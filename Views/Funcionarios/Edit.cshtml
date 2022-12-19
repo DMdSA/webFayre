@@ -1,4 +1,4 @@
-﻿@model WebFayre.Models.Utilizador
+﻿@model WebFayre.Models.Funcionario
 
 @{
     ViewData["Title"] = "Edit";
@@ -6,13 +6,13 @@
 
 <h1>Edit</h1>
 
-<h4>Utilizador</h4>
+<h4>Funcionario</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="IdFuncionario" />
             <div class="form-group">
                 <label asp-for="Nome" class="control-label"></label>
                 <input asp-for="Nome" class="form-control" />
@@ -29,39 +29,24 @@
                 <span asp-validation-for="Password" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Rua" class="control-label"></label>
-                <input asp-for="Rua" class="form-control" />
-                <span asp-validation-for="Rua" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Porta" class="control-label"></label>
-                <input asp-for="Porta" class="form-control" />
-                <span asp-validation-for="Porta" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CodigoPostal" class="control-label"></label>
-                <input asp-for="CodigoPostal" class="form-control" />
-                <span asp-validation-for="CodigoPostal" class="text-danger"></span>
-            </div>
-            <div class="form-group">
                 <label asp-for="Telemovel" class="control-label"></label>
                 <input asp-for="Telemovel" class="form-control" />
                 <span asp-validation-for="Telemovel" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Nif" class="control-label"></label>
-                <input asp-for="Nif" class="form-control" />
-                <span asp-validation-for="Nif" class="text-danger"></span>
+                <label asp-for="CreationDate" class="control-label"></label>
+                <input asp-for="CreationDate" class="form-control" />
+                <span asp-validation-for="CreationDate" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="DataNascimento" class="control-label"></label>
-                <input asp-for="DataNascimento" class="form-control" />
-                <span asp-validation-for="DataNascimento" class="text-danger"></span>
+                <label asp-for="FuncionarioPath" class="control-label"></label>
+                <input asp-for="FuncionarioPath" class="form-control" />
+                <span asp-validation-for="FuncionarioPath" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="UtilizadorPath" class="control-label"></label>
-                <input asp-for="UtilizadorPath" class="form-control" />
-                <span asp-validation-for="UtilizadorPath" class="text-danger"></span>
+                <label asp-for="Funcao" class="control-label"></label>
+                <select asp-for="Funcao" class="form-control" asp-items="ViewBag.Funcao"></select>
+                <span asp-validation-for="Funcao" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />

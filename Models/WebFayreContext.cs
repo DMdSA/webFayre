@@ -17,8 +17,6 @@ public partial class WebFayreContext : DbContext
 
     public virtual DbSet<Categoriafeira> Categoriafeiras { get; set; }
 
-    public virtual DbSet<CodigoPostal> CodigoPostals { get; set; }
-
     public virtual DbSet<Feira> Feiras { get; set; }
 
     public virtual DbSet<Funcao> Funcaos { get; set; }
@@ -63,20 +61,6 @@ public partial class WebFayreContext : DbContext
             entity.Property(e => e.Descricao)
                 .HasMaxLength(45)
                 .HasColumnName("descricao");
-        });
-
-        modelBuilder.Entity<CodigoPostal>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("PK_codigo_postal_id");
-
-            entity.ToTable("codigo_postal", "webfayre");
-
-            entity.Property(e => e.Id)
-                .HasMaxLength(10)
-                .HasColumnName("id");
-            entity.Property(e => e.Localidade)
-                .HasMaxLength(25)
-                .HasColumnName("localidade");
         });
 
         modelBuilder.Entity<Feira>(entity =>
@@ -157,9 +141,7 @@ public partial class WebFayreContext : DbContext
 
             entity.ToTable("funcao", "webfayre");
 
-            entity.Property(e => e.IdFuncao)
-                .ValueGeneratedNever()
-                .HasColumnName("id_funcao");
+            entity.Property(e => e.IdFuncao).HasColumnName("id_funcao");
             entity.Property(e => e.Descricao)
                 .HasMaxLength(45)
                 .HasColumnName("descricao");
@@ -191,7 +173,7 @@ public partial class WebFayreContext : DbContext
                 .HasMaxLength(35)
                 .HasColumnName("password");
             entity.Property(e => e.Telemovel)
-                .HasMaxLength(15)
+                .HasMaxLength(17)
                 .HasColumnName("telemovel");
 
             entity.HasOne(d => d.FuncaoNavigation).WithMany(p => p.Funcionarios)
@@ -208,11 +190,9 @@ public partial class WebFayreContext : DbContext
 
             entity.HasIndex(e => e.Email, "IX_patrocinador").IsUnique();
 
-            entity.Property(e => e.IdPatrocinador)
-                .HasMaxLength(45)
-                .HasColumnName("id_patrocinador");
+            entity.Property(e => e.IdPatrocinador).HasColumnName("id_patrocinador");
             entity.Property(e => e.Descricao)
-                .HasMaxLength(100)
+                .HasMaxLength(200)
                 .HasColumnName("descricao");
             entity.Property(e => e.Email)
                 .HasMaxLength(50)
@@ -221,7 +201,7 @@ public partial class WebFayreContext : DbContext
                 .HasMaxLength(45)
                 .HasColumnName("nome");
             entity.Property(e => e.Telefone)
-                .HasMaxLength(50)
+                .HasMaxLength(20)
                 .HasColumnName("telefone");
         });
 
@@ -375,29 +355,28 @@ public partial class WebFayreContext : DbContext
 
         modelBuilder.Entity<Ticket>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK_ticket_id");
-
             entity.ToTable("ticket", "webfayre");
 
-            entity.HasIndex(e => new { e.UtilizadorId, e.FeiraId }, "IX_ticket").IsUnique();
+            entity.HasIndex(e => e.Id, "IX_ticket_1").IsUnique();
 
-            entity.HasIndex(e => e.FeiraId, "feira_id_idx");
-
-            entity.HasIndex(e => e.UtilizadorId, "utilizador_id_idx");
+            entity.HasIndex(e => new { e.FeiraId, e.UtilizadorId }, "IX_ticket_2").IsUnique();
 
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.Data)
-                .HasColumnType("date")
+                .HasColumnType("datetime")
                 .HasColumnName("data");
-            entity.Property(e => e.FeiraId)
-                .HasMaxLength(45)
-                .HasColumnName("feira_id");
+            entity.Property(e => e.FeiraId).HasColumnName("feira_id");
             entity.Property(e => e.UtilizadorId).HasColumnName("utilizador_id");
+
+            entity.HasOne(d => d.Feira).WithMany(p => p.Tickets)
+                .HasForeignKey(d => d.FeiraId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_ticket_feira");
 
             entity.HasOne(d => d.Utilizador).WithMany(p => p.Tickets)
                 .HasForeignKey(d => d.UtilizadorId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("ticket$ticket_utilizador_id");
+                .HasConstraintName("FK_ticket_utilizador");
         });
 
         modelBuilder.Entity<TipoStand>(entity =>
@@ -419,8 +398,6 @@ public partial class WebFayreContext : DbContext
             entity.HasKey(e => e.Id).HasName("PK_utilizador_id");
 
             entity.ToTable("utilizador", "webfayre");
-
-            entity.HasIndex(e => e.CodigoPostal, "id_codigo_postal_idx");
 
             entity.HasIndex(e => e.Email, "utilizador$email_UNIQUE").IsUnique();
 

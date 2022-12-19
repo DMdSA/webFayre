@@ -5,7 +5,7 @@ namespace WebFayre.Models;
 
 public partial class Patrocinador
 {
-    public string IdPatrocinador { get; set; } = null!;
+    public int IdPatrocinador { get; set; }
 
     public string Nome { get; set; } = null!;
 

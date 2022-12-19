@@ -1,4 +1,4 @@
-﻿@model IEnumerable<WebFayre.Models.Utilizador>
+﻿@model IEnumerable<WebFayre.Models.Funcionario>
 
 @{
     ViewData["Title"] = "Index";
@@ -22,25 +22,16 @@
                 @Html.DisplayNameFor(model => model.Password)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Rua)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Porta)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CodigoPostal)
-            </th>
-            <th>
                 @Html.DisplayNameFor(model => model.Telemovel)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Nif)
+                @Html.DisplayNameFor(model => model.CreationDate)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.DataNascimento)
+                @Html.DisplayNameFor(model => model.FuncionarioPath)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.UtilizadorPath)
+                @Html.DisplayNameFor(model => model.FuncaoNavigation)
             </th>
             <th></th>
         </tr>
@@ -58,30 +49,22 @@
                 @Html.DisplayFor(modelItem => item.Password)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Rua)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Porta)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CodigoPostal)
-            </td>
-            <td>
                 @Html.DisplayFor(modelItem => item.Telemovel)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Nif)
+                @Html.DisplayFor(modelItem => item.DataOnly)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.DataNascimento)
+                @Html.DisplayFor(modelItem => item.FuncionarioPath)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.UtilizadorPath)
+                @Html.DisplayFor(modelItem => item.FuncaoNavigation.Descricao)
+                ,@Html.DisplayFor(modelItem => item.FuncaoNavigation.IdFuncao)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                <a asp-action="Edit" asp-route-id="@item.IdFuncionario">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.IdFuncionario">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.IdFuncionario">Delete</a>
             </td>
         </tr>
 }

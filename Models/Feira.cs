@@ -29,6 +29,8 @@ public partial class Feira
 
     public virtual ICollection<Stand> Stands { get; } = new List<Stand>();
 
+    public virtual ICollection<Ticket> Tickets { get; } = new List<Ticket>();
+
     public virtual ICollection<Categoriafeira> FeiraCategoria1s { get; } = new List<Categoriafeira>();
 
     public virtual ICollection<Utilizador> IdUtilizadors { get; } = new List<Utilizador>();

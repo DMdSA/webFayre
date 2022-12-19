@@ -17,15 +17,18 @@ namespace WebFayre.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.0")
+                .HasAnnotation("ProductVersion", "7.0.1")
+                .HasAnnotation("Proxies:ChangeTracking", false)
+                .HasAnnotation("Proxies:CheckEquality", false)
+                .HasAnnotation("Proxies:LazyLoading", true)
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
             modelBuilder.Entity("FeiraCategoria", b =>
                 {
-                    b.Property<string>("FeiraId")
-                        .HasColumnType("nvarchar(45)");
+                    b.Property<int>("FeiraId")
+                        .HasColumnType("int");
 
                     b.Property<int>("FeiraCategoria1")
                         .HasColumnType("int");
@@ -40,11 +43,11 @@ namespace WebFayre.Migrations
 
             modelBuilder.Entity("PatrocinadorFeira", b =>
                 {
-                    b.Property<string>("FeiraId")
-                        .HasColumnType("nvarchar(45)");
+                    b.Property<int>("FeiraId")
+                        .HasColumnType("int");
 
-                    b.Property<string>("PatrocinadorId")
-                        .HasColumnType("nvarchar(45)");
+                    b.Property<int>("PatrocinadorId")
+                        .HasColumnType("int");
 
                     b.HasKey("FeiraId", "PatrocinadorId")
                         .HasName("PK_patrocinador_feira_feira_id");
@@ -58,11 +61,11 @@ namespace WebFayre.Migrations
 
             modelBuilder.Entity("StandPatrocinador", b =>
                 {
-                    b.Property<string>("IdStand")
-                        .HasColumnType("nvarchar(45)");
+                    b.Property<int>("IdStand")
+                        .HasColumnType("int");
 
-                    b.Property<string>("IdPatrocinador")
-                        .HasColumnType("nvarchar(45)");
+                    b.Property<int>("IdPatrocinador")
+                        .HasColumnType("int");
 
                     b.HasKey("IdStand", "IdPatrocinador")
                         .HasName("PK_stand_patrocinador_id_stand");
@@ -74,11 +77,11 @@ namespace WebFayre.Migrations
 
             modelBuilder.Entity("UtilizadorFavoritaFeira", b =>
                 {
-                    b.Property<string>("IdUtilizador")
-                        .HasColumnType("nvarchar(45)");
+                    b.Property<int>("IdUtilizador")
+                        .HasColumnType("int");
 
-                    b.Property<string>("IdFeira")
-                        .HasColumnType("nvarchar(45)");
+                    b.Property<int>("IdFeira")
+                        .HasColumnType("int");
 
                     b.HasKey("IdUtilizador", "IdFeira")
                         .HasName("PK_utilizador_favorita_feira_id_utilizador");
@@ -93,8 +96,11 @@ namespace WebFayre.Migrations
             modelBuilder.Entity("WebFayre.Models.Categoriafeira", b =>
                 {
                     b.Property<int>("IdCategoriaFeira")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasColumnName("id_categoria_feira");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdCategoriaFeira"));
 
                     b.Property<string>("Descricao")
                         .IsRequired()
@@ -104,6 +110,9 @@ namespace WebFayre.Migrations
 
                     b.HasKey("IdCategoriaFeira")
                         .HasName("PK_categoriafeira_id_categoria_feira");
+
+                    b.HasIndex(new[] { "Descricao" }, "IX_categoriafeira")
+                        .IsUnique();
 
                     b.ToTable("categoriafeira", "webfayre");
                 });
@@ -129,10 +138,12 @@ namespace WebFayre.Migrations
 
             modelBuilder.Entity("WebFayre.Models.Feira", b =>
                 {
-                    b.Property<string>("IdFeira")
-                        .HasMaxLength(45)
-                        .HasColumnType("nvarchar(45)")
+                    b.Property<int>("IdFeira")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
                         .HasColumnName("id_feira");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdFeira"));
 
                     b.Property<int>("CapacidadeClientes")
                         .HasColumnType("int")
@@ -194,8 +205,11 @@ namespace WebFayre.Migrations
             modelBuilder.Entity("WebFayre.Models.Funcao", b =>
                 {
                     b.Property<int>("IdFuncao")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasColumnName("id_funcao");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdFuncao"));
 
                     b.Property<string>("Descricao")
                         .IsRequired()
@@ -251,29 +265,34 @@ namespace WebFayre.Migrations
 
                     b.Property<string>("Telemovel")
                         .IsRequired()
-                        .HasMaxLength(15)
-                        .HasColumnType("nvarchar(15)")
+                        .HasMaxLength(17)
+                        .HasColumnType("nvarchar(17)")
                         .HasColumnName("telemovel");
 
                     b.HasKey("IdFuncionario")
                         .HasName("PK_funcionario_id_funcionario");
 
-                    b.HasIndex(new[] { "Funcao" }, "funcao_funcionario_idx");
+                    b.HasIndex("Funcao");
+
+                    b.HasIndex(new[] { "Email" }, "funcao_funcionario_idx")
+                        .IsUnique();
 
                     b.ToTable("funcionario", "webfayre");
                 });
 
             modelBuilder.Entity("WebFayre.Models.Patrocinador", b =>
                 {
-                    b.Property<string>("IdPatrocinador")
-                        .HasMaxLength(45)
-                        .HasColumnType("nvarchar(45)")
+                    b.Property<int>("IdPatrocinador")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
                         .HasColumnName("id_patrocinador");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdPatrocinador"));
 
                     b.Property<string>("Descricao")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)")
                         .HasColumnName("descricao");
 
                     b.Property<string>("Email")
@@ -289,21 +308,23 @@ namespace WebFayre.Migrations
                         .HasColumnName("nome");
 
                     b.Property<string>("Telefone")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)")
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)")
                         .HasColumnName("telefone");
 
                     b.HasKey("IdPatrocinador")
                         .HasName("PK_patrocinador_id_patrocinador");
+
+                    b.HasIndex(new[] { "Email" }, "IX_patrocinador")
+                        .IsUnique();
 
                     b.ToTable("patrocinador", "webfayre");
                 });
 
             modelBuilder.Entity("WebFayre.Models.Produto", b =>
                 {
-                    b.Property<string>("IdProduto")
-                        .HasMaxLength(45)
-                        .HasColumnType("nvarchar(45)")
+                    b.Property<int>("IdProduto")
+                        .HasColumnType("int")
                         .HasColumnName("id_produto");
 
                     b.Property<string>("Descricao")
@@ -325,10 +346,8 @@ namespace WebFayre.Migrations
                         .HasColumnType("decimal(6, 2)")
                         .HasColumnName("preco");
 
-                    b.Property<string>("StandId")
-                        .IsRequired()
-                        .HasMaxLength(45)
-                        .HasColumnType("nvarchar(45)")
+                    b.Property<int>("StandId")
+                        .HasColumnType("int")
                         .HasColumnName("stand_id");
 
                     b.Property<int>("Stock")
@@ -363,10 +382,8 @@ namespace WebFayre.Migrations
                         .HasColumnType("int")
                         .HasColumnName("id_funcionario");
 
-                    b.Property<string>("IdUtilizador")
-                        .IsRequired()
-                        .HasMaxLength(45)
-                        .HasColumnType("nvarchar(45)")
+                    b.Property<int>("IdUtilizador")
+                        .HasColumnType("int")
                         .HasColumnName("id_utilizador");
 
                     b.Property<int>("NStands")
@@ -391,14 +408,15 @@ namespace WebFayre.Migrations
 
             modelBuilder.Entity("WebFayre.Models.Stand", b =>
                 {
-                    b.Property<string>("IdStand")
-                        .HasMaxLength(45)
-                        .HasColumnType("nvarchar(45)")
+                    b.Property<int>("IdStand")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
                         .HasColumnName("id_stand");
 
-                    b.Property<string>("FeiraId")
-                        .HasMaxLength(45)
-                        .HasColumnType("nvarchar(45)")
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdStand"));
+
+                    b.Property<int>("FeiraId")
+                        .HasColumnType("int")
                         .HasColumnName("feira_id");
 
                     b.Property<string>("Descricao")
@@ -458,9 +476,8 @@ namespace WebFayre.Migrations
 
             modelBuilder.Entity("WebFayre.Models.Standstaff", b =>
                 {
-                    b.Property<string>("IdStand")
-                        .HasMaxLength(45)
-                        .HasColumnType("nvarchar(45)")
+                    b.Property<int>("IdStand")
+                        .HasColumnType("int")
                         .HasColumnName("id_stand");
 
                     b.Property<string>("StaffEmail")
@@ -476,10 +493,12 @@ namespace WebFayre.Migrations
 
             modelBuilder.Entity("WebFayre.Models.Ticket", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasMaxLength(45)
-                        .HasColumnType("nvarchar(45)")
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
                         .HasColumnName("id");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("Data")
                         .HasColumnType("date")
@@ -491,14 +510,15 @@ namespace WebFayre.Migrations
                         .HasColumnType("nvarchar(45)")
                         .HasColumnName("feira_id");
 
-                    b.Property<string>("UtilizadorId")
-                        .IsRequired()
-                        .HasMaxLength(45)
-                        .HasColumnType("nvarchar(45)")
+                    b.Property<int>("UtilizadorId")
+                        .HasColumnType("int")
                         .HasColumnName("utilizador_id");
 
                     b.HasKey("Id")
                         .HasName("PK_ticket_id");
+
+                    b.HasIndex(new[] { "UtilizadorId", "FeiraId" }, "IX_ticket")
+                        .IsUnique();
 
                     b.HasIndex(new[] { "FeiraId" }, "feira_id_idx");
 
@@ -510,8 +530,11 @@ namespace WebFayre.Migrations
             modelBuilder.Entity("WebFayre.Models.TipoStand", b =>
                 {
                     b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasColumnName("id");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Descricao")
                         .IsRequired()
@@ -522,15 +545,20 @@ namespace WebFayre.Migrations
                     b.HasKey("Id")
                         .HasName("PK_tipo_stand_id");
 
+                    b.HasIndex(new[] { "Descricao" }, "IX_tipo_stand")
+                        .IsUnique();
+
                     b.ToTable("tipo_stand", "webfayre");
                 });
 
             modelBuilder.Entity("WebFayre.Models.Utilizador", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasMaxLength(45)
-                        .HasColumnType("nvarchar(45)")
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
                         .HasColumnName("id");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("CodigoPostal")
                         .IsRequired()
@@ -559,11 +587,11 @@ namespace WebFayre.Migrations
                         .HasColumnType("nvarchar(75)")
                         .HasColumnName("nome");
 
-                    b.Property<string>("Passord")
+                    b.Property<string>("Password")
                         .IsRequired()
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)")
-                        .HasColumnName("passord");
+                        .HasColumnName("password");
 
                     b.Property<int>("Porta")
                         .HasColumnType("int")
@@ -604,9 +632,8 @@ namespace WebFayre.Migrations
                         .HasColumnType("nvarchar(45)")
                         .HasColumnName("venda_id");
 
-                    b.Property<string>("ProdutoId")
-                        .HasMaxLength(45)
-                        .HasColumnType("nvarchar(45)")
+                    b.Property<int>("ProdutoId")
+                        .HasColumnType("int")
                         .HasColumnName("produto_id");
 
                     b.Property<decimal>("Preco")
@@ -646,10 +673,8 @@ namespace WebFayre.Migrations
                         .HasColumnType("decimal(7, 2)")
                         .HasColumnName("total");
 
-                    b.Property<string>("UtilizadorId")
-                        .IsRequired()
-                        .HasMaxLength(45)
-                        .HasColumnType("nvarchar(45)")
+                    b.Property<int>("UtilizadorId")
+                        .HasColumnType("int")
                         .HasColumnName("utilizador_id");
 
                     b.Property<decimal?>("ValorRegateio")
@@ -718,7 +743,7 @@ namespace WebFayre.Migrations
                         .WithMany()
                         .HasForeignKey("IdFeira")
                         .IsRequired()
-                        .HasConstraintName("utilizador_favorita_feira$favorita_feira_id");
+                        .HasConstraintName("FK_utilizador_favorita_feira_feira");
 
                     b.HasOne("WebFayre.Models.Utilizador", null)
                         .WithMany()
@@ -752,19 +777,11 @@ namespace WebFayre.Migrations
 
             modelBuilder.Entity("WebFayre.Models.Promocaofeira", b =>
                 {
-                    b.HasOne("WebFayre.Models.Funcionario", "IdFuncionarioNavigation")
-                        .WithMany("Promocaofeiras")
-                        .HasForeignKey("IdFuncionario")
-                        .IsRequired()
-                        .HasConstraintName("promocaofeira$id_funcionario");
-
                     b.HasOne("WebFayre.Models.Utilizador", "IdUtilizadorNavigation")
                         .WithMany("Promocaofeiras")
                         .HasForeignKey("IdUtilizador")
                         .IsRequired()
                         .HasConstraintName("promocaofeira$id_utilizador");
-
-                    b.Navigation("IdFuncionarioNavigation");
 
                     b.Navigation("IdUtilizadorNavigation");
                 });
@@ -802,19 +819,11 @@ namespace WebFayre.Migrations
 
             modelBuilder.Entity("WebFayre.Models.Ticket", b =>
                 {
-                    b.HasOne("WebFayre.Models.Feira", "Feira")
-                        .WithMany("Tickets")
-                        .HasForeignKey("FeiraId")
-                        .IsRequired()
-                        .HasConstraintName("ticket$ticket_feira_id");
-
                     b.HasOne("WebFayre.Models.Utilizador", "Utilizador")
                         .WithMany("Tickets")
                         .HasForeignKey("UtilizadorId")
                         .IsRequired()
                         .HasConstraintName("ticket$ticket_utilizador_id");
-
-                    b.Navigation("Feira");
 
                     b.Navigation("Utilizador");
                 });
@@ -852,18 +861,11 @@ namespace WebFayre.Migrations
             modelBuilder.Entity("WebFayre.Models.Feira", b =>
                 {
                     b.Navigation("Stands");
-
-                    b.Navigation("Tickets");
                 });
 
             modelBuilder.Entity("WebFayre.Models.Funcao", b =>
                 {
                     b.Navigation("Funcionarios");
-                });
-
-            modelBuilder.Entity("WebFayre.Models.Funcionario", b =>
-                {
-                    b.Navigation("Promocaofeiras");
                 });
 
             modelBuilder.Entity("WebFayre.Models.Produto", b =>

@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\my_dir\\UNIVERSIDADE MINHO\\4ano\\LI_IV\\webFayre\\webFayre\\WebFayre.csproj": {}
+    "D:\\my_dir\\UNIVERSIDADE MINHO\\4ano\\LI_IV\\webFayre\\WebFayre\\WebFayre.csproj": {}
   },
   "projects": {
-    "D:\\my_dir\\UNIVERSIDADE MINHO\\4ano\\LI_IV\\webFayre\\webFayre\\WebFayre.csproj": {
+    "D:\\my_dir\\UNIVERSIDADE MINHO\\4ano\\LI_IV\\webFayre\\WebFayre\\WebFayre.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\my_dir\\UNIVERSIDADE MINHO\\4ano\\LI_IV\\webFayre\\webFayre\\WebFayre.csproj",
+        "projectUniqueName": "D:\\my_dir\\UNIVERSIDADE MINHO\\4ano\\LI_IV\\webFayre\\WebFayre\\WebFayre.csproj",
         "projectName": "WebFayre",
-        "projectPath": "D:\\my_dir\\UNIVERSIDADE MINHO\\4ano\\LI_IV\\webFayre\\webFayre\\WebFayre.csproj",
+        "projectPath": "D:\\my_dir\\UNIVERSIDADE MINHO\\4ano\\LI_IV\\webFayre\\WebFayre\\WebFayre.csproj",
         "packagesPath": "C:\\Users\\diogo\\.nuget\\packages\\",
-        "outputPath": "D:\\my_dir\\UNIVERSIDADE MINHO\\4ano\\LI_IV\\webFayre\\webFayre\\obj\\",
+        "outputPath": "D:\\my_dir\\UNIVERSIDADE MINHO\\4ano\\LI_IV\\webFayre\\WebFayre\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\diogo\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -56,19 +56,23 @@
               "target": "Package",
               "version": "[2.2.0, )"
             },
+            "Microsoft.EntityFrameworkCore.Proxies": {
+              "target": "Package",
+              "version": "[7.0.1, )"
+            },
             "Microsoft.EntityFrameworkCore.SqlServer": {
               "target": "Package",
-              "version": "[7.0.0, )"
+              "version": "[7.0.1, )"
             },
             "Microsoft.EntityFrameworkCore.Tools": {
               "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
               "suppressParent": "All",
               "target": "Package",
-              "version": "[7.0.0, )"
+              "version": "[7.0.1, )"
             },
             "Microsoft.VisualStudio.Web.CodeGeneration.Design": {
               "target": "Package",
-              "version": "[7.0.0, )"
+              "version": "[7.0.1, )"
             },
             "System.IdentityModel.Tokens.Jwt": {
               "target": "Package",
