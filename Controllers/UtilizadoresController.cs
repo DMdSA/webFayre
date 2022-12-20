@@ -363,6 +363,24 @@ namespace WebFayre.Controllers
 
 
 
+        public async Task<IActionResult> FairHistory()
+        {
+            if (HttpContext.Session.GetInt32("utilizadorId") == null)
+            {
+                return RedirectToAction("login", "home");
+            }
+            // get current user's id
+            var userid = (int)HttpContext.Session.GetInt32("utilizadorId");
+
+            // get all tickets generated for him
+            var tickets = _context.Tickets != null ? await _context.Tickets.Where(t => t.UtilizadorId == userid).Select(t => t.FeiraId).ToListAsync() : null;
+
+            return _context.Feiras != null ?
+                          View(await _context.Feiras.Where(f => tickets.Contains(f.IdFeira)).ToListAsync()) :
+                          Problem("Entity set 'WebFayreContext.Feiras'  is null.");
+        }
+
+
     }
 
 
