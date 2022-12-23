@@ -213,9 +213,7 @@ public partial class WebFayreContext : DbContext
 
             entity.HasIndex(e => e.StandId, "stand_id_idx");
 
-            entity.Property(e => e.IdProduto)
-                .ValueGeneratedNever()
-                .HasColumnName("id_produto");
+            entity.Property(e => e.IdProduto).HasColumnName("id_produto");
             entity.Property(e => e.Descricao)
                 .HasMaxLength(50)
                 .HasColumnName("descricao");

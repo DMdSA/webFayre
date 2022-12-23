@@ -25,7 +25,7 @@ namespace WebFayre.Controllers
             return View(await webFayreContext.ToListAsync());
         }
 
-        public async Task<IActionResult> IndexByFeira(int id)
+        public async Task<IActionResult> StandsByFeira(int id)
         {
             var standlist = _context.Stands.Include(s => s.Feira).Include(s => s.StandTipo).Where(s => s.FeiraId == id);
             return View(await standlist.ToListAsync());
@@ -155,14 +155,14 @@ namespace WebFayre.Controllers
         // POST: Stands/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int idStand, int idFeira)
+        public async Task<IActionResult> DeleteConfirmed(int id, int feiraId)
         {
             if (_context.Stands == null)
             {
                 return Problem("Entity set 'WebFayreContext.Stands'  is null.");
             }
             
-            var stand = await _context.Stands.FindAsync(idStand, idFeira);
+            var stand = await _context.Stands.FindAsync(id, feiraId);
             if (stand != null)
             {
                 _context.Stands.Remove(stand);
@@ -176,5 +176,29 @@ namespace WebFayre.Controllers
         {
           return (_context.Stands?.Any(e => e.IdStand == id)).GetValueOrDefault();
         }
+
+
+        public async Task<IActionResult> Enter(int id)
+        {   
+
+            //Se está no stand assume-se que está login?
+            // se não houver nenhuma session ativa, redirecionar para o login
+            //if (HttpContext.Session.GetInt32("utilizadorId") == null)
+            //{
+            //    return RedirectToAction("Login", "Home");
+            //}
+
+            // get current user id
+            //var userid = HttpContext.Session.GetInt32("utilizadorId");
+
+            if (StandExists(id))
+            {
+                return RedirectToAction("produtosByStand", "produtoes", new { id }); //Redirect para um href com o id do stand
+            }
+
+            return NotFound();
+        }
     }
+
+
 }

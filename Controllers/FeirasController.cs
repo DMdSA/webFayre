@@ -53,7 +53,7 @@ namespace WebFayre.Controllers
         // GET: Feiras/Create
         public IActionResult Create()
         {
-            ViewData["FeiraCategoria1s"] = new MultiSelectList(_context.Categoriafeiras, "IdCategoriaFeira", "IdCategoriaFeira");
+            ViewData["FeiraCategoria1s"] = new MultiSelectList(_context.Categoriafeiras, "Descricao", "Descricao");
             return View();
         }
 
@@ -74,7 +74,7 @@ namespace WebFayre.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["FeiraCategoria1s"] = new MultiSelectList(_context.Categoriafeiras, "IdCategoriaFeira", "IdCategoriaFeira", feira.FeiraCategoria1s);
+            ViewData["FeiraCategoria1s"] = new MultiSelectList(_context.Categoriafeiras, "Descricao", "Descricao", feira.FeiraCategoria1s);
             return View(feira);
         }
 
@@ -91,7 +91,7 @@ namespace WebFayre.Controllers
             {
                 return NotFound();
             }
-            ViewData["FeiraCategoria1s"] = new MultiSelectList(_context.Categoriafeiras, "IdCategoriaFeira", "IdCategoriaFeira", feira.FeiraCategoria1s);
+            ViewData["FeiraCategoria1s"] = new MultiSelectList(_context.Categoriafeiras, "Descricao", "Descricao", feira.FeiraCategoria1s);
             return View(feira);
         }
 
@@ -127,7 +127,7 @@ namespace WebFayre.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["FeiraCategoria1s"] = new MultiSelectList(_context.Categoriafeiras, "IdCategoriaFeira", "IdCategoriaFeira", feira.FeiraCategoria1s);
+            ViewData["FeiraCategoria1s"] = new MultiSelectList(_context.Categoriafeiras, "Descricao", "Descricao", feira.FeiraCategoria1s);
             return View(feira);
         }
 
@@ -208,12 +208,12 @@ namespace WebFayre.Controllers
                     TicketsController tc = new TicketsController(_context);
                     await tc.Create(t);
                     TempData["feiraticket"] = "Ticket gerado com sucesso!";
-                    return RedirectToAction("indexByFeira", "stands", new {id});
+                    return RedirectToAction("standsByFeira", "stands", new {id});
                 }
 
                 TempData["feiraticket"] = "Já tinhas um ticket! podes entrar! :)";
                 // change this to feira's stands
-                return RedirectToAction("indexByFeira", "stands", new {id});
+                return RedirectToAction("standsByFeira", "stands", new {id});
             }
 
             return NotFound();

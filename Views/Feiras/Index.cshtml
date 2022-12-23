@@ -79,6 +79,7 @@
                 @Html.DisplayFor(modelItem => item.FeiraPath)
             </td>
             <td>
+                <a asp-action="Enter" asp-route-id="@item.IdFeira">Enter</a> |
                 <a asp-action="Edit" asp-route-id="@item.IdFeira">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.IdFeira">Details</a> |
                 <a asp-action="Delete" asp-route-id="@item.IdFeira">Delete</a>

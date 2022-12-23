@@ -19,7 +19,7 @@ public partial class Produto
 
     public int StandId { get; set; }
 
-    public virtual Stand Stand { get; set; } = null!;
+    public virtual Stand? Stand { get; set; } = null!;
 
     public virtual ICollection<VendaProduto> VendaProdutos { get; } = new List<VendaProduto>();
 }
