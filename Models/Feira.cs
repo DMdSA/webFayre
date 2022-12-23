@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WebFayre.Models;
 
@@ -31,7 +32,8 @@ public partial class Feira
 
     public virtual ICollection<Ticket> Tickets { get; } = new List<Ticket>();
 
-    public virtual ICollection<Categoriafeira> FeiraCategoria1s { get; } = new List<Categoriafeira>();
+    [ForeignKey("feira_categoria")]
+    public virtual ICollection<Categoriafeira> FeiraCategoria1s { get; set; } = new List<Categoriafeira>();
 
     public virtual ICollection<Utilizador> IdUtilizadors { get; } = new List<Utilizador>();
 

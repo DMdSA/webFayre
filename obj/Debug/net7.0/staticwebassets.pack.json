@@ -13,6 +13,10 @@
       "PackagePath": "staticwebassets\\favicon.ico"
     },
     {
+      "Id": "D:\\my_dir\\UNIVERSIDADE MINHO\\4ano\\LI_IV\\webFayre\\WebFayre\\wwwroot\\img\\webFayre_bg.png",
+      "PackagePath": "staticwebassets\\img\\webFayre_bg.png"
+    },
+    {
       "Id": "D:\\my_dir\\UNIVERSIDADE MINHO\\4ano\\LI_IV\\webFayre\\WebFayre\\wwwroot\\js\\site.js",
       "PackagePath": "staticwebassets\\js\\site.js"
     },

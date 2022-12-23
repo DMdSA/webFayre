@@ -18,9 +18,6 @@ namespace WebFayre.Controllers
             _context = context;
         }
 
-        // sorting?
-        // https://learn.microsoft.com/en-us/aspnet/mvc/overview/getting-started/getting-started-with-ef-using-mvc/sorting-filtering-and-paging-with-the-entity-framework-in-an-asp-net-mvc-application
-        // after that, use chache! ^ (study it)
         // GET: Feiras
         public async Task<IActionResult> Index()
         {
@@ -38,6 +35,7 @@ namespace WebFayre.Controllers
             }
 
             var feira = await _context.Feiras
+                .Include(f => f.FeiraCategoria1s) 
                 .FirstOrDefaultAsync(m => m.IdFeira == id);
             if (feira == null)
             {
@@ -60,9 +58,13 @@ namespace WebFayre.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("IdFeira,Descricao,Nome,DataInicio,DataFim,CapacidadeClientes,NStands,Email,Telefone,Morada,FeiraPath")] Feira feira)
         {
+            var cf = await _context.Categoriafeiras.FindAsync(1);
+
             if (ModelState.IsValid)
             {
-                _context.Add(feira);
+                feira.FeiraCategoria1s.Add(cf);
+
+                _context.Add(feira).Collection(c => c.FeiraCategoria1s);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
@@ -162,7 +164,6 @@ namespace WebFayre.Controllers
           return (_context.Feiras?.Any(e => e.IdFeira == id)).GetValueOrDefault();
         }
 
-
         public async Task<IActionResult> Enter(int id)
         {
             // se não houver nenhuma session ativa, redirecionar para o login
@@ -197,5 +198,7 @@ namespace WebFayre.Controllers
 
             return NotFound();
         }
+
+
     }
 }

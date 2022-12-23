@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "r37JfnM4H0vsE7cWEQACn6vc0gMkLNYq22IJMxRsq/M=",
+  "Hash": "HbxSmgaEBvPTa+1tA3qgH3SHHQEIQ5ZnSMjBj7FVOtk=",
   "Source": "WebFayre",
   "BasePath": "_content/WebFayre",
   "Mode": "Default",
@@ -83,6 +83,23 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\favicon.ico"
+    },
+    {
+      "Identity": "D:\\my_dir\\UNIVERSIDADE MINHO\\4ano\\LI_IV\\webFayre\\WebFayre\\wwwroot\\img\\webFayre_bg.png",
+      "SourceId": "WebFayre",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\my_dir\\UNIVERSIDADE MINHO\\4ano\\LI_IV\\webFayre\\WebFayre\\wwwroot\\",
+      "BasePath": "_content/WebFayre",
+      "RelativePath": "img/webFayre_bg.png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\img\\webFayre_bg.png"
     },
     {
       "Identity": "D:\\my_dir\\UNIVERSIDADE MINHO\\4ano\\LI_IV\\webFayre\\WebFayre\\wwwroot\\js\\site.js",

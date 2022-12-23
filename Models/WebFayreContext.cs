@@ -101,18 +101,18 @@ public partial class WebFayreContext : DbContext
                 .UsingEntity<Dictionary<string, object>>(
                     "FeiraCategoria",
                     r => r.HasOne<Categoriafeira>().WithMany()
-                        .HasForeignKey("FeiraCategoria1")
+                        .HasForeignKey("feira_categoria")
                         .OnDelete(DeleteBehavior.ClientSetNull)
                         .HasConstraintName("feira_categorias$categoria_feira"),
                     l => l.HasOne<Feira>().WithMany()
-                        .HasForeignKey("FeiraId")
+                        .HasForeignKey("feira_id")
                         .OnDelete(DeleteBehavior.ClientSetNull)
                         .HasConstraintName("feira_categorias$id_feira"),
                     j =>
                     {
-                        j.HasKey("FeiraId", "FeiraCategoria1").HasName("PK_feira_categorias_feira_id");
+                        j.HasKey("feira_id", "feira_categoria").HasName("PK_feira_categorias_feira_id");
                         j.ToTable("feira_categorias", "webfayre");
-                        j.HasIndex(new[] { "FeiraCategoria1" }, "categoria_feira_idx");
+                        j.HasIndex(new[] { "feira_categoria" }, "categoria_feira_idx");
                     });
 
             entity.HasMany(d => d.Patrocinadors).WithMany(p => p.Feiras)

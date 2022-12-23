@@ -57,6 +57,9 @@ namespace WebFayre.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("IdCategoriaFeira,Descricao")] Categoriafeira categoriafeira)
         {
+
+            _context.Categoriafeiras.Include(f => f.Feiras);
+
             if (ModelState.IsValid)
             {
                 _context.Add(categoriafeira);
