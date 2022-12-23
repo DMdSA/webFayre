@@ -35,5 +35,5 @@ public partial class Funcionario
     [ForeignKey("funcao_funcionario")]
     public int Funcao { get; set; }
 
-    public virtual Funcao FuncaoNavigation { get; set; } = null!;
+    public virtual Funcao? FuncaoNavigation { get; set; } = null!;
 }

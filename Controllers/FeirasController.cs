@@ -34,13 +34,18 @@ namespace WebFayre.Controllers
                 return NotFound();
             }
 
+            //var feira = await _context.Feiras.Include(x => x.FeiraCategoria1s)
+            //    .ThenInclude(y => y.IdCategoriaFeira)  //Devia ser o nome da table
+            //    .SingleOrDefaultAsync(m => m.IdFeira == id);
+
             var feira = await _context.Feiras
-                .Include(f => f.FeiraCategoria1s) 
-                .FirstOrDefaultAsync(m => m.IdFeira == id);
+                .SingleOrDefaultAsync(m => m.IdFeira == id);
             if (feira == null)
             {
                 return NotFound();
             }
+
+            
 
             return View(feira);
         }
@@ -48,6 +53,7 @@ namespace WebFayre.Controllers
         // GET: Feiras/Create
         public IActionResult Create()
         {
+            ViewData["FeiraCategoria1s"] = new MultiSelectList(_context.Categoriafeiras, "IdCategoriaFeira", "IdCategoriaFeira");
             return View();
         }
 
@@ -56,7 +62,7 @@ namespace WebFayre.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("IdFeira,Descricao,Nome,DataInicio,DataFim,CapacidadeClientes,NStands,Email,Telefone,Morada,FeiraPath")] Feira feira)
+        public async Task<IActionResult> Create([Bind("IdFeira,Descricao,Nome,DataInicio,DataFim,CapacidadeClientes,NStands,Email,Telefone,Morada,FeiraPath,FeiraCategoria1s")] Feira feira)
         {
             var cf = await _context.Categoriafeiras.FindAsync(1);
 
@@ -68,6 +74,7 @@ namespace WebFayre.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["FeiraCategoria1s"] = new MultiSelectList(_context.Categoriafeiras, "IdCategoriaFeira", "IdCategoriaFeira", feira.FeiraCategoria1s);
             return View(feira);
         }
 
@@ -84,6 +91,7 @@ namespace WebFayre.Controllers
             {
                 return NotFound();
             }
+            ViewData["FeiraCategoria1s"] = new MultiSelectList(_context.Categoriafeiras, "IdCategoriaFeira", "IdCategoriaFeira", feira.FeiraCategoria1s);
             return View(feira);
         }
 
@@ -92,7 +100,7 @@ namespace WebFayre.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("IdFeira,Descricao,Nome,DataInicio,DataFim,CapacidadeClientes,NStands,Email,Telefone,Morada,FeiraPath")] Feira feira)
+        public async Task<IActionResult> Edit(int id, [Bind("IdFeira,Descricao,Nome,DataInicio,DataFim,CapacidadeClientes,NStands,Email,Telefone,Morada,FeiraPath,FeiraCategoria1s")] Feira feira)
         {
             if (id != feira.IdFeira)
             {
@@ -119,6 +127,7 @@ namespace WebFayre.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["FeiraCategoria1s"] = new MultiSelectList(_context.Categoriafeiras, "IdCategoriaFeira", "IdCategoriaFeira", feira.FeiraCategoria1s);
             return View(feira);
         }
 
@@ -130,7 +139,7 @@ namespace WebFayre.Controllers
                 return NotFound();
             }
 
-            var feira = await _context.Feiras
+            var feira = await _context.Feiras.Include(x => x.Stands).Include(x => x.Tickets)
                 .FirstOrDefaultAsync(m => m.IdFeira == id);
             if (feira == null)
             {
@@ -152,6 +161,17 @@ namespace WebFayre.Controllers
             var feira = await _context.Feiras.FindAsync(id);
             if (feira != null)
             {
+
+                StandsController standsController = new StandsController(_context);
+                foreach (var stand in feira.Stands.ToList())
+                {
+                    await standsController.DeleteConfirmed(stand.IdStand, stand.FeiraId);
+                }
+                TicketsController tc = new TicketsController(_context);
+                foreach (var ticket in feira.Tickets.ToList())
+                {
+                    await tc.Delete(ticket.Id);
+                }
                 _context.Feiras.Remove(feira);
             }
             
@@ -188,12 +208,12 @@ namespace WebFayre.Controllers
                     TicketsController tc = new TicketsController(_context);
                     await tc.Create(t);
                     TempData["feiraticket"] = "Ticket gerado com sucesso!";
-                    return RedirectToAction("index", "feiras");
+                    return RedirectToAction("indexByFeira", "stands", new {id});
                 }
 
                 TempData["feiraticket"] = "Já tinhas um ticket! podes entrar! :)";
                 // change this to feira's stands
-                return RedirectToAction("index", "feiras");
+                return RedirectToAction("indexByFeira", "stands", new {id});
             }
 
             return NotFound();

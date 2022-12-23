@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WebFayre.Models;
 
@@ -19,17 +20,19 @@ public partial class Stand
 
     public string? Morada { get; set; }
 
+    [ForeignKey("stand_feira_id")]
     public int FeiraId { get; set; }
 
     public string? StandPath { get; set; }
 
+    [ForeignKey("stand_tipo_id")]
     public int StandTipoId { get; set; }
 
-    public virtual Feira Feira { get; set; } = null!;
+    public virtual Feira? Feira { get; set; } = null!;
 
     public virtual ICollection<Produto> Produtos { get; } = new List<Produto>();
 
-    public virtual TipoStand StandTipo { get; set; } = null!;
+    public virtual TipoStand? StandTipo { get; set; } = null!;
 
     public virtual ICollection<Standstaff> Standstaffs { get; } = new List<Standstaff>();
 
