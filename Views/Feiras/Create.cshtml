@@ -63,6 +63,11 @@
                 <span asp-validation-for="FeiraPath" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <label asp-for="FeiraCategoria1s" class="control-label"></label>
+                <select asp-for="FeiraCategoria1s" class ="form-control" asp-items="ViewBag.Categorias"></select>
+                @Html.DropDownListFor(x => x.FeiraCategoria1s, ((SelectList)ViewBag.Categorias),"Select")
+            </div>
+            <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
         </form>
@@ -75,4 +80,5 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
 }

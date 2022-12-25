@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using WebFayre.Models;
+using System.Web;
 
 namespace WebFayre.Controllers
 {
@@ -53,7 +54,17 @@ namespace WebFayre.Controllers
         // GET: Feiras/Create
         public IActionResult Create()
         {
-            ViewData["FeiraCategoria1s"] = new MultiSelectList(_context.Categoriafeiras, "Descricao", "Descricao");
+
+            //ViewData["FeiraCategoria1s"] = new MultiSelectList(_context.Categoriafeiras, "Descricao", "Descricao");
+            //List<SelectListItem> list = new List<SelectListItem>();
+
+
+            //foreach (var cat in _context.Categoriafeiras)
+            //{
+            //    list.Add(new SelectListItem() { Value = cat.IdCategoriaFeira.ToString(), Text = cat.Descricao });
+            //}
+            ViewData["Categorias"] = new SelectList(_context.Categoriafeiras,"IdCategoriaFeira","Descricao");
+            //ViewBag.Categorias = list;
             return View();
         }
 
@@ -64,17 +75,23 @@ namespace WebFayre.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("IdFeira,Descricao,Nome,DataInicio,DataFim,CapacidadeClientes,NStands,Email,Telefone,Morada,FeiraPath,FeiraCategoria1s")] Feira feira)
         {
-            var cf = await _context.Categoriafeiras.FindAsync(1);
+            await _context.Feiras.Include(x => x.FeiraCategoria1s).LoadAsync();
+            var auxiliar = ModelState.Values.ToList()[9];
+            var outraVar = auxiliar.AttemptedValue.Split(",");
 
             if (ModelState.IsValid)
             {
-                feira.FeiraCategoria1s.Add(cf);
+
 
                 _context.Add(feira).Collection(c => c.FeiraCategoria1s);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+
+     
             ViewData["FeiraCategoria1s"] = new MultiSelectList(_context.Categoriafeiras, "Descricao", "Descricao", feira.FeiraCategoria1s);
+
+
             return View(feira);
         }
 
@@ -92,6 +109,13 @@ namespace WebFayre.Controllers
                 return NotFound();
             }
             ViewData["FeiraCategoria1s"] = new MultiSelectList(_context.Categoriafeiras, "Descricao", "Descricao", feira.FeiraCategoria1s);
+            List<SelectListItem> list = new List<SelectListItem>();
+
+            foreach (var cat in _context.Categoriafeiras)
+            {
+                list.Add(new SelectListItem() { Value = cat.IdCategoriaFeira.ToString(), Text = cat.Descricao });
+            }
+            ViewBag.Categorias = list;
             return View(feira);
         }
 

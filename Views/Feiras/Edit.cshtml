@@ -64,6 +64,15 @@
                 <span asp-validation-for="FeiraPath" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <label asp-for="FeiraCategoria1s" class="control-label"></label>
+                <select asp-for="FeiraCategoria1s" class="form-control" asp-items="ViewBag.FeiraCategoria1s"></select>
+                <span asp-validation-for="FeiraCategoria1s" class="text-danger"></span>
+            </div>
+             <div class="form-group">
+                <label asp-for="FeiraCategoria1s" class="control-label"></label>
+                @Html.DropDownListFor(x => x.FeiraCategoria1s, new SelectList(ViewBag.Categorias,"Value","Text"),"Select")
+            </div>
+            <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>
         </form>

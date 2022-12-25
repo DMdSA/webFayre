@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -27,7 +28,6 @@ public partial class Feira
     public string? Morada { get; set; }
 
     public string? FeiraPath { get; set; }
-
     public virtual ICollection<Stand> Stands { get; } = new List<Stand>();
 
     public virtual ICollection<Ticket> Tickets { get; } = new List<Ticket>();
@@ -38,4 +38,6 @@ public partial class Feira
     public virtual ICollection<Utilizador> IdUtilizadors { get; } = new List<Utilizador>();
 
     public virtual ICollection<Patrocinador> Patrocinadors { get; } = new List<Patrocinador>();
+
+
 }
