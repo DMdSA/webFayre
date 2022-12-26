@@ -23,8 +23,8 @@ namespace WebFayre.Controllers
         public async Task<IActionResult> Index()
         {
             return _context.Feiras != null ?
-                        View(await _context.Feiras.ToListAsync()) :
-                        Problem("Entity set 'WebFayreContext.Feiras'  is null.");
+                    View(await _context.Feiras.ToListAsync()) :
+                    Problem("Entity set 'WebFayreContext.Feiras'  is null.");
         }
 
         // GET: Feiras/Details/5
@@ -46,7 +46,7 @@ namespace WebFayre.Controllers
                 return NotFound();
             }
 
-
+            
 
             return View(feira);
         }
@@ -54,8 +54,8 @@ namespace WebFayre.Controllers
         // GET: Feiras/Create
         public IActionResult Create()
         {
-            ViewData["Categorias"] = new SelectList(_context.Categoriafeiras, "IdCategoriaFeira", "Descricao");
 
+            ViewData["Categorias"] = new SelectList(_context.Categoriafeiras, "IdCategoriaFeira", "Descricao");
             return View();
         }
 
@@ -77,13 +77,14 @@ namespace WebFayre.Controllers
                 var category_entities = _context.Categoriafeiras.Where(x => category_idsList.Contains(x.IdCategoriaFeira));
                 feira.FeiraCategoria1s.AddRange(category_entities);
 
-
                 _context.Add(feira).Collection(c => c.FeiraCategoria1s);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
 
+
             ViewData["Categorias"] = new MultiSelectList(_context.Categoriafeiras, "IdCategoriaFeira", "Descricao", feira.FeiraCategoria1s);
+
 
             return View(feira);
         }
@@ -101,7 +102,6 @@ namespace WebFayre.Controllers
             {
                 return NotFound();
             }
-
             ViewData["Categorias"] = new MultiSelectList(_context.Categoriafeiras, "IdCategoriaFeira", "Descricao", feira.FeiraCategoria1s);
             List<SelectListItem> list = new List<SelectListItem>();
 
@@ -146,7 +146,6 @@ namespace WebFayre.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["FeiraCategoria1s"] = new MultiSelectList(_context.Categoriafeiras, "IdCategoriaFeira", "IdCategoriaFeira", feira.FeiraCategoria1s);
-
             return View(feira);
         }
 
@@ -180,12 +179,10 @@ namespace WebFayre.Controllers
             var feira = await _context.Feiras.Include(f => f.FeiraCategoria1s).FirstOrDefaultAsync(f => f.IdFeira == id);
             if (feira != null)
             {
-
                 foreach (var category in feira.FeiraCategoria1s.ToList())
                 {
                     feira.FeiraCategoria1s.Remove(category);
                 }
-
                 StandsController standsController = new StandsController(_context);
                 foreach (var stand in feira.Stands.ToList())
                 {
@@ -198,7 +195,7 @@ namespace WebFayre.Controllers
                 }
                 _context.Feiras.Remove(feira);
             }
-
+            
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
@@ -232,12 +229,12 @@ namespace WebFayre.Controllers
                     TicketsController tc = new TicketsController(_context);
                     await tc.Create(t);
                     TempData["feiraticket"] = "Ticket gerado com sucesso!";
-                    return RedirectToAction("indexByFeira", "stands", new { id });
+                    return RedirectToAction("standsByFeira", "stands", new {id});
                 }
 
                 TempData["feiraticket"] = "Já tinhas um ticket! podes entrar! :)";
                 // change this to feira's stands
-                return RedirectToAction("indexByFeira", "stands", new { id });
+                return RedirectToAction("standsByFeira", "stands", new {id});
             }
 
             return NotFound();
