@@ -5,15 +5,17 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
+using WebFayre.Common;
 using WebFayre.Models;
 
 namespace WebFayre.Controllers
 {
-    public class ProdutoesController : Controller
+    public class ProdutosController : Controller
     {
         private readonly WebFayreContext _context;
 
-        public ProdutoesController(WebFayreContext context)
+        public ProdutosController(WebFayreContext context)
         {
             _context = context;
         }
@@ -27,6 +29,8 @@ namespace WebFayre.Controllers
 
         public async Task<IActionResult> ProdutosByStand(int id)
         {
+
+            ViewBag.StandShoppingCart = HttpContext.Session.GetObject<StandShoppingCart>("StandShoppingCart");
             var prodList = _context.Produtos.Include(s => s.Stand).Where(s => s.StandId == id);
             return View(await prodList.ToListAsync());
         }
@@ -53,7 +57,7 @@ namespace WebFayre.Controllers
         // GET: Produtoes/Create
         public IActionResult Create()
         {
-            ViewData["StandId"] = new SelectList(_context.Stands, "IdStand", "IdStand");
+            ViewData["StandId"] = new SelectList(_context.Stands, "IdStand", "Descricao");
             return View();
         }
 
@@ -70,7 +74,7 @@ namespace WebFayre.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["StandId"] = new SelectList(_context.Stands, "IdStand", "IdStand", produto.StandId);
+            ViewData["StandId"] = new SelectList(_context.Stands, "IdStand", "Descricao", produto.StandId);
             return View(produto);
         }
 
@@ -167,7 +171,9 @@ namespace WebFayre.Controllers
 
         private bool ProdutoExists(int id)
         {
-          return (_context.Produtos?.Any(e => e.IdProduto == id)).GetValueOrDefault();
+            return (_context.Produtos?.Any(e => e.IdProduto == id)).GetValueOrDefault();
         }
+
+        
     }
 }

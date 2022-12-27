@@ -283,3 +283,6 @@ D:\my_dir\UNIVERSIDADE MINHO\4ano\LI_IV\webFayre\WebFayre\bin\Debug\net7.0\Micro
 D:\my_dir\UNIVERSIDADE MINHO\4ano\LI_IV\webFayre\WebFayre\bin\Debug\net7.0\Microsoft.AspNetCore.Identity.EntityFrameworkCore.dll
 D:\my_dir\UNIVERSIDADE MINHO\4ano\LI_IV\webFayre\WebFayre\bin\Debug\net7.0\Microsoft.Extensions.Identity.Core.dll
 D:\my_dir\UNIVERSIDADE MINHO\4ano\LI_IV\webFayre\WebFayre\bin\Debug\net7.0\Microsoft.Extensions.Identity.Stores.dll
+D:\my_dir\UNIVERSIDADE MINHO\4ano\LI_IV\webFayre\WebFayre\bin\Debug\net7.0\Microsoft.AspNetCore.JsonPatch.dll
+D:\my_dir\UNIVERSIDADE MINHO\4ano\LI_IV\webFayre\WebFayre\bin\Debug\net7.0\Microsoft.AspNetCore.Mvc.NewtonsoftJson.dll
+D:\my_dir\UNIVERSIDADE MINHO\4ano\LI_IV\webFayre\WebFayre\bin\Debug\net7.0\Newtonsoft.Json.Bson.dll

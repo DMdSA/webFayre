@@ -13,10 +13,10 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Descricao)
+                @Html.DisplayNameFor(model => model.Nome)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Nome)
+                @Html.DisplayNameFor(model => model.Descricao)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Email)
@@ -31,9 +31,6 @@
                 @Html.DisplayNameFor(model => model.Morada)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.StandPath)
-            </th>
-            <th>
                 @Html.DisplayNameFor(model => model.Feira)
             </th>
             <th>
@@ -46,10 +43,10 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Descricao)
+                @Html.DisplayFor(modelItem => item.Nome)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Nome)
+                @Html.DisplayFor(modelItem => item.Descricao)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Email)
@@ -58,19 +55,24 @@
                 @Html.DisplayFor(modelItem => item.Telefone)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Disponibilidade)
+                @{
+                        var text_bool = item.Disponibilidade == 1 ? "True" : "False";
+                 }
+                @Html.DisplayFor(modelItem => text_bool)
+
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Morada)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.StandPath)
-            </td>
-            <td>
                 @Html.DisplayFor(modelItem => item.Feira.IdFeira)
+                ,
+                    @Html.DisplayFor(modelItem => item.Feira.Descricao)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.StandTipo.Id)
+                ,
+                    @Html.DisplayFor(modelItem => item.StandTipo.Descricao)
             </td>
             <td>
                       <a asp-action="Enter" asp-route-id="@item.IdStand">ENTRAR</a> |

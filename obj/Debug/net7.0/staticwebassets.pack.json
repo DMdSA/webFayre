@@ -9,12 +9,36 @@
       "PackagePath": "staticwebassets\\css\\site.css"
     },
     {
+      "Id": "D:\\my_dir\\UNIVERSIDADE MINHO\\4ano\\LI_IV\\webFayre\\WebFayre\\wwwroot\\css\\style.css",
+      "PackagePath": "staticwebassets\\css\\style.css"
+    },
+    {
       "Id": "D:\\my_dir\\UNIVERSIDADE MINHO\\4ano\\LI_IV\\webFayre\\WebFayre\\wwwroot\\favicon.ico",
       "PackagePath": "staticwebassets\\favicon.ico"
     },
     {
+      "Id": "D:\\my_dir\\UNIVERSIDADE MINHO\\4ano\\LI_IV\\webFayre\\WebFayre\\wwwroot\\img\\logo-no-background.png",
+      "PackagePath": "staticwebassets\\img\\logo-no-background.png"
+    },
+    {
+      "Id": "D:\\my_dir\\UNIVERSIDADE MINHO\\4ano\\LI_IV\\webFayre\\WebFayre\\wwwroot\\img\\tst1.jpg",
+      "PackagePath": "staticwebassets\\img\\tst1.jpg"
+    },
+    {
+      "Id": "D:\\my_dir\\UNIVERSIDADE MINHO\\4ano\\LI_IV\\webFayre\\WebFayre\\wwwroot\\img\\tst2.jpg",
+      "PackagePath": "staticwebassets\\img\\tst2.jpg"
+    },
+    {
+      "Id": "D:\\my_dir\\UNIVERSIDADE MINHO\\4ano\\LI_IV\\webFayre\\WebFayre\\wwwroot\\img\\tst3.jpg",
+      "PackagePath": "staticwebassets\\img\\tst3.jpg"
+    },
+    {
       "Id": "D:\\my_dir\\UNIVERSIDADE MINHO\\4ano\\LI_IV\\webFayre\\WebFayre\\wwwroot\\img\\webFayre_bg.png",
       "PackagePath": "staticwebassets\\img\\webFayre_bg.png"
+    },
+    {
+      "Id": "D:\\my_dir\\UNIVERSIDADE MINHO\\4ano\\LI_IV\\webFayre\\WebFayre\\wwwroot\\js\\cart.js",
+      "PackagePath": "staticwebassets\\js\\cart.js"
     },
     {
       "Id": "D:\\my_dir\\UNIVERSIDADE MINHO\\4ano\\LI_IV\\webFayre\\WebFayre\\wwwroot\\js\\site.js",

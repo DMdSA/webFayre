@@ -2,6 +2,8 @@
 using System.Diagnostics;
 using WebFayre.Models;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Routing;
+using System;
 
 namespace WebFayre.Controllers
 {
@@ -83,6 +85,20 @@ namespace WebFayre.Controllers
                 ViewBag.triedOnce = "yes";
                 return View();
             }
+        }
+
+
+        [HttpPost]
+        public ActionResult Logout(int? id)
+        {
+            //< a asp - action = "Details" asp - route - id = "@item.IdFuncionario" > Details </ a > |
+            //if (HttpContext.Session.GetInt32("utilizadorId") != null)
+            // logout
+            HttpContext.Session.Clear();
+            HttpContext.Session.Remove("utilizadorId");
+            HttpContext.Session.Remove("utilizadorNome");
+
+            return RedirectToAction("login", "home");
         }
 
 

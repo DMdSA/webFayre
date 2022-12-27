@@ -1,0 +1,92 @@
+﻿@model IEnumerable<WebFayre.Models.Produto>
+@using Newtonsoft.Json;
+
+<script type="text/javascript">
+    let standCart = @Html.Raw(JsonConvert.SerializeObject(ViewBag.StandShoppingCart));
+</script>
+<script type="text/javascript" src="/js/cart.js"></script>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+
+<h1>Index</h1>
+
+<button onclick="transplantCart()">Transplantar</button>
+
+<!-- cartObject.FeiraId  -->
+<!-- cartObject.StandId  -->
+<!-- cartObject.Products -->
+
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Descricao)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Stock)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Preco)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Iva)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Stand)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Descricao)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Stock)
+                </td>
+                <td>
+                    @{
+                        var dotPrice = item.Preco.ToString().Replace(",", ".");
+                    }
+                    @Html.DisplayFor(modelItem => dotPrice)
+                </td>
+                <td>
+                    @{
+                        var dotIva = item.Iva.ToString().Replace(",", ".");
+                    }
+                    @Html.DisplayFor(modelItem => dotIva)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Stand.IdStand)
+                    ,
+                    @Html.DisplayFor(modelItem => item.Stand.Descricao)
+
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.IdProduto">Edit</a> |
+
+                    @{
+                        var price = item.Preco.ToString().Replace(",", ".");
+                        var iva = item.Iva.ToString().Replace(",", ".");
+                    }
+                    <button onclick="addProduct(@item.IdProduto, @price, @iva)">Adicionar</button>
+                    <input type="number" id="@item.IdProduto" value="0" min="0" readonly/>
+                    <button onclick="removeProduct(@item.IdProduto, @price)">Remover</button>
+
+                    <a asp-action="Details" asp-route-id="@item.IdProduto">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.IdProduto">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
