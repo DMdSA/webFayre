@@ -4,7 +4,7 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>@Html.Raw(ViewBag.NomeFeira)</h1>
 
 <p>
     <a asp-action="Create">Create New</a>
@@ -29,9 +29,6 @@
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Morada)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Feira)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.StandTipo)
@@ -62,11 +59,6 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Morada)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Feira.IdFeira)
-                ,
-                    @Html.DisplayFor(modelItem => item.Feira.Descricao)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.StandTipo.Id)

@@ -32,6 +32,8 @@ namespace WebFayre.Controllers
 
             ViewBag.StandShoppingCart = HttpContext.Session.GetObject<StandShoppingCart>("StandShoppingCart");
             var prodList = _context.Produtos.Include(s => s.Stand).Where(s => s.StandId == id);
+            var stand = await _context.Stands.Where(p => p.IdStand == id).FirstOrDefaultAsync();
+            ViewBag.NomeStand = stand.Nome;
             return View(await prodList.ToListAsync());
         }
 

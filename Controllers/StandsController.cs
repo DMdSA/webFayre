@@ -31,6 +31,8 @@ namespace WebFayre.Controllers
         public async Task<IActionResult> StandsByFeira(int id)
         {
             var standlist = _context.Stands.Include(s => s.Feira).Include(s => s.StandTipo).Where(s => s.FeiraId == id);
+            var feira = await _context.Feiras.Where(s => s.IdFeira == id).FirstOrDefaultAsync();
+            ViewBag.NomeFeira = feira.Nome;
             return View(await standlist.ToListAsync());
         }
 
