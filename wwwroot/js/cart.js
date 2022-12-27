@@ -3,9 +3,6 @@
 
 // Write your JavaScript code.
 
-//alert(standCart.FeiraId)
-//alert(standCart.StandId)
-//
 
 const cartId = "standCart"
 var official_cart;
@@ -75,23 +72,26 @@ function decrementValue(productId) {
     }
 }
 
-function addProduct(productId, price, iva) {
+function addProduct(productId, price, iva, stock) {
 
     if (productId in official_cart.Products) {
 
         // se já existir, o preço e a quantidade devem ser atualizados
+        if (((official_cart.Products)[productId]).Quantity < stock) {
 
-        ((official_cart.Products)[productId]).FinalPrice += price;
-        ++((official_cart.Products)[productId]).Quantity;
+            ((official_cart.Products)[productId]).FinalPrice += price;
+            ++((official_cart.Products)[productId]).Quantity;
+            incrementValue(productId);
+        }
     }
     else {
 
         // se nao existir, deve ser criada uma entrada para esse produto
         ((official_cart.Products)[productId]) = { Id: productId, Quantity: 1, FinalPrice: price, IVA: iva}
+        incrementValue(productId);
     }
     //console.log(official_cart);
     sessionStorage.setItem("standCart", JSON.stringify(official_cart));
-    incrementValue(productId);
 
 }
 

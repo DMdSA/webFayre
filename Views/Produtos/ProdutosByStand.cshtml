@@ -15,10 +15,6 @@
 
 <button onclick="transplantCart()">Transplantar</button>
 
-<!-- cartObject.FeiraId  -->
-<!-- cartObject.StandId  -->
-<!-- cartObject.Products -->
-
 
 <p>
     <a asp-action="Create">Create New</a>
@@ -70,8 +66,8 @@
                         var price = item.Preco.ToString().Replace(",", ".");
                         var iva = item.Iva.ToString().Replace(",", ".");
                     }
-                    <button onclick="addProduct(@item.IdProduto, @price, @iva)">Adicionar</button>
-                    <input type="number" id="@item.IdProduto" value="0" min="0" readonly/>
+                    <button onclick="addProduct(@item.IdProduto, @price, @iva, @item.Stock)">Adicionar</button>
+                    <input type="number" id="@item.IdProduto" value="0" min="0" max="@item.Stock" readonly/>
                     <button onclick="removeProduct(@item.IdProduto, @price)">Remover</button>
 
                     <a asp-action="Details" asp-route-id="@item.IdProduto">Details</a> |
