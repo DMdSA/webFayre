@@ -4,6 +4,8 @@ using WebFayre.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using System;
+using System.Runtime.Intrinsics.X86;
+using WebFayre.Common;
 
 namespace WebFayre.Controllers
 {
@@ -88,15 +90,18 @@ namespace WebFayre.Controllers
         }
 
 
-        [HttpPost]
-        public ActionResult Logout(int? id)
+        public ActionResult Logout()
         {
             //< a asp - action = "Details" asp - route - id = "@item.IdFuncionario" > Details </ a > |
-            //if (HttpContext.Session.GetInt32("utilizadorId") != null)
-            // logout
-            HttpContext.Session.Clear();
-            HttpContext.Session.Remove("utilizadorId");
-            HttpContext.Session.Remove("utilizadorNome");
+            if (HttpContext.Session.GetInt32("utilizadorId") != null)
+            {
+
+                // logout
+                HttpContext.Session.Clear();
+                HttpContext.Session.Remove("utilizadorId");
+                HttpContext.Session.Remove("utilizadorNome");
+                HttpContext.Session.Remove("StandShoppingCart");
+            }
 
             return RedirectToAction("login", "home");
         }
