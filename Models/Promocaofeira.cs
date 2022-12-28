@@ -19,5 +19,5 @@ public partial class Promocaofeira
 
     public int IdFuncionario { get; set; }
 
-    public virtual Utilizador IdUtilizadorNavigation { get; set; } = null!;
+    public virtual Utilizador? IdUtilizadorNavigation { get; set; } = null!;
 }

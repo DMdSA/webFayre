@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "omtLOvJsIWt+aM/R365tMTi0hRi5fdjO+Byt8GX8ONwdQKS7M64Vs2eObwn8T6IVF+aRu0aO2LTZsT9xs/rrbg==",
+  "dgSpecHash": "etpsj/WLqDYtX/RqBt6ggb24Q92c8p8OPLEEBBFglnoGXZWf00Y15Gg8xKWvpbduXIrjP2rhwXeM8hTcNWxhzw==",
   "success": true,
-  "projectFilePath": "D:\\my_dir\\UNIVERSIDADE MINHO\\4ano\\LI_IV\\webFayre\\WebFayre\\WebFayre.csproj",
+  "projectFilePath": "C:\\Users\\diogo\\Documents\\GitHub\\webFayre\\WebFayre.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\diogo\\.nuget\\packages\\azure.core\\1.24.0\\azure.core.1.24.0.nupkg.sha512",
     "C:\\Users\\diogo\\.nuget\\packages\\azure.identity\\1.6.0\\azure.identity.1.6.0.nupkg.sha512",
@@ -108,7 +108,7 @@
     "C:\\Users\\diogo\\.nuget\\packages\\microsoft.win32.systemevents\\6.0.0\\microsoft.win32.systemevents.6.0.0.nupkg.sha512",
     "C:\\Users\\diogo\\.nuget\\packages\\mono.texttemplating\\2.2.1\\mono.texttemplating.2.2.1.nupkg.sha512",
     "C:\\Users\\diogo\\.nuget\\packages\\netstandard.library\\1.6.1\\netstandard.library.1.6.1.nupkg.sha512",
-    "C:\\Users\\diogo\\.nuget\\packages\\newtonsoft.json\\13.0.1\\newtonsoft.json.13.0.1.nupkg.sha512",
+    "C:\\Users\\diogo\\.nuget\\packages\\newtonsoft.json\\13.0.2\\newtonsoft.json.13.0.2.nupkg.sha512",
     "C:\\Users\\diogo\\.nuget\\packages\\newtonsoft.json.bson\\1.0.2\\newtonsoft.json.bson.1.0.2.nupkg.sha512",
     "C:\\Users\\diogo\\.nuget\\packages\\nuget.common\\6.3.1\\nuget.common.6.3.1.nupkg.sha512",
     "C:\\Users\\diogo\\.nuget\\packages\\nuget.configuration\\6.3.1\\nuget.configuration.6.3.1.nupkg.sha512",
@@ -135,6 +135,8 @@
     "C:\\Users\\diogo\\.nuget\\packages\\runtime.ubuntu.14.04-x64.runtime.native.system.security.cryptography.openssl\\4.3.0\\runtime.ubuntu.14.04-x64.runtime.native.system.security.cryptography.openssl.4.3.0.nupkg.sha512",
     "C:\\Users\\diogo\\.nuget\\packages\\runtime.ubuntu.16.04-x64.runtime.native.system.security.cryptography.openssl\\4.3.0\\runtime.ubuntu.16.04-x64.runtime.native.system.security.cryptography.openssl.4.3.0.nupkg.sha512",
     "C:\\Users\\diogo\\.nuget\\packages\\runtime.ubuntu.16.10-x64.runtime.native.system.security.cryptography.openssl\\4.3.0\\runtime.ubuntu.16.10-x64.runtime.native.system.security.cryptography.openssl.4.3.0.nupkg.sha512",
+    "C:\\Users\\diogo\\.nuget\\packages\\syncfusion.ej2.aspnet.core\\20.4.0.40\\syncfusion.ej2.aspnet.core.20.4.0.40.nupkg.sha512",
+    "C:\\Users\\diogo\\.nuget\\packages\\syncfusion.licensing\\20.4.0.40\\syncfusion.licensing.20.4.0.40.nupkg.sha512",
     "C:\\Users\\diogo\\.nuget\\packages\\system.appcontext\\4.3.0\\system.appcontext.4.3.0.nupkg.sha512",
     "C:\\Users\\diogo\\.nuget\\packages\\system.buffers\\4.5.1\\system.buffers.4.5.1.nupkg.sha512",
     "C:\\Users\\diogo\\.nuget\\packages\\system.codedom\\4.4.0\\system.codedom.4.4.0.nupkg.sha512",

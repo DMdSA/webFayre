@@ -45,7 +45,7 @@ public partial class WebFayreContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Server=LAPTOP-8VUUH6OV; Database=webFayre;Trusted_Connection=True;TrustServerCertificate=True;");
+        => optionsBuilder.UseSqlServer("Server=LAPTOP-QEF35SJ2; Database=webFayre;Trusted_Connection=True;TrustServerCertificate=True;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -98,40 +98,40 @@ public partial class WebFayreContext : DbContext
                 .HasColumnName("telefone");
 
             entity.HasMany(d => d.FeiraCategoria1s).WithMany(p => p.Feiras)
-                .UsingEntity<Dictionary<string, object>>(
-                    "FeiraCategoria",
-                    r => r.HasOne<Categoriafeira>().WithMany()
-                        .HasForeignKey("feira_categoria")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("feira_categorias$categoria_feira"),
-                    l => l.HasOne<Feira>().WithMany()
-                        .HasForeignKey("feira_id")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("feira_categorias$id_feira"),
-                    j =>
-                    {
-                        j.HasKey("feira_id", "feira_categoria").HasName("PK_feira_categorias_feira_id");
-                        j.ToTable("feira_categorias", "webfayre");
-                        j.HasIndex(new[] { "feira_categoria" }, "categoria_feira_idx");
-                    });
+                 .UsingEntity<Dictionary<string, object>>(
+                     "FeiraCategoria",
+                     r => r.HasOne<Categoriafeira>().WithMany()
+                         .HasForeignKey("feira_categoria")
+                         .OnDelete(DeleteBehavior.ClientSetNull)
+                         .HasConstraintName("feira_categorias$categoria_feira"),
+                     l => l.HasOne<Feira>().WithMany()
+                         .HasForeignKey("feira_id")
+                         .OnDelete(DeleteBehavior.ClientSetNull)
+                         .HasConstraintName("feira_categorias$id_feira"),
+                     j =>
+                     {
+                         j.HasKey("feira_id", "feira_categoria").HasName("PK_feira_categorias_feira_id");
+                         j.ToTable("feira_categorias", "webfayre");
+                         j.HasIndex(new[] { "feira_categoria" }, "categoria_feira_idx");
+                     });
 
             entity.HasMany(d => d.Patrocinadors).WithMany(p => p.Feiras)
                 .UsingEntity<Dictionary<string, object>>(
                     "PatrocinadorFeira",
                     r => r.HasOne<Patrocinador>().WithMany()
-                        .HasForeignKey("PatrocinadorId")
+                        .HasForeignKey("patrocinador_id")
                         .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("patrocinador_feira$patrocinador_id"),
+                        .HasConstraintName("patrocinador_feira$patrocinador_id"),//???
                     l => l.HasOne<Feira>().WithMany()
-                        .HasForeignKey("FeiraId")
+                        .HasForeignKey("feira_id")
                         .OnDelete(DeleteBehavior.ClientSetNull)
                         .HasConstraintName("patrocinador_feira$feira_id"),
                     j =>
                     {
-                        j.HasKey("FeiraId", "PatrocinadorId").HasName("PK_patrocinador_feira_feira_id");
+                        j.HasKey("feira_id", "patrocinador_id").HasName("PK_patrocinador_feira_feira_id");
                         j.ToTable("patrocinador_feira", "webfayre");
-                        j.HasIndex(new[] { "FeiraId" }, "feira_id_idx");
-                        j.HasIndex(new[] { "PatrocinadorId" }, "patrocinador_id_idx");
+                        j.HasIndex(new[] { "feira_id" }, "feira_id_idx");
+                        j.HasIndex(new[] { "patrocinador_id" }, "patrocinador_id_idx");
                     });
         });
 
@@ -246,9 +246,7 @@ public partial class WebFayreContext : DbContext
 
             entity.HasIndex(e => e.IdUtilizador, "id_utilizador_idx");
 
-            entity.Property(e => e.IdPromocaoFeira)
-                .ValueGeneratedNever()
-                .HasColumnName("id_promocao_feira");
+            entity.Property(e => e.IdPromocaoFeira).HasColumnName("id_promocao_feira");
             entity.Property(e => e.CapacidadeUtilizadores).HasColumnName("capacidade_utilizadores");
             entity.Property(e => e.Descricao)
                 .HasMaxLength(200)

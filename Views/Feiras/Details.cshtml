@@ -78,8 +78,18 @@
             @foreach (var category in Model.FeiraCategoria1s)
             {
                 @Html.DisplayFor(m => category.Descricao)
+
             }
-            
+        <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Patrocinadors)
+        </dt>
+        <dd class="col-sm-10">
+
+                @foreach (var patrocinador in Model.Patrocinadors)
+                {
+                    @Html.DisplayFor(m => patrocinador.Nome)
+
+                }
 
         </dd>
     </dl>
