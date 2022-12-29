@@ -5,7 +5,7 @@ namespace WebFayre.Models;
 
 public partial class VendaProduto
 {
-    public string VendaId { get; set; } = null!;
+    public int VendaId { get; set; }
 
     public int ProdutoId { get; set; }
 

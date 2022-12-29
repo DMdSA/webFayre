@@ -47,7 +47,7 @@ namespace WebFayre.Controllers
         // GET: Promocaofeiras/Create
         public IActionResult Create()
         {
-            //ViewData["IdUtilizador"] = new SelectList(_context.Utilizadors, "Id", "Id");
+            ViewData["IdUtilizador"] = new SelectList(_context.Utilizadors, "Id", "Id");
             return View();
         }
 
@@ -60,14 +60,11 @@ namespace WebFayre.Controllers
         {
             if (ModelState.IsValid)
             {
-                var userid = HttpContext.Session.GetInt32("utilizadorId");
-                promocaofeira.IdUtilizador = (int)userid;
-                promocaofeira.IdFuncionario = 2;
                 _context.Add(promocaofeira);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            //ViewData["IdUtilizador"] = new SelectList(_context.Utilizadors, "Id", "Id", promocaofeira.IdUtilizador);
+            ViewData["IdUtilizador"] = new SelectList(_context.Utilizadors, "Id", "Id", promocaofeira.IdUtilizador);
             return View(promocaofeira);
         }
 

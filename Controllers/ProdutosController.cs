@@ -27,14 +27,20 @@ namespace WebFayre.Controllers
             return View(await webFayreContext.ToListAsync());
         }
 
-        public async Task<IActionResult> ProdutosByStand(int id)
+        public async Task<IActionResult> ProdutosByStand(int feiraId, int id)
         {
-
-            ViewBag.StandShoppingCart = HttpContext.Session.GetObject<StandShoppingCart>("StandShoppingCart");
+            StandShoppingCart ssc = new StandShoppingCart();
+            ssc.StandId = id;
+            ssc.FeiraId = feiraId;
+            ssc.Products = new List<ProductInfo>();
+            ViewBag.StandShoppingCart = ssc;
+            //if (HttpContext.Session.GetObject<StandShoppingCart>("StandShoppingCart") != null)
+            //    ViewBag.StandShoppingCart = HttpContext.Session.GetObject<StandShoppingCart>("StandShoppingCart");
             
             var prodList = _context.Produtos.Include(s => s.Stand).Where(s => s.StandId == id);
             var stand = await _context.Stands.Where(p => p.IdStand == id).FirstOrDefaultAsync();
-            ViewBag.NomeStand = stand.Nome;
+            if (stand != null)
+                ViewBag.NomeStand = stand.Nome;
             return View(await prodList.ToListAsync());
         }
 

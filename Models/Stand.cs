@@ -19,7 +19,7 @@ public partial class Stand
     public short Disponibilidade { get; set; }
 
     public string? Morada { get; set; }
-
+    
     [ForeignKey("stand_feira_id")]
     public int FeiraId { get; set; }
 
@@ -35,6 +35,8 @@ public partial class Stand
     public virtual TipoStand? StandTipo { get; set; } = null!;
 
     public virtual ICollection<Standstaff> Standstaffs { get; } = new List<Standstaff>();
+
+    public virtual ICollection<Vendum> Venda { get; } = new List<Vendum>();
 
     public virtual ICollection<Patrocinador> IdPatrocinadors { get; } = new List<Patrocinador>();
 }

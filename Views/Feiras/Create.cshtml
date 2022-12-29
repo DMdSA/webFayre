@@ -70,6 +70,14 @@
                 <label asp-for="Patrocinadors" class="control-label"></label>
                 @Html.DropDownListFor(x => x.Patrocinadors, ((MultiSelectList)ViewBag.Patrocinadores),"Select",new {multiple = "multiple"})
             </div>
+            <div>
+            @{
+                var data = new string[] { "Badminton", "Basketball", "Cricket", "Football", "Golf", "Gymnastics", "Hockey", "Tennis" };
+            }
+
+                <ejs-multiselect id="games" [dataSource]="data" [placeholder]="Favorite Sports">epa</ejs-multiselect>
+                <ejs-calendar id="oi"></ejs-calendar>
+            </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>

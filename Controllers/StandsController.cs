@@ -5,8 +5,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using WebFayre.Common;
 using WebFayre.Models;
 
@@ -22,7 +20,7 @@ namespace WebFayre.Controllers
         }
 
         // GET: Stands
-        public async Task<IActionResult> Index(int id)
+        public async Task<IActionResult> Index()
         {
             var webFayreContext = _context.Stands.Include(s => s.Feira).Include(s => s.StandTipo);
             return View(await webFayreContext.ToListAsync());
@@ -166,13 +164,13 @@ namespace WebFayre.Controllers
             {
                 return Problem("Entity set 'WebFayreContext.Stands'  is null.");
             }
-            
+
             var stand = await _context.Stands.FindAsync(id, feiraId);
             if (stand != null)
             {
                 _context.Stands.Remove(stand);
             }
-            
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
@@ -182,21 +180,17 @@ namespace WebFayre.Controllers
           return (_context.Stands?.Any(e => e.IdStand == id)).GetValueOrDefault();
         }
 
-
         public async Task<IActionResult> Enter(int feiraId, int id)
         {
 
             if (StandExists(id))
             {
 
-                StandShoppingCart ssc = new StandShoppingCart();
-                ssc.StandId = id;
-                ssc.FeiraId = feiraId;
-                ssc.Products = new List<ProductInfo>();
+                
 
-                HttpContext.Session.SetObject("StandShoppingCart", ssc);
+                //HttpContext.Session.SetObject("StandShoppingCart", ssc);
 
-                return RedirectToAction("produtosByStand", "produtos", new { id }); //Redirect para um href com o id do stand
+                return RedirectToAction("produtosByStand", "produtos", new { feiraId, id }); //Redirect para um href com o id do stand
             }
 
             return NotFound();
@@ -212,10 +206,7 @@ namespace WebFayre.Controllers
             int standId = ssc.StandId;
             int feiraId = ssc.FeiraId;
 
-            return new JsonResult(new {data = ssc});
+            return new JsonResult(new { data = ssc });
         }
-
     }
-
-
 }

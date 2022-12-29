@@ -45,7 +45,7 @@ public partial class WebFayreContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Server=LAPTOP-QEF35SJ2; Database=webFayre;Trusted_Connection=True;TrustServerCertificate=True;");
+        => optionsBuilder.UseSqlServer("Server=LAPTOP-8VUUH6OV; Database=webFayre;Trusted_Connection=True;TrustServerCertificate=True;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -98,22 +98,22 @@ public partial class WebFayreContext : DbContext
                 .HasColumnName("telefone");
 
             entity.HasMany(d => d.FeiraCategoria1s).WithMany(p => p.Feiras)
-                 .UsingEntity<Dictionary<string, object>>(
-                     "FeiraCategoria",
-                     r => r.HasOne<Categoriafeira>().WithMany()
-                         .HasForeignKey("feira_categoria")
-                         .OnDelete(DeleteBehavior.ClientSetNull)
-                         .HasConstraintName("feira_categorias$categoria_feira"),
-                     l => l.HasOne<Feira>().WithMany()
-                         .HasForeignKey("feira_id")
-                         .OnDelete(DeleteBehavior.ClientSetNull)
-                         .HasConstraintName("feira_categorias$id_feira"),
-                     j =>
-                     {
-                         j.HasKey("feira_id", "feira_categoria").HasName("PK_feira_categorias_feira_id");
-                         j.ToTable("feira_categorias", "webfayre");
-                         j.HasIndex(new[] { "feira_categoria" }, "categoria_feira_idx");
-                     });
+                .UsingEntity<Dictionary<string, object>>(
+                    "FeiraCategoria",
+                    r => r.HasOne<Categoriafeira>().WithMany()
+                        .HasForeignKey("feira_categoria")
+                        .OnDelete(DeleteBehavior.ClientSetNull)
+                        .HasConstraintName("feira_categorias$categoria_feira"),
+                    l => l.HasOne<Feira>().WithMany()
+                        .HasForeignKey("feira_id")
+                        .OnDelete(DeleteBehavior.ClientSetNull)
+                        .HasConstraintName("feira_categorias$id_feira"),
+                    j =>
+                    {
+                        j.HasKey("feira_id", "feira_categoria").HasName("PK_feira_categorias_feira_id");
+                        j.ToTable("feira_categorias", "webfayre");
+                        j.HasIndex(new[] { "feira_categoria" }, "categoria_feira_idx");
+                    });
 
             entity.HasMany(d => d.Patrocinadors).WithMany(p => p.Feiras)
                 .UsingEntity<Dictionary<string, object>>(
@@ -455,9 +455,7 @@ public partial class WebFayreContext : DbContext
 
             entity.HasIndex(e => e.ProdutoId, "produto_id_idx");
 
-            entity.Property(e => e.VendaId)
-                .HasMaxLength(45)
-                .HasColumnName("venda_id");
+            entity.Property(e => e.VendaId).HasColumnName("venda_id");
             entity.Property(e => e.ProdutoId).HasColumnName("produto_id");
             entity.Property(e => e.Preco)
                 .HasColumnType("decimal(6, 2)")
@@ -487,15 +485,11 @@ public partial class WebFayreContext : DbContext
 
             entity.HasIndex(e => e.UtilizadorId, "utilizador_id_idx");
 
-            entity.Property(e => e.IdVenda)
-                .HasMaxLength(45)
-                .HasColumnName("id_venda");
+            entity.Property(e => e.IdVenda).HasColumnName("id_venda");
             entity.Property(e => e.Data)
                 .HasColumnType("date")
                 .HasColumnName("data");
-            entity.Property(e => e.StandId)
-                .HasMaxLength(45)
-                .HasColumnName("stand_id");
+            entity.Property(e => e.StandId).HasColumnName("stand_id");
             entity.Property(e => e.Total)
                 .HasColumnType("decimal(7, 2)")
                 .HasColumnName("total");
@@ -503,6 +497,12 @@ public partial class WebFayreContext : DbContext
             entity.Property(e => e.ValorRegateio)
                 .HasColumnType("decimal(7, 2)")
                 .HasColumnName("valor_regateio");
+
+            entity.HasOne(d => d.Stand).WithMany(p => p.Venda)
+                .HasPrincipalKey(p => p.IdStand)
+                .HasForeignKey(d => d.StandId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_venda_stand");
 
             entity.HasOne(d => d.Utilizador).WithMany(p => p.Venda)
                 .HasForeignKey(d => d.UtilizadorId)
