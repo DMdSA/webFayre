@@ -35,6 +35,12 @@ namespace WebFayre.Controllers
             }
         }
 
+        // POST: Feiras/SearchResults
+        public async Task<IActionResult> SearchResults(String searchTerm)
+        {
+            return View("Index", await _context.Feiras.Where( f => f.Nome.Contains(searchTerm)).ToListAsync());
+        }
+
         // GET: Feiras/Details/5
         public async Task<IActionResult> Details(int? id)
         {

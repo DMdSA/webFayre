@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using WebFayre.Models;
 using Microsoft.AspNetCore.Http;
@@ -18,9 +18,13 @@ namespace WebFayre.Controllers
             _logger = logger;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> IndexAsync()
         {
-            return View();
+            WebFayreContext wfc = new WebFayreContext();
+
+            return wfc.Feiras != null ?
+                    View(await wfc.Feiras.ToListAsync()) :
+                    Problem("Entity set 'WebFayreContext.Feiras'  is null.");
         }
 
         public IActionResult Privacy()

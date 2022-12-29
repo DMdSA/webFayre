@@ -1,5 +1,16 @@
 ﻿@import url('https://fonts.googleapis.com/css?family=Poppins:400,500,700');
 
+
+/*-- General style to all pages --*/
+/*-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! --*/
+*, *::after, *::before{
+    box-sizing: border-box;
+}
+
+:root{
+    --handle-size: 3rem;
+    --img-gap: 0.25rem;
+}
 html{
     height: 100%;
     width: 100%;
@@ -8,15 +19,28 @@ html{
 }
 body {
     background: url('../img/webFayre_bg.png') no-repeat center center fixed;
-    -webkit-background-size: cover;
-    -moz-background-size: cover;
     background-size: cover;
-    -o-background-size: cover;
     height: 100%;
     width: 100%;
     font-family: 'Poppins', sans-serif;
-    color: #222;
+    color: white;
+    margin: 0;
 }
+
+/*-- Bottom of the page styling starts --*/
+#footer {
+    padding: 2rem;
+    background-color: #3f3f3f;
+    color: #d5d5d5;
+}
+
+hr.light {
+    border-top: 1px solid #d5d5d5;
+    width: 75%;
+    margin-top: .8rem;
+    margin-bottom: 1rem;
+}
+/*-- Bottom of the page styling ends --*/
 
 /* 1 rem/em = 16px */
 .navbar{
@@ -65,30 +89,140 @@ body {
     width:100%;
     margin-bottom: 2rem;
 }
-
-/*-- Bottom of the page styling starts --*/
-footer {
-    background-color: #3f3f3f;
-    color: #d5d5d5;
-    padding-top: 2rem;
-}
-
-hr.light{
-    border-top: 1px solid #d5d5d5;
-    width: 75%;
-    margin-top: .8rem;
-    margin-bottom: 1rem;
-}
-/*-- Bottom of the page styling ends --*/
+/*-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! --*/
 
 
+
+/*-- Search bar and Carousel displayed on index page --*/
+/*-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! --*/
 .search-bar {
     width:65%;
     margin: 0 auto;
 }
 
+/*-- Container where the carousel will be displayed --*/
+.carousel-container{
+    display: flex;
+    justify-content: center;
+    overflow: hidden;
+}
 
-/*-- Favorites display home page --*/
+.carousel-slider{
+    --cards-per-screen: 5;
+    --slider-index: 0;
+    display: flex;
+    flex-grow: 1;
+    margin: 0 var(--img-gap);
+    transform: translateX(calc(var(--slider-index) * -100%));
+    transition: transform 250ms ease-in-out;
+    
+}
+
+.card {
+    flex: 0 0 calc(100%/ var(--cards-per-screen));
+    max-width: calc(100%/ var(--cards-per-screen));
+    aspect-ratio: 16/9;
+    padding: var(--img-gap);
+    border-radius: 1rem;
+    box-shadow: 2px 6px 8px 0 rgba(22, 22, 26, .18);
+    color: orangered;
+}
+
+
+.card-body > img {
+    /*-- flex grow 0, flex shrink 0, width is 25%  --*/
+    /*--flex: 0 0 25%;--*/
+    max-width:100%;
+    aspect-ratio: 16/9;
+    padding: var(--img-gap);
+    border-radius: 1rem;
+}
+
+.carousel-handler {
+    border: none;
+    border-radius: .75rem;
+    flex-grow: 0;
+    flex-shrink: 0;
+    background-color: rgba(255,69,0, .25);
+    z-index: 10;
+    margin: var(--img-gap) 0;
+    width: var(--handle-size);
+    
+}
+
+.carousel-handler:hover,
+.carousel-handler:focus {
+    background-color: rgba(255,69,0, .5);
+}
+
+.carousel-handler:hover .carousel-control-prev-icon {
+    transform: scale(1.2);
+}
+
+.carousel-handler:hover .carousel-control-next-icon {
+    transform: scale(1.2);
+}
+.previous {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+.next{
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.carousel:hover {
+    background-color: rgba(0 ,0 ,0, .5);
+}
+
+.slider-row {
+}
+
+.slider-header {
+    display: flex;
+    justify-content: space-between;
+    padding: .5rem calc(var(--img-gap) * 2 + var(--handle-size));
+    align-items: center;
+}
+
+.fav{
+    font-size: 2rem;
+    margin: 0;
+}
+
+.slider-track{
+    display: flex;
+    gap: .25rem;
+}
+
+.track-item {
+    flex: 0 0 2rem;
+    min-width: 2rem;
+    height: .3em;
+    background-color: rgba(249, 105, 14, .65);
+}
+
+.track-item.active {
+    background-color: rgba(249, 105, 14, 1);
+}
+/*-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! --*/
+
+
+/*-- LOGIN PAGE STYLE--*/
+/*-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! --*/
+
+.form-login {
+    width: 30%;
+    margin: 0 auto;
+    padding: 2rem 4rem;
+    -webkit-box-shadow: -1px 4px 26px 11px rgba(0, 0, 0, 0.75);
+    -moz-box-shadow: -1px 4px 26px 11px rgba(0, 0, 0, 0.75);
+    box-shadow: -1px 4px 26px 11px rgba(0, 0, 0, 0.75);
+}
+
+
+/*-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! --*/
+/*-- Favorites display home page 
 .img-wrapper{
     max-width: 100%;
     height: 13em;
@@ -100,7 +234,7 @@ img{
 .carousel-inner{
     display: flex;
     padding: 7em;
-    width: 90%;
+    width: 100%;
 }
 
 .carousel-item{
@@ -131,24 +265,28 @@ img{
     text-shadow: 1px 1px 10px #000;
     padding-bottom: 1rem;
 }
-
-
-.card{
-    margin: 0 .5em;
-    border-radius: 0;
-    box-shadow: 2px 6px 8px 0 rgba(22, 22, 26, .18)
+.card {
+margin: 0 .5em;
+border-radius: 0;
+box-shadow: 2px 6px 8px 0 rgba(22, 22, 26, .18)
 }
+
+
+    --*/
 
 
 
 /*---Media Queries --*/
 @media (max-width: 992px) {
+
 }
 
 @media (max-width: 768px) {
+
 }
 
 @media (max-width: 576px) {
+
 }
 
 
