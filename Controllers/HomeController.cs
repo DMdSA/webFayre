@@ -1,11 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using WebFayre.Models;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Routing;
-using System;
-using System.Runtime.Intrinsics.X86;
-using WebFayre.Common;
+using Microsoft.EntityFrameworkCore;
 
 namespace WebFayre.Controllers
 {
