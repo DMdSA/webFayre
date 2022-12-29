@@ -20,11 +20,19 @@ namespace WebFayre.Controllers
         }
 
         // GET: Feiras
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string nameFeira)
         {
-            return _context.Feiras != null ?
-                    View(await _context.Feiras.ToListAsync()) :
-                    Problem("Entity set 'WebFayreContext.Feiras'  is null.");
+            if (String.IsNullOrEmpty(nameFeira))
+            {
+                return _context.Feiras != null ?
+                        View(await _context.Feiras.ToListAsync()) :
+                        Problem("Entity set 'WebFayreContext.Feiras'  is null.");
+            }
+            else
+            {
+                var searchItems = await _context.Feiras.Where(s => s.Nome.Contains(nameFeira)).ToListAsync();
+                return View(searchItems);
+            }
         }
 
         // GET: Feiras/Details/5
@@ -55,7 +63,8 @@ namespace WebFayre.Controllers
         public IActionResult Create()
         {
 
-            ViewData["Categorias"] = new SelectList(_context.Categoriafeiras, "IdCategoriaFeira", "Descricao");
+            ViewData["Categorias"] = new MultiSelectList(_context.Categoriafeiras, "IdCategoriaFeira", "Descricao");
+            ViewData["Patrocinadores"] = new MultiSelectList(_context.Patrocinadors, "IdPatrocinador", "Nome");
             return View();
         }
 
@@ -64,9 +73,9 @@ namespace WebFayre.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("IdFeira,Descricao,Nome,DataInicio,DataFim,CapacidadeClientes,NStands,Email,Telefone,Morada,FeiraPath,FeiraCategoria1s")] Feira feira)
+        public async Task<IActionResult> Create([Bind("IdFeira,Descricao,Nome,DataInicio,DataFim,CapacidadeClientes,NStands,Email,Telefone,Morada,FeiraPath,FeiraCategoria1s,Patrocinadors")] Feira feira)
         {
-            await _context.Feiras.Include(x => x.FeiraCategoria1s).LoadAsync();
+            await _context.Feiras.Include(x => x.FeiraCategoria1s).Include(x => x.Patrocinadors).LoadAsync();
 
             if (ModelState.IsValid)
             {
@@ -74,8 +83,14 @@ namespace WebFayre.Controllers
                 var category_ids = category_values.AttemptedValue.Split(",");
                 var category_idsList = category_ids.Select(int.Parse).ToList();
 
+                var patroc_values = ModelState.Values.ToList()[10];
+                var patroc_ids = patroc_values.AttemptedValue.Split(",");
+                var patroc_idsList = patroc_ids.Select(int.Parse).ToList();
+
                 var category_entities = _context.Categoriafeiras.Where(x => category_idsList.Contains(x.IdCategoriaFeira));
+                var patroc_entities = _context.Patrocinadors.Where(x => patroc_idsList.Contains(x.IdPatrocinador));
                 feira.FeiraCategoria1s.AddRange(category_entities);
+                feira.Patrocinadors.AddRange(patroc_entities);
 
                 _context.Add(feira).Collection(c => c.FeiraCategoria1s);
                 await _context.SaveChangesAsync();
@@ -84,6 +99,7 @@ namespace WebFayre.Controllers
 
 
             ViewData["Categorias"] = new MultiSelectList(_context.Categoriafeiras, "IdCategoriaFeira", "Descricao", feira.FeiraCategoria1s);
+            ViewData["Patrocinadores"] = new MultiSelectList(_context.Patrocinadors, "IdPatrocinador", "Nome", feira.Patrocinadors);
 
 
             return View(feira);
@@ -103,13 +119,7 @@ namespace WebFayre.Controllers
                 return NotFound();
             }
             ViewData["Categorias"] = new MultiSelectList(_context.Categoriafeiras, "IdCategoriaFeira", "Descricao", feira.FeiraCategoria1s);
-            List<SelectListItem> list = new List<SelectListItem>();
-
-            foreach (var cat in _context.Categoriafeiras)
-            {
-                list.Add(new SelectListItem() { Value = cat.IdCategoriaFeira.ToString(), Text = cat.Descricao });
-            }
-            ViewBag.Categorias = list;
+            ViewData["Patrocinadores"] = new MultiSelectList(_context.Patrocinadors, "IdPatrocinador", "Nome", feira.Patrocinadors);
             return View(feira);
         }
 
@@ -118,7 +128,7 @@ namespace WebFayre.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("IdFeira,Descricao,Nome,DataInicio,DataFim,CapacidadeClientes,NStands,Email,Telefone,Morada,FeiraPath,FeiraCategoria1s")] Feira feira)
+        public async Task<IActionResult> Edit(int id, [Bind("IdFeira,Descricao,Nome,DataInicio,DataFim,CapacidadeClientes,NStands,Email,Telefone,Morada,FeiraPath,FeiraCategoria1s,Patrocinadors")] Feira feira)
         {
             if (id != feira.IdFeira)
             {
@@ -129,6 +139,27 @@ namespace WebFayre.Controllers
             {
                 try
                 {
+                    var category_values = ModelState.Values.ToList()[12];
+                    var category_ids = category_values.AttemptedValue.Split(",");
+                    var category_idsList = category_ids.Select(int.Parse).ToList();
+
+                    var patroc_values = ModelState.Values.ToList()[11];
+                    var patroc_ids = patroc_values.AttemptedValue.Split(",");
+                    var patroc_idsList = patroc_ids.Select(int.Parse).ToList();
+
+                    foreach (var category in feira.FeiraCategoria1s.ToList())
+                    {
+                        feira.FeiraCategoria1s.Remove(category);
+                    }
+                    foreach (var patrocinador in feira.Patrocinadors.ToList())
+                    {
+                        feira.Patrocinadors.Remove(patrocinador);
+                    }
+
+                    var category_entities = _context.Categoriafeiras.Where(x => category_idsList.Contains(x.IdCategoriaFeira));
+                    var patroc_entities = _context.Patrocinadors.Where(x => patroc_idsList.Contains(x.IdPatrocinador));
+                    feira.FeiraCategoria1s.AddRange(category_entities);
+                    feira.Patrocinadors.AddRange(patroc_entities);
                     _context.Update(feira);
                     await _context.SaveChangesAsync();
                 }
@@ -146,6 +177,7 @@ namespace WebFayre.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["FeiraCategoria1s"] = new MultiSelectList(_context.Categoriafeiras, "IdCategoriaFeira", "IdCategoriaFeira", feira.FeiraCategoria1s);
+            ViewData["Patrocinadores"] = new MultiSelectList(_context.Patrocinadors, "IdPatrocinador", "Nome", feira.Patrocinadors);
             return View(feira);
         }
 

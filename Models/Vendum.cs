@@ -5,7 +5,7 @@ namespace WebFayre.Models;
 
 public partial class Vendum
 {
-    public string IdVenda { get; set; } = null!;
+    public int IdVenda { get; set; }
 
     public DateTime Data { get; set; }
 
@@ -15,7 +15,9 @@ public partial class Vendum
 
     public int UtilizadorId { get; set; }
 
-    public string StandId { get; set; } = null!;
+    public int StandId { get; set; }
+
+    public virtual Stand Stand { get; set; } = null!;
 
     public virtual Utilizador Utilizador { get; set; } = null!;
 

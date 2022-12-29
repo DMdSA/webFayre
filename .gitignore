@@ -68,9 +68,6 @@ obj/Release/net7.0/WebFayre.csproj.AssemblyReference.cache
 obj/Release/net7.0/WebFayre.GeneratedMSBuildEditorConfig.editorconfig
 obj/WebFayre.csproj.nuget.dgspec.json
 obj/WebFayre.csproj.nuget.g.props
-Models/WebFayreContext.cs
-Models/WebFayreContext.cs
-obj/WebFayre.csproj.nuget.g.props
 .vs/
 obj/
 bin/

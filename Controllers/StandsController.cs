@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using WebFayre.Common;
 using WebFayre.Models;
 
 namespace WebFayre.Controllers
@@ -19,7 +20,7 @@ namespace WebFayre.Controllers
         }
 
         // GET: Stands
-        public async Task<IActionResult> Index(int id)
+        public async Task<IActionResult> Index()
         {
             var webFayreContext = _context.Stands.Include(s => s.Feira).Include(s => s.StandTipo);
             return View(await webFayreContext.ToListAsync());
@@ -28,6 +29,8 @@ namespace WebFayre.Controllers
         public async Task<IActionResult> StandsByFeira(int id)
         {
             var standlist = _context.Stands.Include(s => s.Feira).Include(s => s.StandTipo).Where(s => s.FeiraId == id);
+            var feira = await _context.Feiras.Where(s => s.IdFeira == id).FirstOrDefaultAsync();
+            ViewBag.NomeFeira = feira.Nome;
             return View(await standlist.ToListAsync());
         }
 
@@ -54,8 +57,8 @@ namespace WebFayre.Controllers
         // GET: Stands/Create
         public IActionResult Create()
         {
-            ViewData["FeiraId"] = new SelectList(_context.Feiras, "IdFeira", "IdFeira");
-            ViewData["StandTipoId"] = new SelectList(_context.TipoStands, "Id", "Id");
+            ViewData["FeiraId"] = new SelectList(_context.Feiras, "IdFeira", "Descricao");
+            ViewData["StandTipoId"] = new SelectList(_context.TipoStands, "Id", "Descricao");
             return View();
         }
 
@@ -72,8 +75,8 @@ namespace WebFayre.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["FeiraId"] = new SelectList(_context.Feiras, "IdFeira", "IdFeira", stand.FeiraId);
-            ViewData["StandTipoId"] = new SelectList(_context.TipoStands, "Id", "Id", stand.StandTipoId);
+            ViewData["FeiraId"] = new SelectList(_context.Feiras, "IdFeira", "Descricao", stand.FeiraId);
+            ViewData["StandTipoId"] = new SelectList(_context.TipoStands, "Id", "Descricao", stand.StandTipoId);
             return View(stand);
         }
 
@@ -161,13 +164,13 @@ namespace WebFayre.Controllers
             {
                 return Problem("Entity set 'WebFayreContext.Stands'  is null.");
             }
-            
+
             var stand = await _context.Stands.FindAsync(id, feiraId);
             if (stand != null)
             {
                 _context.Stands.Remove(stand);
             }
-            
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
@@ -177,28 +180,33 @@ namespace WebFayre.Controllers
           return (_context.Stands?.Any(e => e.IdStand == id)).GetValueOrDefault();
         }
 
-
-        public async Task<IActionResult> Enter(int id)
-        {   
-
-            //Se está no stand assume-se que está login?
-            // se não houver nenhuma session ativa, redirecionar para o login
-            //if (HttpContext.Session.GetInt32("utilizadorId") == null)
-            //{
-            //    return RedirectToAction("Login", "Home");
-            //}
-
-            // get current user id
-            //var userid = HttpContext.Session.GetInt32("utilizadorId");
+        public async Task<IActionResult> Enter(int feiraId, int id)
+        {
 
             if (StandExists(id))
             {
-                return RedirectToAction("produtosByStand", "produtoes", new { id }); //Redirect para um href com o id do stand
+
+                
+
+                //HttpContext.Session.SetObject("StandShoppingCart", ssc);
+
+                return RedirectToAction("produtosByStand", "produtos", new { feiraId, id }); //Redirect para um href com o id do stand
             }
 
             return NotFound();
         }
+
+        [HttpPost]
+        public async Task<JsonResult> ReadJsonCart([FromBody] StandShoppingCart ssc)
+        {
+            List<ProductInfo> products = ssc.Products;
+            products.RemoveAll(p => p == null);
+            ssc.Products = products;
+
+            int standId = ssc.StandId;
+            int feiraId = ssc.FeiraId;
+
+            return new JsonResult(new { data = ssc });
+        }
     }
-
-
 }

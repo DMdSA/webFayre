@@ -17,7 +17,9 @@ public partial class Promocaofeira
 
     public int IdUtilizador { get; set; }
 
-    public int IdFuncionario { get; set; }
+    public int? IdFuncionario { get; set; }
 
-    public virtual Utilizador IdUtilizadorNavigation { get; set; } = null!;
+    public virtual Funcionario? IdFuncionarioNavigation { get; set; }
+
+    public virtual Utilizador? IdUtilizadorNavigation { get; set; } = null!;
 }

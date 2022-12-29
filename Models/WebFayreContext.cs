@@ -119,19 +119,19 @@ public partial class WebFayreContext : DbContext
                 .UsingEntity<Dictionary<string, object>>(
                     "PatrocinadorFeira",
                     r => r.HasOne<Patrocinador>().WithMany()
-                        .HasForeignKey("PatrocinadorId")
+                        .HasForeignKey("patrocinador_id")
                         .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("patrocinador_feira$patrocinador_id"),
+                        .HasConstraintName("patrocinador_feira$patrocinador_id"),//???
                     l => l.HasOne<Feira>().WithMany()
-                        .HasForeignKey("FeiraId")
+                        .HasForeignKey("feira_id")
                         .OnDelete(DeleteBehavior.ClientSetNull)
                         .HasConstraintName("patrocinador_feira$feira_id"),
                     j =>
                     {
-                        j.HasKey("FeiraId", "PatrocinadorId").HasName("PK_patrocinador_feira_feira_id");
+                        j.HasKey("feira_id", "patrocinador_id").HasName("PK_patrocinador_feira_feira_id");
                         j.ToTable("patrocinador_feira", "webfayre");
-                        j.HasIndex(new[] { "FeiraId" }, "feira_id_idx");
-                        j.HasIndex(new[] { "PatrocinadorId" }, "patrocinador_id_idx");
+                        j.HasIndex(new[] { "feira_id" }, "feira_id_idx");
+                        j.HasIndex(new[] { "patrocinador_id" }, "patrocinador_id_idx");
                     });
         });
 
@@ -246,9 +246,7 @@ public partial class WebFayreContext : DbContext
 
             entity.HasIndex(e => e.IdUtilizador, "id_utilizador_idx");
 
-            entity.Property(e => e.IdPromocaoFeira)
-                .ValueGeneratedNever()
-                .HasColumnName("id_promocao_feira");
+            entity.Property(e => e.IdPromocaoFeira).HasColumnName("id_promocao_feira");
             entity.Property(e => e.CapacidadeUtilizadores).HasColumnName("capacidade_utilizadores");
             entity.Property(e => e.Descricao)
                 .HasMaxLength(200)
@@ -259,6 +257,10 @@ public partial class WebFayreContext : DbContext
             entity.Property(e => e.Nome)
                 .HasMaxLength(45)
                 .HasColumnName("nome");
+
+            entity.HasOne(d => d.IdFuncionarioNavigation).WithMany(p => p.Promocaofeiras)
+                .HasForeignKey(d => d.IdFuncionario)
+                .HasConstraintName("FK_promocaofeira_funcionario");
 
             entity.HasOne(d => d.IdUtilizadorNavigation).WithMany(p => p.Promocaofeiras)
                 .HasForeignKey(d => d.IdUtilizador)
@@ -457,9 +459,7 @@ public partial class WebFayreContext : DbContext
 
             entity.HasIndex(e => e.ProdutoId, "produto_id_idx");
 
-            entity.Property(e => e.VendaId)
-                .HasMaxLength(45)
-                .HasColumnName("venda_id");
+            entity.Property(e => e.VendaId).HasColumnName("venda_id");
             entity.Property(e => e.ProdutoId).HasColumnName("produto_id");
             entity.Property(e => e.Preco)
                 .HasColumnType("decimal(6, 2)")
@@ -489,15 +489,11 @@ public partial class WebFayreContext : DbContext
 
             entity.HasIndex(e => e.UtilizadorId, "utilizador_id_idx");
 
-            entity.Property(e => e.IdVenda)
-                .HasMaxLength(45)
-                .HasColumnName("id_venda");
+            entity.Property(e => e.IdVenda).HasColumnName("id_venda");
             entity.Property(e => e.Data)
                 .HasColumnType("date")
                 .HasColumnName("data");
-            entity.Property(e => e.StandId)
-                .HasMaxLength(45)
-                .HasColumnName("stand_id");
+            entity.Property(e => e.StandId).HasColumnName("stand_id");
             entity.Property(e => e.Total)
                 .HasColumnType("decimal(7, 2)")
                 .HasColumnName("total");
@@ -505,6 +501,12 @@ public partial class WebFayreContext : DbContext
             entity.Property(e => e.ValorRegateio)
                 .HasColumnType("decimal(7, 2)")
                 .HasColumnName("valor_regateio");
+
+            entity.HasOne(d => d.Stand).WithMany(p => p.Venda)
+                .HasPrincipalKey(p => p.IdStand)
+                .HasForeignKey(d => d.StandId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_venda_stand");
 
             entity.HasOne(d => d.Utilizador).WithMany(p => p.Venda)
                 .HasForeignKey(d => d.UtilizadorId)

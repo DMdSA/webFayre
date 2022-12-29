@@ -73,10 +73,9 @@
                 @Html.DisplayFor(modelItem => item.StandTipo.Id)
             </td>
             <td>
-                      <a asp-action="Enter" asp-route-id="@item.IdStand">ENTRAR</a> |
-                      <a asp-action="Edit" asp-route-id="@item.IdStand">Edit</a> |
-                      <a asp-action="Details" asp-route-id="@item.IdStand">Details</a> |
-                      <a asp-action="Delete" asp-route-id="@item.IdStand">Delete</a>
+                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
             </td>
         </tr>
 }
