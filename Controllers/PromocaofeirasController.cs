@@ -60,6 +60,9 @@ namespace WebFayre.Controllers
         {
             if (ModelState.IsValid)
             {
+                var userid = HttpContext.Session.GetInt32("utilizadorId");
+                promocaofeira.IdUtilizador = (int)userid;
+                promocaofeira.IdFuncionario = null;
                 _context.Add(promocaofeira);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));

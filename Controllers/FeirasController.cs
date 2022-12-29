@@ -20,11 +20,19 @@ namespace WebFayre.Controllers
         }
 
         // GET: Feiras
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string nameFeira)
         {
-            return _context.Feiras != null ?
-                    View(await _context.Feiras.ToListAsync()) :
-                    Problem("Entity set 'WebFayreContext.Feiras'  is null.");
+            if (String.IsNullOrEmpty(nameFeira))
+            {
+                return _context.Feiras != null ?
+                        View(await _context.Feiras.ToListAsync()) :
+                        Problem("Entity set 'WebFayreContext.Feiras'  is null.");
+            }
+            else
+            {
+                var searchItems = await _context.Feiras.Where(s => s.Nome.Contains(nameFeira)).ToListAsync();
+                return View(searchItems);
+            }
         }
 
         // GET: Feiras/Details/5
