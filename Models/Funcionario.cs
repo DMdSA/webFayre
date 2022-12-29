@@ -36,4 +36,6 @@ public partial class Funcionario
     public int Funcao { get; set; }
 
     public virtual Funcao? FuncaoNavigation { get; set; } = null!;
+
+    public virtual ICollection<Promocaofeira> Promocaofeiras { get; } = new List<Promocaofeira>();
 }

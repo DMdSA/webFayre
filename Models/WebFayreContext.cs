@@ -258,6 +258,10 @@ public partial class WebFayreContext : DbContext
                 .HasMaxLength(45)
                 .HasColumnName("nome");
 
+            entity.HasOne(d => d.IdFuncionarioNavigation).WithMany(p => p.Promocaofeiras)
+                .HasForeignKey(d => d.IdFuncionario)
+                .HasConstraintName("FK_promocaofeira_funcionario");
+
             entity.HasOne(d => d.IdUtilizadorNavigation).WithMany(p => p.Promocaofeiras)
                 .HasForeignKey(d => d.IdUtilizador)
                 .OnDelete(DeleteBehavior.ClientSetNull)
