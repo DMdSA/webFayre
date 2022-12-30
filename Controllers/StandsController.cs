@@ -26,10 +26,10 @@ namespace WebFayre.Controllers
             return View(await webFayreContext.ToListAsync());
         }
 
-        public async Task<IActionResult> StandsByFeira(int id)
+        public async Task<IActionResult> StandsByFeira(int feiraid)
         {
-            var standlist = _context.Stands.Include(s => s.Feira).Include(s => s.StandTipo).Where(s => s.FeiraId == id);
-            var feira = await _context.Feiras.Where(s => s.IdFeira == id).FirstOrDefaultAsync();
+            var standlist = _context.Stands.Include(s => s.Feira).Include(s => s.StandTipo).Where(s => s.FeiraId == feiraid);
+            var feira = await _context.Feiras.Where(s => s.IdFeira == feiraid).FirstOrDefaultAsync();
             ViewBag.NomeFeira = feira.Nome;
             return View(await standlist.ToListAsync());
         }

@@ -8,10 +8,13 @@ namespace WebFayre.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly FairsConcurrencyController _fairsCC;
 
-        public HomeController(ILogger<HomeController> logger)
+
+        public HomeController(ILogger<HomeController> logger, FairsConcurrencyController fairsCC)
         {
             _logger = logger;
+            _fairsCC = fairsCC;
         }
 
         public async Task<IActionResult> IndexAsync()
@@ -34,6 +37,19 @@ namespace WebFayre.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
+        /*
+        [HttpPost]
+        public async Task<JsonResult> HasSession()
+        {
+
+            if (HttpContext.Session.GetInt32("utilizadorId") == null)
+            {
+                return new JsonResult(new { data = 0 });
+            }
+            var userid = (int)HttpContext.Session.GetInt32("utilizadorId");
+            return new JsonResult(new { data = userid });
+        }
+        */
 
         public ActionResult Register()
         {
@@ -78,6 +94,10 @@ namespace WebFayre.Controllers
 
                 HttpContext.Session.SetInt32("utilizadorId", userLoggedIn.Id);
                 HttpContext.Session.SetString("utilizadorNome", userLoggedIn.Nome);
+                HttpContext.Session.SetString("utilizadorEmail", userLoggedIn.Email);
+
+                // remove current user from all possible fairs that are being tracked
+                LeaveAll(userLoggedIn.Id);
 
 
                 return RedirectToAction("index", "home");
@@ -95,6 +115,10 @@ namespace WebFayre.Controllers
             //< a asp - action = "Details" asp - route - id = "@item.IdFuncionario" > Details </ a > |
             if (HttpContext.Session.GetInt32("utilizadorId") != null)
             {
+
+                // remove current user from all possible fairs that are being tracked
+                var userid = (int)HttpContext.Session.GetInt32("utilizadorId");
+                LeaveAll(userid);
 
                 // logout
                 HttpContext.Session.Clear();
@@ -118,6 +142,17 @@ namespace WebFayre.Controllers
             {
                 //ViewBag.name = HttpContext.Session.GetString("utilizadorNome");
                 return View();
+            }
+        }
+
+        public void LeaveAll(int userid)
+        {
+            foreach (var users in _fairsCC.FairsCC.Values)
+            {
+                if (users.userExists(userid))
+                {
+                    users.removeUser(userid);
+                }
             }
         }
 

@@ -13,7 +13,7 @@
     <link href="style.css" rel="stylesheet">
     <link rel="stylesheet" href="~/css/style.css" asp-append-version="true" />
 </head>
-<body>
+<body onbeforeunload="ConfirmClose()" onunload="HandleOnClose()">
         <!-- Header -->
         <!-- navbar-expand-md breakpoint at 768px to change from mobile to full -->
         <nav class="navbar navbar-expand-md navbar-light bg-light sticky-top">

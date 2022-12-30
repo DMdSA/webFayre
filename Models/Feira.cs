@@ -36,14 +36,15 @@ public partial class Feira
     [Display(Name = "Img Path")]
     public string? FeiraPath { get; set; }
 
-    public virtual ICollection<Stand> Stands { get; } = new List<Stand>();
+    public virtual ICollection<Stand> Stands { get; set; } = new List<Stand>();
 
-    public virtual ICollection<Ticket> Tickets { get; } = new List<Ticket>();
+    public virtual ICollection<Ticket> Tickets { get; set; } = new List<Ticket>();
 
     [ForeignKey("feira_categoria")]
     public virtual ICollection<Categoriafeira> FeiraCategoria1s { get; set; } = new List<Categoriafeira>();
 
-    public virtual ICollection<Utilizador> IdUtilizadors { get; } = new List<Utilizador>();
+    [ForeignKey("id_utilizador")]
+    public virtual ICollection<Utilizador> IdUtilizadors { get; set; } = new List<Utilizador>();
 
-    public virtual ICollection<Patrocinador> Patrocinadors { get; } = new List<Patrocinador>();
+    public virtual ICollection<Patrocinador> Patrocinadors { get; set; } = new List<Patrocinador>();
 }

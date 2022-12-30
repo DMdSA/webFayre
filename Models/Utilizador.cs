@@ -1,6 +1,8 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WebFayre.Models;
 
@@ -43,11 +45,12 @@ public partial class Utilizador
 
     public string? UtilizadorPath { get; set; }
 
-    public virtual ICollection<Promocaofeira> Promocaofeiras { get; } = new List<Promocaofeira>();
+    public virtual ICollection<Promocaofeira> Promocaofeiras { get; set; } = new List<Promocaofeira>();
 
-    public virtual ICollection<Ticket> Tickets { get; } = new List<Ticket>();
+    public virtual ICollection<Ticket> Tickets { get; set; } = new List<Ticket>();
 
-    public virtual ICollection<Vendum> Venda { get; } = new List<Vendum>();
+    public virtual ICollection<Vendum> Venda { get; set; } = new List<Vendum>();
 
-    public virtual ICollection<Feira> IdFeiras { get; } = new List<Feira>();
+    [ForeignKey("id_feira")]
+    public virtual ICollection<Feira> IdFeiras { get; set; } = new List<Feira>();
 }

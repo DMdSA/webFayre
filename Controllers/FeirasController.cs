@@ -13,10 +13,30 @@ namespace WebFayre.Controllers
     public class FeirasController : Controller
     {
         private readonly WebFayreContext _context;
+        private readonly FairsConcurrencyController _fairsCC;
 
-        public FeirasController(WebFayreContext context)
+        public FeirasController(WebFayreContext context, FairsConcurrencyController fairsCC)
         {
             _context = context;
+            _fairsCC = fairsCC;
+
+            // <feira_id, {<id_utilizador,email_utilizador>, maxConcurrentUsers}>
+            // {1 : { {1: d@gmail.com, 2: j@gmail.com} , 10 }, 2 : { {13 : @gmail.com, 144 : @gmail.com} , 100}, ...}
+        }
+
+        private Boolean userHasSession()
+        {
+            return (HttpContext.Session.GetInt32("utilizadorId") != null);
+        }
+
+        private int getUserId()
+        {
+            return (int)HttpContext.Session.GetInt32("utilizadorId");
+        }
+
+        private string getUserEmail()
+        {
+            return HttpContext.Session.GetString("utilizadorEmail");
         }
 
         // GET: Feiras
@@ -25,12 +45,12 @@ namespace WebFayre.Controllers
             if (String.IsNullOrEmpty(nameFeira))
             {
                 return _context.Feiras != null ?
-                        View(await _context.Feiras.ToListAsync()) :
+                        View(await _context.Feiras.Include(f => f.FeiraCategoria1s).ToListAsync()) :
                         Problem("Entity set 'WebFayreContext.Feiras'  is null.");
             }
             else
             {
-                var searchItems = await _context.Feiras.Where(s => s.Nome.Contains(nameFeira)).ToListAsync();
+                var searchItems = await _context.Feiras.Include(f => f.FeiraCategoria1s).Where(s => s.Nome.Contains(nameFeira)).ToListAsync();
                 return View(searchItems);
             }
         }
@@ -38,7 +58,7 @@ namespace WebFayre.Controllers
         // POST: Feiras/SearchResults
         public async Task<IActionResult> SearchResults(String searchTerm)
         {
-            return View("Index", await _context.Feiras.Where( f => f.Nome.Contains(searchTerm)).ToListAsync());
+            return View("Index", await _context.Feiras.Include(f => f.FeiraCategoria1s).Where( f => f.Nome.Contains(searchTerm)).ToListAsync());
         }
 
         // GET: Feiras/Details/5
@@ -246,38 +266,187 @@ namespace WebFayre.Controllers
         public async Task<IActionResult> Enter(int id)
         {
             // se não houver nenhuma session ativa, redirecionar para o login
-            if (HttpContext.Session.GetInt32("utilizadorId") == null)
+            if (!userHasSession())
             {
                 return RedirectToAction("Login", "Home");
             }
 
             // get current user id
-            var userid = HttpContext.Session.GetInt32("utilizadorId");
+            var userid = getUserId();
+            var useremail = getUserEmail();
 
+            // se a feira existe na bd
             if (FeiraExists(id))
             {
-
+                // verificar se um ticket já foi emitido para o utilizador em questão
                 bool ticket_exists = _context.Tickets.Any(t => t.UtilizadorId == userid && t.FeiraId == id);
 
+                // se o ticket não tiver sido gerado
                 if (!ticket_exists)
                 {
                     // criar um ticket manualmente com valores default
                     Ticket t = new Ticket() { Id = 0, Data = DateTime.Now, UtilizadorId = (int)userid, FeiraId = id };
+                    
                     // utilizar o controller dos tickets para o adicionar corretamente à db
                     TicketsController tc = new TicketsController(_context);
                     await tc.Create(t);
+                    
                     TempData["feiraticket"] = "Ticket gerado com sucesso!";
-                    return RedirectToAction("standsByFeira", "stands", new {id});
+                    return RedirectToAction("standsByFeira", "stands", new { id });
                 }
 
+                // se o ticket já tinha sido gerado
+
                 TempData["feiraticket"] = "Já tinhas um ticket! podes entrar! :)";
-                // change this to feira's stands
-                return RedirectToAction("standsByFeira", "stands", new {id});
+
+                // entrar nos stands associados à feira em questão
+                return await addUserToFair(id, userid, useremail);
+                //return RedirectToAction("standsByFeira", "stands", new { id });
             }
 
             return NotFound();
         }
 
+        
+        public async Task<IActionResult> Leave(int id)
+        {
+            if (this._fairsCC.FairsCC.ContainsKey(id))
+            {
+                var userid = getUserId();
+                int result = (this._fairsCC.FairsCC[id]).removeUser(userid);
+                if (this._fairsCC.FairsCC[id].onlineUsers() == 0)
+                {
+                    this._fairsCC.FairsCC.TryRemove(id, out _);
+                }
+                return RedirectToAction("index", "feiras");
+            }
+            return RedirectToAction("index", "home");
+        }
+
+        
+        public void LeaveAll(int userid)
+        {
+            foreach (var users in _fairsCC.FairsCC.Values)
+            {
+                if (users.userExists(userid))
+                {
+                    users.removeUser(userid);
+                }
+            }
+        }
+
+
+        public async Task<IActionResult> addUserToFair(int feiraid, int userid, string email)
+        {
+
+            // se a feira já estiver a ser controlada
+            if (this._fairsCC.FairsCC.ContainsKey(feiraid))
+            {
+                // get do controlador da feira em questão
+                FairCurrentUsers fcu = this._fairsCC.FairsCC[feiraid];
+
+                // tentar entrar na feira
+                int result = fcu.addUser(userid, email);
+
+                // se foi possível entrar na feira
+                if (result == 0)
+                    
+                    // entrar nos stands associados à feira em questão
+                    return RedirectToAction("standsByFeira", "stands", new { feiraid });
+
+                // se não foi possível entrar na feira
+                else
+                {
+                    TempData["enter"] = "full";
+                    // alterar o redirect para onde for necessário
+                    return RedirectToAction("index", "home");
+                }
+            }
+
+            // se a feira ainda não estiver a ser controlada
+            // get da feira
+            var feira = await _context.Feiras.FindAsync(feiraid);
+                
+            // criar o controlador de utilizadores em simultaneo
+            FairCurrentUsers nfcu = new FairCurrentUsers(feira.CapacidadeClientes);
+            // adicionar utilizador
+            nfcu.addUser(userid, email);
+            // atualizar o controlador de feiras
+            this._fairsCC.FairsCC.TryAdd(feiraid, nfcu);
+
+            // entrar na feira
+            TempData["userid"] = userid;
+            TempData["feiraid"] = feiraid;
+            return RedirectToAction("standsByFeira", "stands", new { feiraid });
+        }
+
+        /*
+        public async Task<int> removeUserFromFair(int feiraid, int userid)
+        {
+            // se a feira estiver a ser controlada
+            if (this.fairsCurrentUsers.ContainsKey(feiraid))
+            {
+                // remover o utilizador, caso exista
+                return (this.fairsCurrentUsers[feiraid]).removeUser(userid);
+            }
+
+            // se a feira não estiver a ser controlada
+            return 3;
+        }
+        */
+
+        public async Task<IActionResult> AddFavorite(int id)
+        {
+
+            // se não houver nenhuma session ativa, redirecionar para o login
+            if (!userHasSession())
+            {
+                return RedirectToAction("Login", "Home");
+            }
+
+            // get current user id
+            var userid = getUserId();
+
+            await _context.Feiras.LoadAsync();
+            await _context.Utilizadors.Include(u => u.IdFeiras).LoadAsync();
+
+            var currentuser = await _context.Utilizadors.FindAsync(userid);
+            var feira = await _context.Feiras.FindAsync(id);
+            if (!currentuser.IdFeiras.Contains(feira))
+            {
+
+                currentuser.IdFeiras.Add(feira);
+                _context.Update(currentuser).Collection(u => u.IdFeiras);
+                await _context.SaveChangesAsync();
+                ViewBag.favorite = "NewFavorite";
+            }
+            else
+                ViewBag.favorite = "OldFavorite";
+
+            // change if needed
+            return RedirectToAction("index", "feiras");
+        }
+
+        public async Task<IActionResult> Favorites()
+        {
+            if (!userHasSession())
+            {
+                return RedirectToAction("Login", "Home");
+            }
+
+            // get current user id
+            var userid = getUserId();
+            var currentuser = await _context.Utilizadors.FindAsync(userid);
+            var feiraids = new List<int>();
+            foreach (var f in currentuser.IdFeiras)
+                feiraids.Add(f.IdFeira);
+
+
+            var feiras = await _context.Feiras.Where(f => feiraids.Contains(f.IdFeira)).Include(f => f.FeiraCategoria1s).ToListAsync();
+            return _context.Feiras != null ?
+                        View(feiras) :
+                        Problem("Entity set 'WebFayreContext.Feiras'  is null.");
+        }
 
     }
 }

@@ -2,13 +2,18 @@
 
 @{
     ViewData["Title"] = "Index";
+    ViewBag.feiraid= TempData["feiraid"];
 }
 
 <h1>@Html.Raw(ViewBag.NomeFeira)</h1>
 
+
 <p>
     <a asp-action="Create">Create New</a>
 </p>
+
+<a asp-action="Leave" asp-controller="Feiras" asp-route-id=@Model.FirstOrDefault().FeiraId>Sair da feira</a>
+
 <table class="table">
     <thead>
         <tr>

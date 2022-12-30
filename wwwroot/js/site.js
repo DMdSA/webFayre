@@ -108,4 +108,48 @@ function setFooterStyle() {
 $(document).ready(function () {
     setFooterStyle();
     window.onresize = setFooterStyle;
+    // 14.8 minutes of timeout
+    //setTimeout("RefreshSession()", 1000);
 });
+
+/*
+function isSessionAvailable() {
+
+    $.ajax({
+        type: 'POST',
+        url: '/Home/HasSession',
+        data: {},
+        global: false,
+        success: function (a) {
+
+            if (a == 0)
+                console.log("ok");
+            else console.log("not");
+            return a;
+        },
+        error: function (a) {
+            console.log(a);
+        }
+    });
+}
+
+function RefreshSession() {
+
+    if (isSessionAvailable() == 0) {
+
+        $.ajax({
+            type: 'POST',
+            url: '/Home/Logout',
+            data: {},
+            global: false,
+            success: function () {
+                // 14.8 minutes of timeout
+                setTimeout("RefreshSession()", 10000);
+            },
+            error: function (a) {
+                console.log(a);
+            }
+        });
+    }
+}
+*/

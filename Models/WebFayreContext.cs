@@ -435,19 +435,19 @@ public partial class WebFayreContext : DbContext
                 .UsingEntity<Dictionary<string, object>>(
                     "UtilizadorFavoritaFeira",
                     r => r.HasOne<Feira>().WithMany()
-                        .HasForeignKey("IdFeira")
+                        .HasForeignKey("id_feira")
                         .OnDelete(DeleteBehavior.ClientSetNull)
                         .HasConstraintName("FK_utilizador_favorita_feira_feira"),
                     l => l.HasOne<Utilizador>().WithMany()
-                        .HasForeignKey("IdUtilizador")
+                        .HasForeignKey("id_utilizador")
                         .OnDelete(DeleteBehavior.ClientSetNull)
                         .HasConstraintName("utilizador_favorita_feira$favorita_utilizador_id"),
                     j =>
                     {
-                        j.HasKey("IdUtilizador", "IdFeira").HasName("PK_utilizador_favorita_feira_id_utilizador");
+                        j.HasKey("id_utilizador", "id_feira").HasName("PK_utilizador_favorita_feira_id_utilizador");
                         j.ToTable("utilizador_favorita_feira", "webfayre");
-                        j.HasIndex(new[] { "IdFeira" }, "feira_id_idx");
-                        j.HasIndex(new[] { "IdUtilizador" }, "utilizador_id_idx");
+                        j.HasIndex(new[] { "id_feira" }, "feira_id_idx");
+                        j.HasIndex(new[] { "id_utilizador" }, "utilizador_id_idx");
                     });
         });
 
