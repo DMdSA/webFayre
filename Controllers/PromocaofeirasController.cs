@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
 using WebFayre.Models;
 
@@ -22,6 +23,13 @@ namespace WebFayre.Controllers
         public async Task<IActionResult> Index()
         {
             var webFayreContext = _context.Promocaofeiras.Include(p => p.IdUtilizadorNavigation);
+            return View(await webFayreContext.ToListAsync());
+        }
+
+        public async Task<IActionResult> IndexByUser()
+        {
+            var userid = (int)HttpContext.Session.GetInt32("utilizadorId");
+            var webFayreContext = _context.Promocaofeiras.Include(p => p.IdUtilizadorNavigation).Where(p => p.IdUtilizador == userid);
             return View(await webFayreContext.ToListAsync());
         }
 
