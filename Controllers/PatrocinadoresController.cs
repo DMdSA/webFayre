@@ -26,6 +26,13 @@ namespace WebFayre.Controllers
                           Problem("Entity set 'WebFayreContext.Patrocinadors'  is null.");
         }
 
+        public async Task RemoveFeiraAsync(Feira feira, int idPatroc)
+        {
+            var patrocinadores = await _context.Patrocinadors
+                .FirstOrDefaultAsync(m => m.IdPatrocinador == idPatroc);
+            patrocinadores.Feiras.Remove(feira);
+        }
+
         // GET: Patrocinadores/Details/5
         public async Task<IActionResult> Details(int? id)
         {

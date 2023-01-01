@@ -86,6 +86,8 @@ namespace WebFayre.Controllers
             WebFayreContext wfc = new WebFayreContext();
             var userLoggedIn = wfc.Utilizadors
                 .SingleOrDefault(u => u.Email == email && u.Password == password);
+            var funcionarioLoggedIn = wfc.Funcionarios
+                .SingleOrDefault(u => u.Email == email && u.Password == password);
 
             if (userLoggedIn != null)
             {
@@ -95,9 +97,26 @@ namespace WebFayre.Controllers
                 HttpContext.Session.SetInt32("utilizadorId", userLoggedIn.Id);
                 HttpContext.Session.SetString("utilizadorNome", userLoggedIn.Nome);
                 HttpContext.Session.SetString("utilizadorEmail", userLoggedIn.Email);
+                HttpContext.Session.SetInt32("isFuncionario", 0);
 
                 // remove current user from all possible fairs that are being tracked
                 LeaveAll(userLoggedIn.Id);
+
+
+                return RedirectToAction("index", "home");
+            }
+            else if (funcionarioLoggedIn != null)
+            {
+                ViewBag.message = "Logged in!";
+                ViewBag.triedOnce = "yes";
+
+                HttpContext.Session.SetInt32("utilizadorId", funcionarioLoggedIn.IdFuncionario);
+                HttpContext.Session.SetString("utilizadorNome", funcionarioLoggedIn.Nome);
+                HttpContext.Session.SetString("utilizadorEmail", funcionarioLoggedIn.Email);
+                HttpContext.Session.SetInt32("isFuncionario", 1);
+
+                // remove current user from all possible fairs that are being tracked
+                LeaveAll(funcionarioLoggedIn.IdFuncionario);
 
 
                 return RedirectToAction("index", "home");

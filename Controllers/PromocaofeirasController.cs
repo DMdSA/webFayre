@@ -18,6 +18,10 @@ namespace WebFayre.Controllers
         {
             _context = context;
         }
+        private int getUserType()
+        {
+            return (int)HttpContext.Session.GetInt32("isFuncionario");
+        }
 
         // GET: Promocaofeiras
         public async Task<IActionResult> Index()
@@ -73,7 +77,14 @@ namespace WebFayre.Controllers
                 promocaofeira.IdFuncionario = null;
                 _context.Add(promocaofeira);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                if (getUserType() == 0)
+                {
+                    return RedirectToAction("IndexByUser");
+                }
+                else
+                {
+                    return RedirectToAction(nameof(Index));
+                }
             }
             ViewData["IdUtilizador"] = new SelectList(_context.Utilizadors, "Id", "Id", promocaofeira.IdUtilizador);
             return View(promocaofeira);

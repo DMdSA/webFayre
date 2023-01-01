@@ -33,6 +33,10 @@ namespace WebFayre.Controllers
         {
             return (int)HttpContext.Session.GetInt32("utilizadorId");
         }
+        private int getUserType()
+        {
+            return (int)HttpContext.Session.GetInt32("isFuncionario");
+        }
 
         private string getUserEmail()
         {
@@ -237,19 +241,29 @@ namespace WebFayre.Controllers
             var feira = await _context.Feiras.Include(f => f.FeiraCategoria1s).FirstOrDefaultAsync(f => f.IdFeira == id);
             if (feira != null)
             {
+                CategoriafeirasController categoriaController = new CategoriafeirasController(_context);
                 foreach (var category in feira.FeiraCategoria1s.ToList())
                 {
                     feira.FeiraCategoria1s.Remove(category);
+                    await categoriaController.RemoveFeiraAsync(feira, category.IdCategoriaFeira);
                 }
+
+                PatrocinadoresController patrocinadoresController = new PatrocinadoresController(_context);
+                foreach (var patrocinador in feira.Patrocinadors.ToList())
+                {
+                    feira.Patrocinadors.Remove(patrocinador);
+                    await patrocinadoresController.RemoveFeiraAsync(feira, patrocinador.IdPatrocinador);
+                }
+
                 StandsController standsController = new StandsController(_context);
                 foreach (var stand in feira.Stands.ToList())
                 {
-                    await standsController.DeleteConfirmed(stand.IdStand, stand.FeiraId);
+                    await standsController.RemoveStand(stand.IdStand, stand.FeiraId);
                 }
                 TicketsController tc = new TicketsController(_context);
                 foreach (var ticket in feira.Tickets.ToList())
                 {
-                    await tc.Delete(ticket.Id);
+                    await tc.RemoveTicket(ticket.Id);
                 }
                 _context.Feiras.Remove(feira);
             }
@@ -446,6 +460,22 @@ namespace WebFayre.Controllers
             return _context.Feiras != null ?
                         View(feiras) :
                         Problem("Entity set 'WebFayreContext.Feiras'  is null.");
+        }
+
+        public IActionResult RedirectToForm()
+        {
+            if (!userHasSession())
+            {
+                return RedirectToAction("Login", "Home");
+            }
+            else if(getUserType() == 1){
+                return RedirectToAction("Index", "PromocaoFeiras");
+            }
+            else
+            {
+                return RedirectToAction("IndexByUser", "PromocaoFeiras");
+            }
+
         }
 
     }

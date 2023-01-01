@@ -66,7 +66,7 @@ namespace WebFayre.Controllers
         // GET: Produtoes/Create
         public IActionResult Create()
         {
-            ViewData["StandId"] = new SelectList(_context.Stands, "IdStand", "Descricao");
+            ViewData["StandId"] = new SelectList(_context.Stands, "IdStand", "Nome");
             return View();
         }
 
@@ -83,7 +83,7 @@ namespace WebFayre.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["StandId"] = new SelectList(_context.Stands, "IdStand", "Descricao", produto.StandId);
+            ViewData["StandId"] = new SelectList(_context.Stands, "IdStand", "Nome", produto.StandId);
             return View(produto);
         }
 
@@ -100,7 +100,7 @@ namespace WebFayre.Controllers
             {
                 return NotFound();
             }
-            ViewData["StandId"] = new SelectList(_context.Stands, "IdStand", "IdStand", produto.StandId);
+            ViewData["StandId"] = new SelectList(_context.Stands, "IdStand", "Nome", produto.StandId);
             return View(produto);
         }
 
@@ -136,7 +136,7 @@ namespace WebFayre.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["StandId"] = new SelectList(_context.Stands, "IdStand", "IdStand", produto.StandId);
+            ViewData["StandId"] = new SelectList(_context.Stands, "IdStand", "Nome", produto.StandId);
             return View(produto);
         }
 
@@ -183,6 +183,34 @@ namespace WebFayre.Controllers
             return (_context.Produtos?.Any(e => e.IdProduto == id)).GetValueOrDefault();
         }
 
-        
+        public async Task RemoveProduto(int id)
+        {
+            var produto = await _context.Produtos.FindAsync(id);
+            if (produto != null)
+            {
+                _context.Produtos.Remove(produto);
+            }
+        }
+
+
+        [HttpPost]
+        public async Task<JsonResult> ReadJsonCart([FromBody] StandShoppingCart ssc)
+        {
+            List<ProductInfo> products = ssc.Products;
+            products.RemoveAll(p => p == null);
+            ssc.Products = products;
+
+            int standId = ssc.StandId;
+            int feiraId = ssc.FeiraId;
+
+            return Json(ssc);
+         //Json(new { redirectToUrl = Url.Action("ViewCart", "produtos",ssc)});
+        }
+
+        public async Task<IActionResult> ViewCart(StandShoppingCart ssc)
+        {
+            Console.Write("Aqui");
+            return View(ssc);
+        }
     }
 }

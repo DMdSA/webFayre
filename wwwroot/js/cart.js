@@ -145,17 +145,12 @@ function transplantCart() {
 
     $.ajax({
         type: 'POST',
-        url: '/Stands/ReadJsonCart',
+        url: '/Produtos/ReadJsonCart',
         contentType: "application/json; charset=utf-8",
         data: jsondata,
         cache: false,
-        success: (a) => {
-            console.log("success, value sent");
-            console.log(a);
-        },
-        error: function (a) {
-            console.log(a);
-            alert("Error");
-        }
+        success: function (response) {
+            window.location.href = '@Url.Action("ViewCart", "Products",' + JSON.stringify(response) + ')';
+            }
     })
 }

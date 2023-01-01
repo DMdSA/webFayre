@@ -9,6 +9,9 @@
 <p>
     <a asp-action="Create">Create New</a>
 </p>
+<p>
+    <a asp-action="RedirectToForm">Forms List</a>
+</p>
 <div class="container-fluid padding">
     <div class="row search-bar text-center">
         <div class="col-12">
@@ -71,8 +74,12 @@
                 @Html.DisplayNameFor(model => model.Morada)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.FeiraCategoria1s)
+                Categorias
             </th>
+            <th>
+                Patrocinadores
+            </th>
+
             <th></th>
         </tr>
     </thead>
@@ -109,6 +116,9 @@
             <td>
                 @string.Join(", ", item.FeiraCategoria1s.Select(fc => fc.Descricao).ToArray())
             </td>
+                <td>
+                    @string.Join(", ", item.Patrocinadors.Select(fc => fc.Nome).ToArray())
+                </td>
             <td>
                 <a asp-action="Enter" asp-route-id="@item.IdFeira">Enter</a> |
                     <a asp-action="AddFavorite" asp-route-id="@item.IdFeira">Favorite</a> |

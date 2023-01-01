@@ -170,5 +170,14 @@ namespace WebFayre.Controllers
         {
           return (_context.Tickets?.Any(e => e.Id == id)).GetValueOrDefault();
         }
+
+        public async Task RemoveTicket(int id)
+        {
+            var ticket = await _context.Tickets.FindAsync(id);
+            if (ticket != null)
+            {
+                _context.Tickets.Remove(ticket);
+            }
+        }
     }
 }

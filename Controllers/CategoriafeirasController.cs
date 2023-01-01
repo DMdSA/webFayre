@@ -44,6 +44,13 @@ namespace WebFayre.Controllers
             return View(categoriafeira);
         }
 
+        public async Task RemoveFeiraAsync(Feira feira, int idCateg)
+        {
+            var categoriafeira = await _context.Categoriafeiras
+                .FirstOrDefaultAsync(m => m.IdCategoriaFeira == idCateg);
+            categoriafeira.Feiras.Remove(feira);
+        }
+
         // GET: Categoriafeiras/Create
         public IActionResult Create()
         {

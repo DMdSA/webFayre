@@ -1,0 +1,38 @@
+﻿@model WebFayre.Models.StandShoppingCart
+
+@{
+    ViewData["Title"] = "ViewCart";
+}
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.FeiraId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Products)
+            </th>
+
+        </tr>
+    </thead>
+    <tbody>
+            <tr>
+                <td>
+                    @Html.DisplayFor(model => model.FeiraId)
+                </td>
+                    @Html.DisplayFor(model => model.Products)
+                <td>
+                    @foreach (var prod in Model.Products)
+                    {
+                                <td>
+                            @Html.DisplayFor(proditem => prod)
+                            @Html.DisplayFor(proditem => prod.Quantity)
+                            @Html.DisplayFor(proditem => prod.Iva)
+                            @Html.DisplayFor(proditem => prod.FinalPrice)
+                                </td>
+                    }
+                </td>
+            </tr>
+    </tbody>
+</table>

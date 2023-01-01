@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -57,7 +58,7 @@ namespace WebFayre.Controllers
         // GET: Stands/Create
         public IActionResult Create()
         {
-            ViewData["FeiraId"] = new SelectList(_context.Feiras, "IdFeira", "Descricao");
+            ViewData["FeiraId"] = new SelectList(_context.Feiras, "IdFeira", "Nome");
             ViewData["StandTipoId"] = new SelectList(_context.TipoStands, "Id", "Descricao");
             return View();
         }
@@ -75,7 +76,7 @@ namespace WebFayre.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["FeiraId"] = new SelectList(_context.Feiras, "IdFeira", "Descricao", stand.FeiraId);
+            ViewData["FeiraId"] = new SelectList(_context.Feiras, "IdFeira", "Nome", stand.FeiraId);
             ViewData["StandTipoId"] = new SelectList(_context.TipoStands, "Id", "Descricao", stand.StandTipoId);
             return View(stand);
         }
@@ -164,8 +165,8 @@ namespace WebFayre.Controllers
             {
                 return Problem("Entity set 'WebFayreContext.Stands'  is null.");
             }
-
             var stand = await _context.Stands.FindAsync(id, feiraId);
+
             if (stand != null)
             {
                 _context.Stands.Remove(stand);
@@ -173,6 +174,17 @@ namespace WebFayre.Controllers
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
+        }
+
+        public async Task RemoveStand(int idstand, int idFeira)
+        {
+            var stand = await _context.Stands.FindAsync(idstand, idFeira);
+            ProdutosController pc = new ProdutosController(_context);
+            foreach (var product in stand.Produtos)
+            {
+                pc.RemoveProduto(product.IdProduto);
+            }
+            _context.Stands.Remove(stand);
         }
 
         private bool StandExists(int id)
@@ -196,17 +208,9 @@ namespace WebFayre.Controllers
             return NotFound();
         }
 
-        [HttpPost]
-        public async Task<JsonResult> ReadJsonCart([FromBody] StandShoppingCart ssc)
+        public IActionResult Leave()
         {
-            List<ProductInfo> products = ssc.Products;
-            products.RemoveAll(p => p == null);
-            ssc.Products = products;
-
-            int standId = ssc.StandId;
-            int feiraId = ssc.FeiraId;
-
-            return new JsonResult(new { data = ssc });
+            return RedirectToAction("index", "feiras");
         }
     }
 }

@@ -16,22 +16,22 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.CapacidadeUtilizadores)
+                @Html.DisplayNameFor(model => model.Nome)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Descricao)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Nome)
+               Capacidade Máxima
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.NStands)
+               Número de Stands
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.IdFuncionario)
+               Id de Funcionário
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.IdUtilizadorNavigation)
+               Id de Utilizador
             </th>
             <th></th>
         </tr>
@@ -40,13 +40,13 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.CapacidadeUtilizadores)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Descricao)
-            </td>
-            <td>
                 @Html.DisplayFor(modelItem => item.Nome)
+            </td>
+            <td>
+                    @Html.DisplayFor(modelItem => item.Descricao)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CapacidadeUtilizadores)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.NStands)
