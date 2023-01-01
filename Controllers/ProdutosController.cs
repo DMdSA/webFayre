@@ -194,7 +194,7 @@ namespace WebFayre.Controllers
 
 
         [HttpPost]
-        public async Task<JsonResult> ReadJsonCart([FromBody] StandShoppingCart ssc)
+        public async Task<StandShoppingCart> ReadJsonCart([FromBody] StandShoppingCart ssc)
         {
             List<ProductInfo> products = ssc.Products;
             products.RemoveAll(p => p == null);
@@ -203,13 +203,17 @@ namespace WebFayre.Controllers
             int standId = ssc.StandId;
             int feiraId = ssc.FeiraId;
 
-            return Json(ssc);
-         //Json(new { redirectToUrl = Url.Action("ViewCart", "produtos",ssc)});
+            HttpContext.Session.SetObject("CartObject", ssc);
+            return ssc;
         }
 
-        public async Task<IActionResult> ViewCart(StandShoppingCart ssc)
+        [HttpPost]
+        public async Task<IActionResult> ViewCart()
         {
-            Console.Write("Aqui");
+
+            StandShoppingCart? ssc = HttpContext.Session.GetObject<StandShoppingCart>("CartObject");
+            if (ssc == null) return NoContent();
+            HttpContext.Session.Remove("CartObject");
             return View(ssc);
         }
     }

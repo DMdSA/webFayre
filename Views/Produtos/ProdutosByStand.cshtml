@@ -1,4 +1,6 @@
 ﻿@model IEnumerable<WebFayre.Models.Produto>
+@using Microsoft.AspNetCore.Http;
+@using WebFayre.Common;
 @using Newtonsoft.Json;
 
 <script type="text/javascript">
@@ -13,14 +15,17 @@
 
 <h1>@Html.Raw(ViewBag.NomeStand)</h1>
 
-<button onclick="transplantCart()">Transplantar</button>
+
+<form asp-action="ViewCart">
+        <input type="submit" id ="process_cart" value="Create" class="btn btn-primary d-none" />
+</form>
+
+<input id="buy" type="button" value="Comprar" onclick="transplantCart()" />
+
 
 
 <p>
     <a asp-action="Create">Create New</a>
-</p>
-<p>
-    <a asp-action="ViewCart">ViewCart</a>
 </p>
 
 <table class="table">

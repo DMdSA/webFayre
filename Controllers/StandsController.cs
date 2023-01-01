@@ -198,8 +198,6 @@ namespace WebFayre.Controllers
             if (StandExists(id))
             {
 
-                
-
                 //HttpContext.Session.SetObject("StandShoppingCart", ssc);
 
                 return RedirectToAction("produtosByStand", "produtos", new { feiraId, id }); //Redirect para um href com o id do stand

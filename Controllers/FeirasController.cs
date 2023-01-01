@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using NuGet.Packaging;
+using WebFayre.Common;
 using WebFayre.Models;
 
 namespace WebFayre.Controllers
@@ -308,7 +309,6 @@ namespace WebFayre.Controllers
                     TempData["feiraticket"] = "Ticket gerado com sucesso!";
                     return RedirectToAction("standsByFeira", "stands", new { id });
                 }
-
                 // se o ticket já tinha sido gerado
 
                 TempData["feiraticket"] = "Já tinhas um ticket! podes entrar! :)";

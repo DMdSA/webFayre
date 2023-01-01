@@ -143,14 +143,20 @@ function transplantCart() {
     }
     console.log(jsondata);
 
+    var answer;
     $.ajax({
+        async: false,
         type: 'POST',
         url: '/Produtos/ReadJsonCart',
         contentType: "application/json; charset=utf-8",
         data: jsondata,
         cache: false,
         success: function (response) {
-            window.location.href = '@Url.Action("ViewCart", "Products",' + JSON.stringify(response) + ')';
-            }
-    })
+            answer = response;
+
+        }
+    });
+
+    document.getElementById("process_cart").click();
+    return answer;
 }
