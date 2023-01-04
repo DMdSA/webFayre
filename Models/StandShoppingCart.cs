@@ -21,13 +21,13 @@ namespace WebFayre.Models
         public int Id { get; set; }
 
         [Display(Name = "Quantity")]
-        public float Quantity { get; set; }
+        public int Quantity { get; set; }
 
         [Display(Name = "Final Price")]
-        public float FinalPrice { get; set; }
+        public decimal FinalPrice { get; set; }
 
         [Display(Name = "IVA")]
-        public float Iva { get; set; }
+        public decimal Iva { get; set; }
     
     }
 }

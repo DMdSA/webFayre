@@ -10,6 +10,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Post Testing</title>
+    <script type="text/javascript" src="/js/cart.js"></script>
 </head>
 <body>
     <h2>Normal Form</h2>
@@ -18,7 +19,7 @@
 
         <span>NIF:</span><input name="nif" id="nif" value=@(ViewBag.Nif) />
         <span>TEL:</span><input name="tel" id="tel" value=@(ViewBag.Telemovel) />
-        <input type ="submit" id="s" value="Finalizar"/> 
+        <input type ="submit" id="s" value="Finalizar" onclick="deleteCart()"/> 
     }
 
 </body>

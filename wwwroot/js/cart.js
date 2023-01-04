@@ -160,3 +160,8 @@ function transplantCart() {
     document.getElementById("process_cart").click();
     return answer;
 }
+
+function deleteCart() {
+
+    sessionStorage.removeItem("standCart");
+}

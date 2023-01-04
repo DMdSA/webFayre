@@ -219,14 +219,14 @@ namespace WebFayre.Controllers
 
             StandShoppingCart? ssc = HttpContext.Session.GetObject<StandShoppingCart>("CartObject");
             if (ssc == null) return NoContent();
-            float total = calculateTotal(ssc.Products);
+            decimal total = calculateTotal(ssc.Products);
             ViewBag.Total = total;
             return View(ssc);
         }
 
-        public float calculateTotal(List<ProductInfo> products)
+        public decimal calculateTotal(List<ProductInfo> products)
         {
-            float total = 0;
+            decimal total = 0;
             foreach (var item in products)
             {
                 total += item.FinalPrice;
@@ -246,9 +246,59 @@ namespace WebFayre.Controllers
 
         public async Task<IActionResult> FinalizePurchase(string nif, string tel)
         {
+            if (HttpContext.Session.GetInt32("utilizadorId") == null)
+            {
+                RedirectToAction("login", "home");
+            }
+            int userid = (int)HttpContext.Session.GetInt32("utilizadorId");
+
             //@todo -atualizar stock; registar a compra; redirect correto para lista de produtos
             Console.WriteLine(nif);
             Console.WriteLine(tel);
+
+            // se for finalizada..
+            StandShoppingCart? ssc = HttpContext.Session.GetObject<StandShoppingCart>("CartObject");
+            
+            // aqui devia ser redirecionado para o sitio devido
+            if (ssc == null) return NoContent() ;
+
+            // lista de produtos no carrinho
+            List<ProductInfo> productsInfo = ssc.Products;
+            // var com os ids de cada produto retirado
+            var productsIds = productsInfo.Select(x => x.Id);
+            // lista com a relacao entre a venda e os produtos - para a bd
+            List<VendaProduto> vendaProdutos = new List<VendaProduto>();
+            // entidades dos produtos
+            var produtosEntity = _context.Produtos.Where(p => productsIds.Contains(p.IdProduto)).ToDictionary(p => p.IdProduto);
+
+            // para cada produto do carrinho
+            foreach (var pi in productsInfo)
+            {
+                // criar uma relação entre venda-produto
+                // não há referência a IVAs, devia?
+                vendaProdutos.Add(new VendaProduto() { VendaId = 0, ProdutoId = pi.Id, Preco = pi.FinalPrice, Quantidade = pi.Quantity });
+
+                // atualizar o stock de cada produto
+                produtosEntity[pi.Id].Stock -= pi.Quantity;
+            }
+
+            // criar o objeto da venda
+            await _context.Venda.Include(v => v.VendaProdutos).LoadAsync();
+            Vendum venda = new Vendum
+            {
+                IdVenda = 0,
+                Data = DateTime.Now,
+                Total = calculateTotal(productsInfo),
+                UtilizadorId = userid,
+                StandId = ssc.StandId,
+                VendaProdutos = vendaProdutos
+            };
+
+            // atualizar tudo devidamente
+            _context.Add(venda);
+            _context.Produtos.UpdateRange(produtosEntity.Values);
+            await _context.SaveChangesAsync();
+
             HttpContext.Session.Remove("CartObject"); 
             return RedirectToAction("index", "home");
 

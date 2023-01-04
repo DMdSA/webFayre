@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WebFayre.Models;
 
@@ -19,7 +20,9 @@ public partial class Produto
 
     public int StandId { get; set; }
 
+    // pq eq aq n pode ter foreign key?...
     public virtual Stand? Stand { get; set; } = null!;
 
+    //[ForeignKey("produto_id")]
     public virtual ICollection<VendaProduto> VendaProdutos { get; } = new List<VendaProduto>();
 }
