@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Intrinsics.X86;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -18,6 +19,11 @@ namespace WebFayre.Controllers
         public ProdutosController(WebFayreContext context)
         {
             _context = context;
+        }
+
+        private int getUserId()
+        {
+            return (int)HttpContext.Session.GetInt32("utilizadorId");
         }
 
         // GET: Produtoes
@@ -213,8 +219,39 @@ namespace WebFayre.Controllers
 
             StandShoppingCart? ssc = HttpContext.Session.GetObject<StandShoppingCart>("CartObject");
             if (ssc == null) return NoContent();
-            HttpContext.Session.Remove("CartObject");
+            float total = calculateTotal(ssc.Products);
+            ViewBag.Total = total;
             return View(ssc);
+        }
+
+        public float calculateTotal(List<ProductInfo> products)
+        {
+            float total = 0;
+            foreach (var item in products)
+            {
+                total += item.FinalPrice;
+            }
+            return total;
+        }
+
+        [HttpGet]
+        public IActionResult FinalizePurchase()
+        {
+            int id = getUserId();
+            var user = _context.Utilizadors.FirstOrDefault(x => x.Id == id);
+            ViewBag.Nif = user.Nif;
+            ViewBag.Telemovel = user.Telemovel;
+            return View();
+        }
+
+        public async Task<IActionResult> FinalizePurchase(string nif, string tel)
+        {
+            //@todo -atualizar stock; registar a compra; redirect correto para lista de produtos
+            Console.WriteLine(nif);
+            Console.WriteLine(tel);
+            HttpContext.Session.Remove("CartObject"); 
+            return RedirectToAction("index", "home");
+
         }
     }
 }

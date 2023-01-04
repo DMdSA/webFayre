@@ -86,8 +86,6 @@ namespace WebFayre.Controllers
             WebFayreContext wfc = new WebFayreContext();
             var userLoggedIn = wfc.Utilizadors
                 .SingleOrDefault(u => u.Email == email && u.Password == password);
-            var funcionarioLoggedIn = wfc.Funcionarios
-                .SingleOrDefault(u => u.Email == email && u.Password == password);
 
             if (userLoggedIn != null)
             {
@@ -105,7 +103,9 @@ namespace WebFayre.Controllers
 
                 return RedirectToAction("index", "home");
             }
-            else if (funcionarioLoggedIn != null)
+            var funcionarioLoggedIn = wfc.Funcionarios
+                .SingleOrDefault(u => u.Email == email && u.Password == password);
+            if (funcionarioLoggedIn != null)
             {
                 ViewBag.message = "Logged in!";
                 ViewBag.triedOnce = "yes";

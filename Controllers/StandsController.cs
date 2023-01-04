@@ -23,12 +23,14 @@ namespace WebFayre.Controllers
         // GET: Stands
         public async Task<IActionResult> Index()
         {
+            HttpContext.Session.Remove("CartObject");
             var webFayreContext = _context.Stands.Include(s => s.Feira).Include(s => s.StandTipo);
             return View(await webFayreContext.ToListAsync());
         }
 
         public async Task<IActionResult> StandsByFeira(int feiraid)
         {
+            HttpContext.Session.Remove("CartObject");
             var standlist = _context.Stands.Include(s => s.Feira).Include(s => s.StandTipo).Where(s => s.FeiraId == feiraid);
             var feira = await _context.Feiras.Where(s => s.IdFeira == feiraid).FirstOrDefaultAsync();
             ViewBag.NomeFeira = feira.Nome;

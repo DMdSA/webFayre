@@ -8,9 +8,6 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.FeiraId)
-            </th>
-            <th>
                 @Html.DisplayNameFor(model => model.Products)
             </th>
 
@@ -18,17 +15,20 @@
     </thead>
     <tbody>
             <tr>
-                <td>
-                    @Html.DisplayFor(model => model.FeiraId)
-                </td>
                     @Html.DisplayFor(model => model.Products)
                 <td>
                     @foreach (var prod in Model.Products)
                     {
                                 <td>
-                            @Html.DisplayFor(proditem => prod)
+                            @Html.DisplayFor(proditem => prod.Id)
+                                </td>
+                         <td>
                             @Html.DisplayFor(proditem => prod.Quantity)
+                            </td>
+                                 <td>
                             @Html.DisplayFor(proditem => prod.Iva)
+                            </td>
+                                 <td>
                             @Html.DisplayFor(proditem => prod.FinalPrice)
                                 </td>
                     }
@@ -36,3 +36,7 @@
             </tr>
     </tbody>
 </table>
+<p>Preço final: @Html.Raw(ViewBag.Total)</p>
+<p>
+    <a asp-action="FinalizePurchase">Comprar</a>
+</p>
