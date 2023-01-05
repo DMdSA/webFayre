@@ -30,11 +30,20 @@ namespace WebFayre.Controllers
 
         public async Task<IActionResult> StandsByFeira(int feiraid)
         {
+            if (HttpContext.Session.GetInt32("utilizadorId") == null)
+                return RedirectToAction("login", "home");
+
+            int userid = (int)HttpContext.Session.GetInt32("utilizadorId");
             HttpContext.Session.Remove("CartObject");
-            var standlist = _context.Stands.Include(s => s.Feira).Include(s => s.StandTipo).Where(s => s.FeiraId == feiraid);
-            var feira = await _context.Feiras.Where(s => s.IdFeira == feiraid).FirstOrDefaultAsync();
-            ViewBag.NomeFeira = feira.Nome;
-            return View(await standlist.ToListAsync());
+            var standlist = await _context.Stands.Include(s => s.Feira).Include(s => s.StandTipo).Where(s => s.FeiraId == feiraid).ToListAsync();
+
+            if (standlist.Count == 0)
+            {
+                RedirectToAction("index", "feiras", userid);
+                return NoContent();
+            }
+
+            return View(standlist);
         }
 
         // GET: Stands/Details/5

@@ -5,8 +5,7 @@
     ViewBag.feiraid= TempData["feiraid"];
 }
 
-<h1>@Html.Raw(ViewBag.NomeFeira)</h1>
-
+<h1>@Model.FirstOrDefault().Feira.Nome</h1>
 
 <p>
     <a asp-action="Create">Create New</a>

@@ -435,7 +435,12 @@ namespace WebFayre.Controllers
                 ViewBag.favorite = "NewFavorite";
             }
             else
+            {
                 ViewBag.favorite = "OldFavorite";
+                currentuser.IdFeiras.Remove(feira);
+                _context.Update(currentuser).Collection(u => u.IdFeiras);
+                await _context.SaveChangesAsync();
+            }
 
             // change if needed
             return RedirectToAction("index", "feiras");
@@ -451,10 +456,7 @@ namespace WebFayre.Controllers
             // get current user id
             var userid = getUserId();
             var currentuser = await _context.Utilizadors.FindAsync(userid);
-            var feiraids = new List<int>();
-            foreach (var f in currentuser.IdFeiras)
-                feiraids.Add(f.IdFeira);
-
+            var feiraids = currentuser.IdFeiras.Select(f => f.IdFeira).ToList();
 
             var feiras = await _context.Feiras.Where(f => feiraids.Contains(f.IdFeira)).Include(f => f.FeiraCategoria1s).ToListAsync();
             return _context.Feiras != null ?

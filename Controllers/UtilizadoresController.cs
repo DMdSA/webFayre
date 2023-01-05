@@ -37,6 +37,37 @@ namespace WebFayre.Controllers
                           Problem("Entity set 'WebFayreContext.Utilizadors'  is null.");
         }
 
+        public async Task<IActionResult> Purchases()
+        {
+            if (HttpContext.Session.GetInt32("utilizadorId") == null)
+            {
+                return RedirectToAction("login", "home");
+            }
+            // get current user's id
+            var userid = (int)HttpContext.Session.GetInt32("utilizadorId");
+
+            return _context.Venda != null ?
+                        View(await _context.Venda.Include(v => v.VendaProdutos).Where(v => v.UtilizadorId == userid).ToListAsync()) :
+                        Problem("Entity set 'WebFayreContext.Venda'  is null.");
+        }
+
+        public async Task<IActionResult> VisitedFairs()
+        {
+            if (HttpContext.Session.GetInt32("utilizadorId") == null)
+            {
+                return RedirectToAction("login", "home");
+            }
+            // get current user's id
+            var userid = (int)HttpContext.Session.GetInt32("utilizadorId");
+
+            var user = await _context.Utilizadors.Include(u => u.Tickets).Include(u => u.IdFeiras).FirstOrDefaultAsync(m => m.Id == userid);
+            var ticket_fairs = user.Tickets.Select(t => t.Feira).ToList();
+            return _context.Feiras != null ?
+                        View(ticket_fairs) :
+                        Problem("Entity set 'WebFayreContext.Venda'  is null.");
+        }
+
+
         // GET: Utilizadors/Details/5
         public async Task<IActionResult> Details(int? id)
         {
