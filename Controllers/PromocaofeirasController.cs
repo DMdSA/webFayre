@@ -23,6 +23,11 @@ namespace WebFayre.Controllers
             return (int)HttpContext.Session.GetInt32("isFuncionario");
         }
 
+        private int getUserId()
+        {
+            return (int)HttpContext.Session.GetInt32("utilizadorId");
+        }
+
         // GET: Promocaofeiras
         public async Task<IActionResult> Index()
         {
@@ -35,6 +40,63 @@ namespace WebFayre.Controllers
             var userid = (int)HttpContext.Session.GetInt32("utilizadorId");
             var webFayreContext = _context.Promocaofeiras.Include(p => p.IdUtilizadorNavigation).Where(p => p.IdUtilizador == userid);
             return View(await webFayreContext.ToListAsync());
+        }
+
+        public async Task<IActionResult> IndexFuncionario()
+        {
+            var webFayreContext = _context.Promocaofeiras.Include(p => p.IdUtilizadorNavigation).Where(p => p.IdFuncionario == null);
+            return View(await webFayreContext.ToListAsync());
+        }
+
+        /**
+         * Funcionáro Aceita um pedido de feira
+         */
+        public async Task<IActionResult> Accept(int? id)
+        {
+            if (id == null || _context.Promocaofeiras == null)
+            {
+                return NotFound();
+            }
+
+            var promocaofeira = await _context.Promocaofeiras
+                .Include(p => p.IdUtilizadorNavigation)
+                .FirstOrDefaultAsync(m => m.IdPromocaoFeira == id);
+            if (promocaofeira == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                promocaofeira.IdFuncionario = getUserId();
+                _context.Update(promocaofeira);
+                await _context.SaveChangesAsync();
+                return RedirectToAction("indexFuncionario", "promocaofeiras");
+            }
+        }
+        /**
+         * Funcionáro Rejeita um pedido de feira
+         */
+        public async Task<IActionResult> Reject(int? id)
+        {
+            if (id == null || _context.Promocaofeiras == null)
+            {
+                return NotFound();
+            }
+
+            var promocaofeira = await _context.Promocaofeiras
+                .Include(p => p.IdUtilizadorNavigation)
+                .FirstOrDefaultAsync(m => m.IdPromocaoFeira == id);
+            if (promocaofeira == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                promocaofeira.IdFuncionario = getUserId();
+                _context.Update(promocaofeira);
+                await _context.SaveChangesAsync();
+                return RedirectToAction("indexFuncionario", "promocaofeiras");
+            }
         }
 
         // GET: Promocaofeiras/Details/5

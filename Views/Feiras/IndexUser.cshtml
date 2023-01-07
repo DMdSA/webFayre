@@ -1,21 +1,12 @@
 ﻿@model IEnumerable<WebFayre.Models.Feira>
 
-@{
-    ViewData["Title"] = "Index";
-}
-
-<h1>Index</h1>
-
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
 <p>
     <a asp-action="RedirectToForm">Forms List</a>
 </p>
 <div class="container-fluid padding">
     <div class="row search-bar text-center">
         <div class="col-12">
-            <form asp-action="Index">
+            <form asp-action="IndexUser">
                 <div class="input-group">
                     <input name="nameFeira" type="search" placeholder="Search ... " class="form-control" />
                     <div class="input-group-append">
@@ -31,13 +22,13 @@
             </form>
 
             @section scripts{
-                    <script>
-                        $(function (){
-                            $("#basic-text1").click(function (){
-                                $("Form").submit();
-                            })
-                        });
-                    </script>
+                        <script>
+                            $(function (){
+                                $("#basic-text1").click(function (){
+                                    $("Form").submit();
+                                })
+                            });
+                        </script>
             }
 
         </div>
@@ -50,10 +41,10 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Nome)
+                @Html.DisplayNameFor(model => model.Descricao)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Descricao)
+                @Html.DisplayNameFor(model => model.Nome)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.DataInicio)
@@ -76,13 +67,6 @@
             <th>
                 @Html.DisplayNameFor(model => model.Morada)
             </th>
-            <th>
-                Categorias
-            </th>
-            <th>
-                Patrocinadores
-            </th>
-
             <th></th>
         </tr>
     </thead>
@@ -90,10 +74,10 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Nome)
+                @Html.DisplayFor(modelItem => item.Descricao)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Descricao)
+                @Html.DisplayFor(modelItem => item.Nome)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.DataInicio)
@@ -117,16 +101,9 @@
                 @Html.DisplayFor(modelItem => item.Morada)
             </td>
             <td>
-                @string.Join(", ", item.FeiraCategoria1s.Select(fc => fc.Descricao).ToArray())
-            </td>
-                <td>
-                    @string.Join(", ", item.Patrocinadors.Select(fc => fc.Nome).ToArray())
-                </td>
-            <td>
                 <a asp-action="Enter" asp-route-id="@item.IdFeira">Enter</a> |
-                    <a asp-action="Edit" asp-route-id="@item.IdFeira">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.IdFeira">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.IdFeira">Delete</a>
+                <a asp-action="AddFavorite" asp-route-id="@item.IdFeira">Favorite</a> |
+                <a asp-action="Details" asp-route-id="@item.IdFeira">Details</a>
             </td>
         </tr>
 }

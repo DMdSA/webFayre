@@ -60,12 +60,36 @@ namespace WebFayre.Controllers
         public ActionResult Register(Utilizador u)
         {
             WebFayreContext wfc = new WebFayreContext();
+            var userlist = wfc.Utilizadors.ToList();
+            foreach(var user in userlist)
+            {
+                if(u.Email == user.Email)
+                {
+                    return RedirectToAction("Advise", "home");
+                    //return RedirectToAction("index", "home");
+                }
+            }
+            var funcList = wfc.Funcionarios.ToList();
+            foreach(var func in funcList)
+            {
+                if (u.Email == func.Email)
+                {
+                    return RedirectToAction("Advise", "home");
+                    //return RedirectToAction("index", "home");
+                }
+            }
             wfc.Utilizadors.Add(u);
             wfc.SaveChanges();
 
             ViewBag.message = "You are successfully registered!!";
 
             return RedirectToAction("login", "home");
+        }
+
+        public async Task<IActionResult> Advise()
+        {
+            ViewBag.Message = "There is someone with that email";
+            return View();
         }
         
         public ActionResult Login()
@@ -114,6 +138,9 @@ namespace WebFayre.Controllers
                 HttpContext.Session.SetString("utilizadorNome", funcionarioLoggedIn.Nome);
                 HttpContext.Session.SetString("utilizadorEmail", funcionarioLoggedIn.Email);
                 HttpContext.Session.SetInt32("isFuncionario", 1);
+                var func = funcionarioLoggedIn.Funcao;
+                var funcName = wfc.Funcaos.Where(u => u.IdFuncao == func).FirstOrDefault();
+                HttpContext.Session.SetString("Funcao", funcName.Descricao);
 
                 // remove current user from all possible fairs that are being tracked
                 LeaveAll(funcionarioLoggedIn.IdFuncionario);

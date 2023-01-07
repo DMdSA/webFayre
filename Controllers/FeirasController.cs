@@ -44,8 +44,60 @@ namespace WebFayre.Controllers
             return HttpContext.Session.GetString("utilizadorEmail");
         }
 
+        private string getFuncFuncao()
+        {
+            return HttpContext.Session.GetString("Funcao");
+        }
+
+        public IActionResult RedirectIndex(string nameFeira)
+        {   
+
+            if (getFuncFuncao() == "Admin")
+            {
+                return RedirectToAction("Index", "Feiras", nameFeira);
+            }
+            else if(getUserType() == 0)
+            {
+                return RedirectToAction("IndexUser", "Feiras", nameFeira);
+            }
+            else
+            {
+                return RedirectToAction("IndexFunc", "Feiras", nameFeira);
+            }
+        }
+
         // GET: Feiras
         public async Task<IActionResult> Index(string nameFeira)
+        {
+            if (String.IsNullOrEmpty(nameFeira))
+            {
+                return _context.Feiras != null ?
+                        View(await _context.Feiras.Include(f => f.FeiraCategoria1s).ToListAsync()) :
+                        Problem("Entity set 'WebFayreContext.Feiras'  is null.");
+            }
+            else
+            {
+                var searchItems = await _context.Feiras.Include(f => f.FeiraCategoria1s).Where(s => s.Nome.Contains(nameFeira)).ToListAsync();
+                return View(searchItems);
+            }
+        }
+
+        public async Task<IActionResult> IndexUser(string nameFeira)
+        {
+            if (String.IsNullOrEmpty(nameFeira))
+            {
+                return _context.Feiras != null ?
+                        View(await _context.Feiras.Include(f => f.FeiraCategoria1s).ToListAsync()) :
+                        Problem("Entity set 'WebFayreContext.Feiras'  is null.");
+            }
+            else
+            {
+                var searchItems = await _context.Feiras.Include(f => f.FeiraCategoria1s).Where(s => s.Nome.Contains(nameFeira)).ToListAsync();
+                return View(searchItems);
+            }
+        }
+
+        public async Task<IActionResult> IndexFunc(string nameFeira)
         {
             if (String.IsNullOrEmpty(nameFeira))
             {
@@ -63,7 +115,18 @@ namespace WebFayre.Controllers
         // POST: Feiras/SearchResults
         public async Task<IActionResult> SearchResults(String searchTerm)
         {
-            return View("Index", await _context.Feiras.Include(f => f.FeiraCategoria1s).Where( f => f.Nome.Contains(searchTerm)).ToListAsync());
+            if (getFuncFuncao() == "Admin")
+            {
+                return View("Index", await _context.Feiras.Include(f => f.FeiraCategoria1s).Where(f => f.Nome.Contains(searchTerm)).ToListAsync());
+            }
+            else if(getUserType() == 0)
+            {
+                return View("IndexUser", await _context.Feiras.Include(f => f.FeiraCategoria1s).Where(f => f.Nome.Contains(searchTerm)).ToListAsync());
+            }
+            else
+            {
+                return View("IndexFunc", await _context.Feiras.Include(f => f.FeiraCategoria1s).Where(f => f.Nome.Contains(searchTerm)).ToListAsync());
+            }
         }
 
         // GET: Feiras/Details/5
@@ -289,10 +352,14 @@ namespace WebFayre.Controllers
             // get current user id
             var userid = getUserId();
             var useremail = getUserEmail();
-
+            var isFunc = getUserType();
             // se a feira existe na bd
             if (FeiraExists(id))
             {
+                if(isFunc == 1)
+                {
+                    return RedirectToAction("RedirectIndex", "stands", new { idFeira = id });
+                }
                 // verificar se um ticket já foi emitido para o utilizador em questão
                 bool ticket_exists = _context.Tickets.Any(t => t.UtilizadorId == userid && t.FeiraId == id);
 
@@ -307,7 +374,8 @@ namespace WebFayre.Controllers
                     await tc.Create(t);
                     
                     TempData["feiraticket"] = "Ticket gerado com sucesso!";
-                    return RedirectToAction("standsByFeira", "stands", new { id });
+                    //return RedirectToAction("standsByFeira", "stands", new { id });
+                    return await addUserToFair(id, userid, useremail);
                 }
                 // se o ticket já tinha sido gerado
 
@@ -366,7 +434,7 @@ namespace WebFayre.Controllers
                 if (result == 0)
                     
                     // entrar nos stands associados à feira em questão
-                    return RedirectToAction("standsByFeira", "stands", new { feiraid });
+                    return RedirectToAction("RedirectIndex", "stands", new { idFeira = feiraid });
 
                 // se não foi possível entrar na feira
                 else
@@ -391,7 +459,7 @@ namespace WebFayre.Controllers
             // entrar na feira
             TempData["userid"] = userid;
             TempData["feiraid"] = feiraid;
-            return RedirectToAction("standsByFeira", "stands", new { feiraid });
+            return RedirectToAction("RedirectIndex", "stands", new { idFeira = feiraid });
         }
 
         /*
@@ -443,7 +511,7 @@ namespace WebFayre.Controllers
             }
 
             // change if needed
-            return RedirectToAction("index", "feiras");
+            return RedirectToAction("RedirectIndex", "feiras");
         }
 
         public async Task<IActionResult> Favorites()
@@ -471,7 +539,7 @@ namespace WebFayre.Controllers
                 return RedirectToAction("Login", "Home");
             }
             else if(getUserType() == 1){
-                return RedirectToAction("Index", "PromocaoFeiras");
+                return RedirectToAction("IndexFuncionario", "PromocaoFeiras");
             }
             else
             {

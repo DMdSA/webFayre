@@ -64,6 +64,23 @@ namespace WebFayre.Controllers
 
             if (ModelState.IsValid)
             {
+                var funcList = _context.Funcionarios.ToList();
+                foreach(var func in funcList)
+                {
+                    if(funcionario.Email == func.Email)
+                    {
+                        return RedirectToAction("index", "home");
+                    }
+                }
+                var userList = _context.Utilizadors.ToList();
+                foreach(var user in userList)
+                {
+                    if (funcionario.Email == user.Email)
+                    {
+                        return RedirectToAction("index", "home");
+                    }
+                }
+
                 funcionario.Telemovel = funcionario.Telemovel.Replace(" ", "");
                 _context.Add(funcionario);
                 await _context.SaveChangesAsync();

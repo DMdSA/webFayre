@@ -25,12 +25,54 @@ namespace WebFayre.Controllers
         {
             return (int)HttpContext.Session.GetInt32("utilizadorId");
         }
+        private string getFuncFuncao()
+        {
+            return HttpContext.Session.GetString("Funcao");
+        }
+        private int getUserType()
+        {
+            return (int)HttpContext.Session.GetInt32("isFuncionario");
+        }
+
+        public IActionResult RedirectIndex(int feiraId, int id)
+        {
+            if(getUserType() == 0)
+            {
+                return RedirectToAction("produtosByStand", "produtos", new { feiraId, id});
+            }
+            else if(getFuncFuncao() == "Admin")
+            {
+                return RedirectToAction("prodByStandAdmin", "produtos", new { id });
+            }
+            else
+            {
+                return RedirectToAction("prodByStandDefault", "produtos", new { id });
+            }
+        }
 
         // GET: Produtoes
         public async Task<IActionResult> Index()
         {
             var webFayreContext = _context.Produtos.Include(p => p.Stand);
             return View(await webFayreContext.ToListAsync());
+        }
+
+        public async Task<IActionResult> ProdByStandAdmin(int id)
+        {
+            var prodList = _context.Produtos.Include(s => s.Stand).Where(s => s.StandId == id);
+            var stand = await _context.Stands.Where(p => p.IdStand == id).FirstOrDefaultAsync();
+            if (stand != null)
+                ViewBag.NomeStand = stand.Nome;
+            return View(await prodList.ToListAsync());
+        }
+
+        public async Task<IActionResult> ProdByStandDefault(int id)
+        {
+            var prodList = _context.Produtos.Include(s => s.Stand).Where(s => s.StandId == id);
+            var stand = await _context.Stands.Where(p => p.IdStand == id).FirstOrDefaultAsync();
+            if (stand != null)
+                ViewBag.NomeStand = stand.Nome;
+            return View(await prodList.ToListAsync());
         }
 
         public async Task<IActionResult> ProdutosByStand(int feiraId, int id)
@@ -68,6 +110,8 @@ namespace WebFayre.Controllers
 
             return View(produto);
         }
+
+
 
         // GET: Produtoes/Create
         public IActionResult Create()

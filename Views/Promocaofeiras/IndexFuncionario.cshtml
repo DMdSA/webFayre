@@ -1,19 +1,16 @@
 ﻿@model IEnumerable<WebFayre.Models.Promocaofeira>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Nome)
+                @Html.DisplayNameFor(model => model.CapacidadeUtilizadores)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Descricao)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.CapacidadeUtilizadores)
+                @Html.DisplayNameFor(model => model.Nome)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.NStands)
@@ -49,6 +46,8 @@
                 @Html.DisplayFor(modelItem => item.IdUtilizadorNavigation.Id)
             </td>
             <td>
+                <a asp-action="Accept" asp-route-id="@item.IdPromocaoFeira">Accept</a> |
+                <a asp-action="Reject" asp-route-id="@item.IdPromocaoFeira">Reject</a> |
                 <a asp-action="Details" asp-route-id="@item.IdPromocaoFeira">Details</a> |
             </td>
         </tr>

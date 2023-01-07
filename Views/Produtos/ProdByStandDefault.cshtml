@@ -1,26 +1,6 @@
 ﻿@model IEnumerable<WebFayre.Models.Produto>
-@using Microsoft.AspNetCore.Http;
-@using WebFayre.Common;
-@using Newtonsoft.Json;
 
-<script type="text/javascript">
-    let standCart = @Html.Raw(JsonConvert.SerializeObject(ViewBag.StandShoppingCart));
-</script>
-<script type="text/javascript" src="/js/cart.js"></script>
-
-@{
-    ViewData["Title"] = "Index";
-}
-
-
-<h1>@Html.Raw(ViewBag.NomeStand)</h1>
-
-
-<form asp-action="ViewCart">
-        <input type="submit" id ="process_cart" value="Create" class="btn btn-primary d-none" />
-</form>
-
-<input id="buy" type="button" value="Comprar" onclick="transplantCart()" />
+    <h1>@Html.Raw(ViewBag.NomeStand)</h1>
 
 <table class="table">
     <thead>
@@ -44,34 +24,25 @@
         @foreach (var item in Model)
         {
             <tr>
-                <td>
+                   <td>
                     @Html.DisplayFor(modelItem => item.Descricao)
-                </td>
-                <td>
+                        </td>
+                        <td>
                     @Html.DisplayFor(modelItem => item.Stock)
-                </td>
-                <td>
+                        </td>
+                        <td>
                     @{
                         var dotPrice = item.Preco.ToString().Replace(",", ".");
                     }
                     @Html.DisplayFor(modelItem => dotPrice)
-                </td>
-                <td>
+                        </td>
+                        <td>
                     @{
                         var dotIva = item.Iva.ToString().Replace(",", ".");
                     }
                     @Html.DisplayFor(modelItem => dotIva)
-                </td>
+                        </td>
                 <td>
-
-                    @{
-                        var price = item.Preco.ToString().Replace(",", ".");
-                        var iva = item.Iva.ToString().Replace(",", ".");
-                    }
-                    <button onclick="addProduct(@item.IdProduto, @price, @iva, @item.Stock)">Adicionar</button>
-                    <input type="number" id="@item.IdProduto" value="0" min="0" max="@item.Stock" readonly/>
-                    <button onclick="removeProduct(@item.IdProduto, @price)">Remover</button>
-
                     <a asp-action="Details" asp-route-id="@item.IdProduto">Details</a> |
                 </td>
             </tr>

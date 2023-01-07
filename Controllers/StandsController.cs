@@ -19,6 +19,10 @@ namespace WebFayre.Controllers
         {
             _context = context;
         }
+        private string getFuncFuncao()
+        {
+            return HttpContext.Session.GetString("Funcao");
+        }
 
         // GET: Stands
         public async Task<IActionResult> Index()
@@ -28,20 +32,54 @@ namespace WebFayre.Controllers
             return View(await webFayreContext.ToListAsync());
         }
 
-        public async Task<IActionResult> StandsByFeira(int feiraid)
+        public IActionResult RedirectIndex(int idFeira)
+        {
+            if(getFuncFuncao() == "Admin")
+            {
+                return RedirectToAction("StandsByFeiraAdmin", "Stands", new { idFeira });
+            }
+            else
+            {
+                return RedirectToAction("StandsByFeira", "Stands", new { idFeira });
+            }
+        }
+
+        public async Task<IActionResult> StandsByFeira(int idFeira)
         {
             if (HttpContext.Session.GetInt32("utilizadorId") == null)
                 return RedirectToAction("login", "home");
 
             int userid = (int)HttpContext.Session.GetInt32("utilizadorId");
             HttpContext.Session.Remove("CartObject");
-            var standlist = await _context.Stands.Include(s => s.Feira).Include(s => s.StandTipo).Where(s => s.FeiraId == feiraid).ToListAsync();
-
+            var standlist = await _context.Stands.Include(s => s.Feira).Include(s => s.StandTipo).Where(s => s.FeiraId == idFeira).ToListAsync();
+            var feira = await _context.Feiras.Where(s => s.IdFeira == idFeira).FirstOrDefaultAsync();
+            ViewBag.FeiraNome = feira.Nome;
+            /*
             if (standlist.Count == 0)
             {
                 RedirectToAction("index", "feiras", userid);
                 return NoContent();
-            }
+            }*/
+
+            return View(standlist);
+        }
+
+        public async Task<IActionResult> StandsByFeiraAdmin(int idFeira)
+        {
+            if (HttpContext.Session.GetInt32("utilizadorId") == null)
+                return RedirectToAction("login", "home");
+
+            int userid = (int)HttpContext.Session.GetInt32("utilizadorId");
+            HttpContext.Session.Remove("CartObject");
+            var standlist = await _context.Stands.Include(s => s.Feira).Include(s => s.StandTipo).Where(s => s.FeiraId == idFeira).ToListAsync();
+            var feira = await _context.Feiras.Where(s => s.IdFeira == idFeira).FirstOrDefaultAsync();
+            ViewBag.FeiraNome = feira.Nome;
+            /*
+            if (standlist.Count == 0)
+            {
+                RedirectToAction("index", "feiras", userid);
+                return NoContent();
+            }*/
 
             return View(standlist);
         }
@@ -211,7 +249,7 @@ namespace WebFayre.Controllers
 
                 //HttpContext.Session.SetObject("StandShoppingCart", ssc);
 
-                return RedirectToAction("produtosByStand", "produtos", new { feiraId, id }); //Redirect para um href com o id do stand
+                return RedirectToAction("RedirectIndex", "produtos", new { feiraId, id }); //Redirect para um href com o id do stand
             }
 
             return NotFound();
@@ -219,7 +257,7 @@ namespace WebFayre.Controllers
 
         public IActionResult Leave()
         {
-            return RedirectToAction("index", "feiras");
+            return RedirectToAction("RedirectIndex", "feiras");
         }
     }
 }

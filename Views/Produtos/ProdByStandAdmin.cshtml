@@ -1,0 +1,56 @@
+﻿@model IEnumerable<WebFayre.Models.Produto>
+
+    <h1>@Html.Raw(ViewBag.NomeStand)</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Descricao)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Stock)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Preco)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Iva)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+               <td>
+                    @Html.DisplayFor(modelItem => item.Descricao)
+                    </td>
+                    <td>
+                    @Html.DisplayFor(modelItem => item.Stock)
+                    </td>
+                    <td>
+                    @{
+                        var dotPrice = item.Preco.ToString().Replace(",", ".");
+                    }
+                    @Html.DisplayFor(modelItem => dotPrice)
+                    </td>
+                    <td>
+                    @{
+                        var dotIva = item.Iva.ToString().Replace(",", ".");
+                    }
+                    @Html.DisplayFor(modelItem => dotIva)
+                    </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.IdProduto">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.IdProduto">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.IdProduto">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

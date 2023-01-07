@@ -1,0 +1,82 @@
+﻿@model IEnumerable<WebFayre.Models.Stand>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>@Html.Raw(ViewBag.FeiraNome)</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<p>
+<a asp-action="Leave">Sair da feira</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Nome)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Descricao)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Email)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Telefone)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Disponibilidade)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Morada)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.StandTipo)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Nome)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Descricao)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Email)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Telefone)
+                </td>
+                <td>
+                    @{
+                        var text_bool = item.Disponibilidade == 1 ? "True" : "False";
+                    }
+                    @Html.DisplayFor(modelItem => text_bool)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Morada)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.StandTipo.Id)
+                    ,
+                    @Html.DisplayFor(modelItem => item.StandTipo.Descricao)
+                </td>
+                <td>
+                        <a asp-action="Enter" asp-route-feiraId="@item.FeiraId" asp-route-id="@item.IdStand">Enter</a> |
+                        <a asp-action="Edit" asp-route-id="@item.IdStand">Edit</a> |
+                        <a asp-action="Details" asp-route-id="@item.IdStand">Details</a> |
+                        <a asp-action="Delete" asp-route-id="@item.IdStand" asp-route-feiraId="@item.FeiraId">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -2,14 +2,10 @@
 
 @{
     ViewData["Title"] = "Index";
-    ViewBag.feiraid= TempData["feiraid"];
 }
 
-<h1>@Model.FirstOrDefault().Feira.Nome</h1>
+<h1>@Html.Raw(ViewBag.FeiraNome)</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
 <p>
 <a asp-action="Leave">Sair da feira</a>
 </p>
@@ -66,15 +62,11 @@
                 @Html.DisplayFor(modelItem => item.Morada)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.StandTipo.Id)
-                ,
                     @Html.DisplayFor(modelItem => item.StandTipo.Descricao)
             </td>
             <td>
                     <a asp-action="Enter" asp-route-feiraId="@item.FeiraId" asp-route-id="@item.IdStand">Enter</a> |
-                    <a asp-action="Edit" asp-route-id="@item.IdStand">Edit</a> |
                     <a asp-action="Details" asp-route-id="@item.IdStand">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.IdStand" asp-route-feiraId="@item.FeiraId">Delete</a>
             </td>
         </tr>
 }
