@@ -71,3 +71,4 @@ obj/WebFayre.csproj.nuget.g.props
 .vs/
 obj/
 bin/
+appsettings.json

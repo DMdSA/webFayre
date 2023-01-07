@@ -17,7 +17,7 @@ document.addEventListener("click", e => {
     if (handle != null) onHandleClick(handle)
 })
 
-//
+
 document.querySelectorAll(".slider-track").forEach(calculateSliderTrack)
 
 //Calculate and create the number of bars on the slider tracking 
@@ -53,7 +53,6 @@ window.addEventListener("resize", (e) => {
 })
 
 
-
 //Moving slider left or right
 function onHandleClick(handle) {
     const sliderTrack = handle.closest(".slider-row").querySelector(".slider-track")
@@ -75,7 +74,7 @@ function onHandleClick(handle) {
             sliderTrack.children[sliderIndex - 1].classList.add("active")
         }
     }
-    //If the handle class contains "next" we want to slide forward
+    //If the handle class contains "next" we want to slide forward 
     if (handle.classList.contains("next")) {
         //checking if we have more items on the slider
         if (sliderIndex + 1 >= sliderTrackItemCount) {
@@ -94,6 +93,87 @@ function onHandleClick(handle) {
     }
 }
 
+//Pagination 
+function getPageList(totalPages, page, maxLength) {
+    function range(start, end) {
+        return Array.from(Array(end - start + 1), (_, i) => 1 + start);
+    }
+
+    var sideWidth = maxLength < 9 ? 1 : 2;
+    var leftWidth = (maxLength - sideWidth * 2 - 3) >> 1;
+    var rightWidth = (maxLength - sideWidth * 2 - 3) >> 1;
+
+    if (totalPages <= maxLength) {
+        return range(1, totalPages);
+    }
+
+    if (page <= maxLength - sideWidth - 1 - rightWidth) {
+        return range(1, maxLength - sideWidth - 1).concat(0, range(totalPages - sideWidth + 1, totalPages));
+    }
+
+    if (page >= totalPages - sideWidth - 1 - rightWidth) {
+        return range(1, sideWidth).concat(0, range(totalPages - sideWidth - 1 - rightWidth - leftWidth, totalPages));
+    }
+    return range(1, sideWidth).concat(0, range(page - leftWidth, page + rightWidth), 0, range(totalPages - sideWidth + 1, totalPages));
+}
+
+
+$(function () {
+
+    var numberOfItems = $(".card-content .card-display").length;
+    var limitPerPage = 10; //Limit of cards visible per page
+    var totalPages = Math.ceil(numberOfItems / limitPerPage);
+    var paginationSize = 5; //Number of pages shown at the button 
+    var currentPage;
+
+    function showPage(whichPage) {
+        if (whichPage < 1 || whichPage > totalPages) return false;
+
+        currentPage = whichPage;
+
+        $(".card-content .card-display").hide().slice((currentPage - 1) * limitPerPage, currentPage * limitPerPage).show();
+
+        $(".pagination-card li").slice(1, -1).remove();
+
+        getPageList(totalPages, currentPage, paginationSize).forEach(item => {
+            $("<li>").addClass("page-card").addClass(item ? "current-page" : "dots")
+                .toggleClass("actPage", item === currentPage).append($("<a>").addClass("card-link")
+                    .attr({ hreft: "javascript:void(0)" }).text(item || "...")).insertBefore(".nxtPage");
+        });
+
+        $(".prvPage").toggleClass("disable", currentPage === 1);
+        $(".nxtPage").toggleClass("disable", currentPage === totalPages);
+        return true;
+    }
+
+    $(".pagination-card").append(
+        $("<li>").addClass("page-card").addClass("prvPage").append($("<a>").addClass("card-link")
+            .attr({ href: "javascript:void(0)" }).text("Prev")),
+        $("<li>").addClass("page-card").addClass("nxtPage").append($("<a>").addClass("card-link")
+            .attr({ href: "javascript:void(0)" }).text("Next"))
+    );
+    $(".card-content".show());
+    showPage(1);
+
+    $(document).on("click", ".pagination-card li.current-page:not(.actPage)", function () {
+        return showPage(+$(this).text());
+    });
+
+    $("nxtPage").on("click", function () {
+        return showPage(currentPage + 1);
+    });
+
+    $("prvPage").on("click", function () {
+        return showPage(currentPage - 1);
+    });
+});
+
+
+
+
+
+
+//footer
 function setFooterStyle() {
     var docHeight = $(window).height();
     var footerHeight = $('#footer').outerHeight();
@@ -105,7 +185,11 @@ function setFooterStyle() {
     }
     $('#footer').removeClass('invisible');
 }
+
+
 $(document).ready(function () {
+
+    //footer resize
     setFooterStyle();
     window.onresize = setFooterStyle;
     // 14.8 minutes of timeout

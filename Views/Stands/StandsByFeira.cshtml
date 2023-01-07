@@ -6,70 +6,21 @@
 
 <h1>@Html.Raw(ViewBag.FeiraNome)</h1>
 
-<p>
-<a asp-action="Leave">Sair da feira</a>
-</p>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Nome)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Descricao)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Email)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Telefone)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Disponibilidade)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Morada)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.StandTipo)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Nome)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Descricao)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Email)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Telefone)
-            </td>
-            <td>
-                    @{
-                        var text_bool = item.Disponibilidade == 1 ? "True" : "False";
-                    }
-                    @Html.DisplayFor(modelItem => text_bool)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Morada)
-            </td>
-            <td>
-                    @Html.DisplayFor(modelItem => item.StandTipo.Descricao)
-            </td>
-            <td>
-                    <a asp-action="Enter" asp-route-feiraId="@item.FeiraId" asp-route-id="@item.IdStand">Enter</a> |
-                    <a asp-action="Details" asp-route-id="@item.IdStand">Details</a> |
-                    <a asp-action="Sales" asp-route-id="@item.IdStand">Sales done</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+<div class="displayContainer">
+    <div class="card-content" style="display: 10">
+        @foreach (var item in Model)
+        {
+            <div class="card-display">
+                <div class="card-image"><img src="https://mdbcdn.b-cdn.net/img/new/standard/city/041.webp"></div>
+                <div class="card-info">
+                    <h3>@item.Nome </h3>
+                    <p> @item.Descricao</p>
+                    <p> @item.Email</p>
+                    <p> @item.Telefone</p>
+                    <a class="btn btn-primary" asp-action="Enter" asp-route-id="@item.IdStand">Visit</a>
+                </div>
+            </div>
+        }
+    </div>
+</div>

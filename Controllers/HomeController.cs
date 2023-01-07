@@ -37,6 +37,7 @@ namespace WebFayre.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
+
         /*
         [HttpPost]
         public async Task<JsonResult> HasSession()
@@ -50,6 +51,16 @@ namespace WebFayre.Controllers
             return new JsonResult(new { data = userid });
         }
         */
+
+        // POST: Feiras/SearchResults
+        [HttpPost]
+        public async Task<IActionResult> SearchResult(String nameFeira)
+        {
+            WebFayreContext wfc = new WebFayreContext();
+            var result = await wfc.Feiras.Where(f => f.Nome.Contains(nameFeira)).ToListAsync();
+            return View("Index" , result);
+        }
+
 
         public ActionResult Register()
         {

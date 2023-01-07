@@ -7,7 +7,7 @@
 <div class="container-fluid padding">
     <div class="row about text-center">
         <div class="col-12">
-            <h1 class="display-4"> Welcome to WebFayre </h1>
+            <h1 class="display-4"> WebFayre </h1>
         </div>
         <hr />
     </div>
@@ -18,169 +18,308 @@
     <div class="row search-bar text-center">
         <div class="col-12">
 
-            <form asp-action="SearchResults">
+            <form asp-action="SearchResult" asp-controller="Home">
                 <div class="input-group">
-                    <label for="searchTerm" class="control-label"></label>
-                    <input name="searchTerm" placeholder="Search ... " class="form-control" />
+                    <label for="nameFeira" class="control-label"></label>
+                    <input name="nameFeira" placeholder="Search ... " class="form-control" />
                     <div class="input-group-append">
                         <div class="input-group">
-                            <button type="submit" value="Search" class="btn btn-primary">
+                            <button type="submit" value="Search" class="btn btn-primary" id="search">
                                 <i class="fas fa-search"></i>
                             </button>
                         </div>
                     </div>
                 </div>
             </form>
-
-        </div>
-    </div>
-</div>
-
-
-<!-- Favorites listed in a carousel row -->
-<div class="slider-row">
-
-    <div class="slider-header">
-        <h3 class="fav"> Favorites </h3>
-        <div class="slider-track">
-            <div class="track-item active"></div>
-            <div class="track-item"></div>
-            <div class="track-item"></div>
-            <div class="track-item"></div>
-        </div>
-    </div>
-
-    <div class="carousel-container">
-        <!-- Previous button the left side to control carousel-->
-        <button class="carousel-handler previous" type="button" data-bs-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="visually-hidden"></span>
-        </button>
-        <!-- Carousel displaying favorite fairs cards -->
-        <div class="carousel-slider">
-            <div class="card">
-                <div class="card-body">
-                    <img class="card-img-top" src="https://via.placeholder.com/210?text=1" alt="">
-                    <h5 class="card-title">Card title</h5>
-                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                    <a class="btn btn-primary" asp-area="" asp-controller="Feiras" asp-action="RedirectIndex">fav</a>
-                    <a class="btn btn-primary" asp-area="" asp-controller="Feiras" asp-action="RedirectIndex">Feiras</a>
-                </div>
-            </div>
-            <div class="card">
-                <div class="card-body">
-                    <img class="card-img-top" src="https://via.placeholder.com/220?text=2" alt="">
-                    <h5 class="card-title">Card title</h5>
-                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                    <a class="btn btn-primary" asp-area="" asp-controller="Feiras" asp-action="RedirectIndex">fav</a>
-                    <a class="btn btn-primary" asp-area="" asp-controller="Feiras" asp-action="RedirectIndex">Feiras</a>
-                </div>
-            </div>
-            <!--
-            <img src="https://via.placeholder.com/220?text=2" alt="">
-            <img src="https://via.placeholder.com/230?text=3" alt="">
-            <img src="https://via.placeholder.com/240?text=4" alt="">
-            <img src="https://via.placeholder.com/250?text=5" alt="">
-            <img src="https://via.placeholder.com/260?text=6" alt="">
-            <img src="https://via.placeholder.com/270?text=7" alt="">
-            <img src="https://via.placeholder.com/280?text=8" alt="">
-            <img src="https://via.placeholder.com/290?text=9" alt="">-->
-
-        </div>
-        <button class="carousel-handler next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="visually-hidden"></span>
-        </button>
-    </div>
-
-</div>
-
-<!-- List of X fairs sorted by date without any search -->
-<div class="container-fluid padding">
-    <div class="row padding">
-        <div class="col-md-4">
-            @foreach (var item in Model)
-            {
-             <div class="card">
-                <img  class="card-img-top" src="https://via.placeholder.com/220?text=2" alt="">
-                <div class="card-body">
-                    <h4 class="card-title">@item.Nome</h4>
-                    <p class="card-text"> @item.DataInicio</p>
-                    <a class="btn btn-outline-secondary">Visit</a>
-                </div>
-            </div> 
+            @section scripts{
+                <script>
+                    $(function (){
+                        $("#search").click(function (){
+                            $("Form").submit();
+                        })
+                    });
+                </script>
             }
 
         </div>
     </div>
 </div>
 
-                <!-- Next button the right side to control carousel-->
 
-@* 
-        <div class="row">
-            <div class="col-12">
-                <div class="carousel-indicators">
-                    <button type="button" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-                    <button type="button" data-bs-slide-to="1" aria-label="Slide 2"></button>
-                    <button type="button" data-bs-slide-to="2" aria-label="Slide 3"></button>
-                    <button type="button" data-bs-slide-to="4" aria-label="Slide 4"></button>
-                </div>
+<!-- ###################### CAROUSEL STARTS HERE ###################### -->
+<!-- Favorites listed in a carousel row -->
+<section>
+    <div class="slider-row">
 
-
-                <div class="carousel-inner">
-
-                    <div class="carousel-item active"> 
-                        <!-- Cards to be displayed int he carousel -->
-                        <div class="card">
-                            <img src="..." class="card-img-top" alt="feiras">
-                            <div class="card-body">
-                                <h5 class="card-title">Card title</h5>
-                                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                                <a class="btn btn-primary" asp-area="" asp-controller="Feiras" asp-action="Index">Feiras</a>
-
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="carousel-item">
-                        <!-- Cards to be displayed int he carousel -->
-                        <div class="card">
-                            <!-- wrapping images so they have they have releatively the same size -->
-
-                            <img src="..." class="card-img-top" alt="img2">
-                            <div class="card-body">
-                                <h5 class="card-title">Card title</h5>
-                                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                                <a class="btn btn-primary" asp-area="" asp-controller="Funcoes" asp-action="Index">Funcoes</a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="carousel-item">
-                        <!-- Cards to be displayed int he carousel -->
-                        <div class="card">
-                            <img src="..." class="card-img-top" alt="img3">
-                            <div class="card-body">
-                                <h5 class="card-title">Card title</h5>
-                                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                                <a href="#" class="btn btn-primary">Go somewhere</a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="carousel-item">
-                        <!-- Cards to be displayed int he carousel -->
-                        <div class="card">
-                            <img src="..." class="card-img-top" alt="img4">
-                            <div class="card-body">
-                                <h5 class="card-title">Card title</h5>
-                                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                                <a href="#" class="btn btn-primary">Go somewhere</a>
-                            </div>
-                        </div>
-                    </div>
-                </div> 
-
+        <div class="slider-header">
+            <h3 class="fav"> Favorites </h3>
+            <div class="slider-track">
+                <div class="track-item active"></div>
+                <div class="track-item"></div>
+                <div class="track-item"></div>
+                <div class="track-item"></div>
             </div>
-        </div>*@
+        </div>
+
+        <div class="carousel-container">
+            <!-- Previous button the left side to control carousel-->
+            <button class="carousel-handler previous" type="button" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden"></span>
+            </button>
+
+            <!-- Carousel displaying favorite fairs cards -->
+            <div class="carousel-slider">
+                <div class="card">
+                    <div class="card-body">
+                        <img class="card-img-top" src="https://via.placeholder.com/210?text=1" alt="">
+                        <h5 class="card-title">Card title</h5>
+                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                        <a class="btn btn-primary" asp-area="" asp-controller="Feiras" asp-action="RedirectIndex">fav</a>
+                        <a class="btn btn-primary" asp-area="" asp-controller="Feiras" asp-action="RedirectIndex">Feiras</a>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-body">
+                        <img class="card-img-top" src="https://via.placeholder.com/220?text=2" alt="">
+                        <h5 class="card-title">Card title</h5>
+                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                        <a class="btn btn-primary" asp-area="" asp-controller="Feiras" asp-action="RedirectIndex">fav</a>
+                        <a class="btn btn-primary" asp-area="" asp-controller="Feiras" asp-action="RedirectIndex">Feiras</a>
+                    </div>
+                </div>
+                <!--
+                <img src="https://via.placeholder.com/220?text=2" alt="">
+                <img src="https://via.placeholder.com/230?text=3" alt="">
+                <img src="https://via.placeholder.com/240?text=4" alt="">
+                <img src="https://via.placeholder.com/250?text=5" alt="">
+                <img src="https://via.placeholder.com/260?text=6" alt="">
+                <img src="https://via.placeholder.com/270?text=7" alt="">
+                <img src="https://via.placeholder.com/280?text=8" alt="">
+                <img src="https://via.placeholder.com/290?text=9" alt="">-->
+            </div>
+
+            <button class="carousel-handler next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden"></span>
+            </button>
+        </div>
+        <!-- fix this HR -->
+        <hr/>
+    </div>
+</section>
+<!-- XXXXXXXXXXXXXXXXXXXX CAROUSEL ENDS HERE XXXXXXXXXXXXXXXXXXXX -->
+
+<!-- ##################### DISPLAY CONTENT STARTS HERE #################### -->
+<!-- List of X fairs sorted by date without any search -->
+<div class="displayContainer">
+    <div class="card-content" style="display: 10">
+        @foreach (var item in Model)
+        {
+        <div class="card-display">
+            <div class="card-image"><img src="https://mdbcdn.b-cdn.net/img/new/standard/city/041.webp"></div>
+            <div class="card-info">
+                <h3> @item.Nome </h3>
+                <p> @item.DataInicio </p>
+                <a class="btn btn-outline-secondary">Visit</a>
+            </div>
+        </div>
+        }
+        <div class="card-display">
+            <div class="card-image"><img src="https://mdbcdn.b-cdn.net/img/new/standard/city/041.webp"></div>
+            <div class="card-info">
+                <h3> Title </h3>
+                <p> TEXT </p>
+            </div>
+        </div>
+
+        <div class="card-display">
+            <div class="card-image"><img src="https://mdbcdn.b-cdn.net/img/new/standard/city/041.webp"></div>
+            <div class="card-info">
+                <h3> Title </h3>
+                <p> TEXT </p>
+            </div>
+        </div>
+        <div class="card-display">
+            <div class="card-image"><img src="https://mdbcdn.b-cdn.net/img/new/standard/city/041.webp"></div>
+            <div class="card-info">
+                <h3> Title </h3>
+                <p> TEXT </p>
+            </div>
+        </div>
+        <div class="card-display">
+            <div class="card-image"><img src="https://mdbcdn.b-cdn.net/img/new/standard/city/041.webp"></div>
+            <div class="card-info">
+                <h3> Title </h3>
+                <p> TEXT </p>
+            </div>
+        </div>
+        <div class="card-display">
+            <div class="card-image"><img src="https://mdbcdn.b-cdn.net/img/new/standard/city/041.webp"></div>
+            <div class="card-info">
+                <h3> Title </h3>
+                <p> TEXT </p>
+            </div>
+        </div>
+        <div class="card-display">
+            <div class="card-image"><img src="https://mdbcdn.b-cdn.net/img/new/standard/city/041.webp"></div>
+            <div class="card-info">
+                <h3> Title </h3>
+                <p> TEXT </p>
+            </div>
+        </div>
+        <div class="card-display">
+            <div class="card-image"><img src="https://mdbcdn.b-cdn.net/img/new/standard/city/041.webp"></div>
+            <div class="card-info">
+                <h3> Title </h3>
+                <p> TEXT </p>
+            </div>
+        </div>
+        <div class="card-display">
+            <div class="card-image"><img src="https://mdbcdn.b-cdn.net/img/new/standard/city/041.webp"></div>
+            <div class="card-info">
+                <h3> Title </h3>
+                <p> TEXT </p>
+            </div>
+        </div>
+        <div class="card-display">
+            <div class="card-image"><img src="https://mdbcdn.b-cdn.net/img/new/standard/city/041.webp"></div>
+            <div class="card-info">
+                <h3> Title </h3>
+                <p> TEXT </p>
+            </div>
+        </div>
+        <div class="card-display">
+            <div class="card-image"><img src="https://mdbcdn.b-cdn.net/img/new/standard/city/041.webp"></div>
+            <div class="card-info">
+                <h3> Title </h3>
+                <p> TEXT </p>
+            </div>
+        </div>
+        <div class="card-display">
+            <div class="card-image"><img src="https://mdbcdn.b-cdn.net/img/new/standard/city/041.webp"></div>
+            <div class="card-info">
+                <h3> Title </h3>
+                <p> TEXT </p>
+            </div>
+        </div>
+        <div class="card-display">
+            <div class="card-image"><img src="https://mdbcdn.b-cdn.net/img/new/standard/city/041.webp"></div>
+            <div class="card-info">
+                <h3> Title </h3>
+                <p> TEXT </p>
+            </div>
+        </div>
+        <div class="card-display">
+            <div class="card-image"><img src="https://mdbcdn.b-cdn.net/img/new/standard/city/041.webp"></div>
+            <div class="card-info">
+                <h3> Title </h3>
+                <p> TEXT </p>
+            </div>
+        </div>
+        <div class="card-display">
+            <div class="card-image"><img src="https://mdbcdn.b-cdn.net/img/new/standard/city/041.webp"></div>
+            <div class="card-info">
+                <h3> Title </h3>
+                <p> TEXT </p>
+            </div>
+        </div>
+        <div class="card-display">
+            <div class="card-image"><img src="https://mdbcdn.b-cdn.net/img/new/standard/city/041.webp"></div>
+            <div class="card-info">
+                <h3> Title </h3>
+                <p> TEXT </p>
+            </div>
+        </div>
+        <div class="card-display">
+            <div class="card-image"><img src="https://mdbcdn.b-cdn.net/img/new/standard/city/041.webp"></div>
+            <div class="card-info">
+                <h3> Title </h3>
+                <p> TEXT </p>
+            </div>
+        </div>
+        <div class="card-display">
+            <div class="card-image"><img src="https://mdbcdn.b-cdn.net/img/new/standard/city/041.webp"></div>
+            <div class="card-info">
+                <h3> Title </h3>
+                <p> TEXT </p>
+            </div>
+        </div>
+        <div class="card-display">
+            <div class="card-image"><img src="https://mdbcdn.b-cdn.net/img/new/standard/city/041.webp"></div>
+            <div class="card-info">
+                <h3> Title </h3>
+                <p> TEXT </p>
+            </div>
+        </div>
+                <div class="card-display">
+            <div class="card-image"><img src="https://mdbcdn.b-cdn.net/img/new/standard/city/041.webp"></div>
+            <div class="card-info">
+                <h3> Title </h3>
+                <p> TEXT </p>
+            </div>
+        </div>
+        <div class="card-display">
+            <div class="card-image"><img src="https://mdbcdn.b-cdn.net/img/new/standard/city/041.webp"></div>
+            <div class="card-info">
+                <h3> Title </h3>
+                <p> TEXT </p>
+            </div>
+        </div>
+        <div class="card-display">
+            <div class="card-image"><img src="https://mdbcdn.b-cdn.net/img/new/standard/city/041.webp"></div>
+            <div class="card-info">
+                <h3> Title </h3>
+                <p> TEXT </p>
+            </div>
+        </div>
+        <div class="card-display">
+            <div class="card-image"><img src="https://mdbcdn.b-cdn.net/img/new/standard/city/041.webp"></div>
+            <div class="card-info">
+                <h3> Title </h3>
+                <p> TEXT </p>
+            </div>
+        </div>
+        <div class="card-display">
+            <div class="card-image"><img src="https://mdbcdn.b-cdn.net/img/new/standard/city/041.webp"></div>
+            <div class="card-info">
+                <h3> Title </h3>
+                <p> TEXT </p>
+            </div>
+        </div>
+        <div class="card-display">
+            <div class="card-image"><img src="https://mdbcdn.b-cdn.net/img/new/standard/city/041.webp"></div>
+            <div class="card-info">
+                <h3> Title </h3>
+                <p> TEXT </p>
+            </div>
+        </div>
+        <div class="card-display">
+            <div class="card-image"><img src="https://mdbcdn.b-cdn.net/img/new/standard/city/041.webp"></div>
+            <div class="card-info">
+                <h3> Title </h3>
+                <p> TEXT </p>
+            </div>
+        </div>
+    </div>
+
+   
+    <ul class="pagination-card">
+        <li class="page-card prvPage disable">
+            <a class="card-link">Prev</a>
+        </li>
+
+        <li class="page-card current-page actPage">
+            <a class="card-link" href="#">1</a></li>
+        <li class="page-card current-page">
+            <a class="card-link" href="#">2</a></li>
+        <li class="page-card dots">
+            <a class="card-link" href="#">3</a></li>
+
+        <li class="page-card nxtPage">
+            <a class="card-link" href="#">Next</a>
+        </li>
+    </ul>
+
+</div>
+<!-- XXXXXXXXXXXXXXXXXXXX DISPLAY CONTENT ENDS HERE XXXXXXXXXXXXXXXXXXXX -->

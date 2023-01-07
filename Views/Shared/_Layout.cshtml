@@ -4,72 +4,89 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>@ViewData["Title"] - WebFayre</title>
+
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
     <script src="https://use.fontawesome.com/releases/v5.0.8/js/all.js"></script> 
     <script src="https://cdn.syncfusion.com/ej2/20.4.38/dist/ej2.min.js%22%3E"></script>
-    <link href="style.css" rel="stylesheet">
+
+    <!-- Owl-Carousel -->
+    <link rel="stylesheet" href="./css/owl.carousel.min.css">
+    <link rel="stylesheet" href="./css/owl.theme.default.min.css">
+
+    <!-- Costume styling -->
     <link rel="stylesheet" href="~/css/style.css" asp-append-version="true" />
 </head>
-<body onbeforeunload="ConfirmClose()" onunload="HandleOnClose()">
-        <!-- Header -->
-        <!-- navbar-expand-md breakpoint at 768px to change from mobile to full -->
-        <nav class="navbar navbar-expand-md navbar-light bg-light sticky-top">
-            <div class="container-fluid"> <!-- container-fluid - Takes up 100% of the screen -->
 
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index"> <img width="165" height="80" src="~/img/logo-no-background.png"> </a>
-          
-                <!-- toggle button when certain window size breakpoints are met-->
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
+<body>
+    <!-- #################### STARTING HEADER ####################  -->
+    <!-- navbar-expand-md breakpoint at 768px to change from mobile to full -->
+    <nav class="navbar navbar-expand-md navbar-light bg-light sticky-top">
+        <div class="container-fluid"> <!-- container-fluid - Takes up 100% of the screen -->
 
-                <div class="collapse navbar-collapse" id="navbarResponsive">
-                    <!-- ml-auto places the navigation links to the right side when at full width -->
-                    <ul class="navbar-nav ml-auto"> 
-                        <!-- active: highlights the active page slightly darker -->
-                        <li class="nav-item active">
-                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Login">Login</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Register">Register</a>
-                        </li>
-                        <li class ="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="RedirectProfile">Profile</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Utilizadores" asp-action="ForgotPassword">About</a>
-                        </li>
-                    <li class="nav-item">
-                        <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Logout">Logout</a>
+            <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index"> <img width="165" height="80" src="~/img/logo-no-background.png"> </a>
+
+            <!-- toggle button when certain window size breakpoints are met-->
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+                <!-- ml-auto places the navigation links to the right side when at full width -->
+                <ul class="navbar-nav ml-auto"> 
+                    <!-- active: highlights the active page slightly darker -->
+                    <li class="nav-item active">
+                        <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Login">Login</a>
                     </li>
-                    </ul>
-                </div>
-
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Register">Register</a>
+                    </li>
+                    <li class ="nav-item">
+                        <a class="nav-link" asp-area="" asp-controller="Utilizadores" asp-action="RedirectProfile">Profile</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="" asp-controller="Utilizadores" asp-action="ForgotPassword">Log out</a>
+                    </li>
+                </ul>
             </div>
-        </nav>
 
-        @RenderBody()
+        </div>
+    </nav>
+    <!-- xxxxxxxxxxxxxxxxxxxx ENDING HEADER xxxxxxxxxxxxxxxxxxxx -->
 
+    <!-- #################### STARTING MAIN ####################  -->
+    <main>
+    @RenderBody()
+    </main>
+    <!-- xxxxxxxxxxxxxxxxxxxx ENDING MAIN xxxxxxxxxxxxxxxxxxxx -->
 
-
-        <!-- Footer -->
-        <div id="footer" class="invisible">
-            <div class="container-fluid padding">
-                <div class="row text-center">
-                <div class="col-12">
-                    <hr class="light">
-                    <h5>&copy; 2022 - WebFayre - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a></h5>
-                </div>
-                </div>
+    <!-- Footer -->
+    <div id="footer" class="invisible">
+        <div class="container-fluid padding">
+            <div class="row text-center">
+            <div class="col-12">
+                <hr class="light">
+                <h5>&copy; 2022 - WebFayre - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a></h5>
+                <h5><a class="nav-link" asp-area="" asp-controller="Utilizadores" asp-action="ForgotPassword">About</a></h5>
+            </div>
             </div>
         </div>
+    </div>
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+    <!-- --------- bootstrap js ------------------->
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- --------- Owl-Carousel js ------------------->
+    <script src="./js/owl.carousel.min.js"></script>
+
+    <!-- Custom Javascript file -->
     <script src="~/js/site.js" asp-append-version="true"></script> 
+
+
     @{await RenderSectionAsync("Scripts", required: false);}
     
 </body>

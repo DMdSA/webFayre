@@ -2,14 +2,15 @@
 
 
 /*-- General style to all pages --*/
-/*-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! --*/
 *, *::after, *::before{
     box-sizing: border-box;
 }
 
-:root{
+:root {
     --handle-size: 3rem;
     --img-gap: 0.25rem;
+    /* Colors */
+    --btnColor: #FFAA33;
 }
 html{
     height: 100%;
@@ -100,6 +101,8 @@ hr.light {
     margin: 0 auto;
 }
 
+
+/* #################### favorite section #################### */
 /*-- Container where the carousel will be displayed --*/
 .carousel-container{
     display: flex;
@@ -111,6 +114,7 @@ hr.light {
     --cards-per-screen: 5;
     --slider-index: 0;
     display: flex;
+    justify-content: center;
     flex-grow: 1;
     margin: 0 var(--img-gap);
     transform: translateX(calc(var(--slider-index) * -100%));
@@ -118,24 +122,33 @@ hr.light {
     
 }
 
-.card {
+.carousel-slider .card{
     flex: 0 0 calc(100%/ var(--cards-per-screen));
     max-width: calc(100%/ var(--cards-per-screen));
     aspect-ratio: 16/9;
     padding: var(--img-gap);
-    border-radius: 1rem;
     box-shadow: 2px 6px 8px 0 rgba(22, 22, 26, .18);
     color: orangered;
+    margin: 0 var(--img-gap);
 }
 
-
-.card-body > img {
-    /*-- flex grow 0, flex shrink 0, width is 25%  --*/
-    /*--flex: 0 0 25%;--*/
-    max-width:100%;
-    aspect-ratio: 16/9;
+.carousel-slider .card-body {
     padding: var(--img-gap);
-    border-radius: 1rem;
+}
+
+.carousel-slider .card-body > img {
+    /*-- flex grow 0, flex shrink 0, width is 25%  --*/
+    flex: 0 0 25%;
+    max-width: 100%;
+    aspect-ratio: 16/9;
+    padding: 0 var(--img-gap);
+}
+
+.carousel-slider .card-title {
+    padding: var(--img-gap);
+}
+.carousel-slider .card-text {
+    padding: 0 var(--img-gap);
 }
 
 .carousel-handler {
@@ -175,6 +188,41 @@ hr.light {
     background-color: rgba(0 ,0 ,0, .5);
 }
 
+.favorite {
+    height: 100vh;
+    width: 100%;
+}
+
+.favorite .favorite-post {
+    padding-top: 6rem;
+}
+.favorite-post .favorite-content{
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    width: 80%;
+    margin: 3rem 2rem;
+    box-shadow: 0 15px 20px rgba(0,0,0,0.2);
+}
+
+.favorite-content .feira-title{
+    padding: 2rem 0;
+}
+
+.favorite-content.btn-feira{
+    padding: .7rem 2rem;
+    background: var(--btnColor);
+    margin: .5rem;
+}
+
+.favorite-content span{
+    display: block;
+}
+
+.container{
+    margin: 0 5vw;
+}
+
 .slider-row {
 }
 
@@ -205,7 +253,116 @@ hr.light {
 .track-item.active {
     background-color: rgba(249, 105, 14, 1);
 }
-/*-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! --*/
+/* XXXXXXXXXXXXXXXXXXXXX favorite section ending XXXXXXXXXXXXXXXXXXXXXX */
+
+
+
+/* #################### display cards section #################### */
+.displayContainer {
+    min-height: 100vh;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.displayContainer .card-content{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    margin: .5rem;
+}
+
+.displayContainer .card-display{
+    position: relative;
+    background: rgba(0 ,0 ,0, .5);
+    max-width: 325px;
+    height: auto;
+    margin: 2rem;
+    box-shadow: 0 5px 25px rgb(1 1 1 / 20%);
+    border-radius: 10px;
+    overflow:hidden;
+}
+
+.displayContainer .card-image{
+    max-height: 200px;
+}
+
+.displayContainer .card-image img{
+    max-width: 200px;
+    height: auto;
+
+}
+
+.card-info{
+    position: relative;
+    color: #fff;
+    padding: 10px 20px 20px;
+}
+
+.card-info h3{
+    font-size: 1.8em;
+    font-weight: 800;
+    margin-bottom: 5px;
+}
+.card-info p{
+    font-size: 1em;
+    margin-bottom: 5px;
+}
+
+
+/* !!!!!!!!!!! NEEDS WORK STYLING !!!!!!!!!!!!!!!*/
+.pagination-card {
+    text-align: center;
+    margin: .5rem .5rem 1rem;
+    user-select: none;
+}
+.pagination-card li {
+    display: inline-block;
+    margin: .25rem;
+    box-shadow: 0 5px 25px rgb(1 1 1 / 10%);
+}
+
+.pagination-card li a {
+    color: #C35817;
+    text-decoration: none;
+    font-size: 1.2em;
+    line-height: 45px;
+}   
+
+.prvPage, .nxtPage {
+    background: #ccc;
+    width: 5rem;
+    border-radius: 2rem;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+
+.prvPage:hover{
+    transform: translateX(-.25rem);
+}
+.nxtPage:hover {
+    transform: translateX(+.25rem);
+}
+
+.current-page, .dots{
+    background: #ccc;
+    width: 45px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.actPage{
+    background: var(--btnColor)
+}
+
+.disable{
+    background: rgba(0, 0, 0, 0.75);
+}
+/* XXXXXXXXXXXXXXXXXXXXX display cards section ending XXXXXXXXXXXXXXXXXXXXXX */
+
+
 
 
 /*-- LOGIN PAGE STYLE--*/
