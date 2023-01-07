@@ -84,6 +84,27 @@ namespace WebFayre.Controllers
             return View(standlist);
         }
 
+        public async Task<IActionResult> Sales(int id)
+        {
+            if (HttpContext.Session.GetInt32("utilizadorId") == null)
+            {
+                return RedirectToAction("login", "home");
+            }
+            
+            /*
+             * @todo => apenas se for um STAFF pode ter acesso a isto
+             * */
+
+            // get current user's id
+            var userid = (int)HttpContext.Session.GetInt32("utilizadorId");
+
+            return _context.Venda != null ?
+                        View(await _context.Venda.Include(v => v.VendaProdutos).Where(v => v.StandId == id).ToListAsync()) :
+                        Problem("Entity set 'WebFayreContext.Venda'  is null.");
+        }
+
+
+
         // GET: Stands/Details/5
         public async Task<IActionResult> Details(int? id)
         {
