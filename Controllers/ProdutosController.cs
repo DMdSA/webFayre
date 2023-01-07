@@ -75,6 +75,15 @@ namespace WebFayre.Controllers
             return View(await prodList.ToListAsync());
         }
 
+        public async Task<IActionResult> StaffIndex(int feiraId, int id)
+        {
+            var prodList = _context.Produtos.Include(s => s.Stand).Where(s => s.StandId == id);
+            var stand = await _context.Stands.Where(p => p.IdStand == id).FirstOrDefaultAsync();
+            if (stand != null)
+                ViewBag.NomeStand = stand.Nome;
+            return View(await prodList.ToListAsync());
+        }
+
         public async Task<IActionResult> ProdutosByStand(int feiraId, int id)
         {
             StandShoppingCart ssc = new StandShoppingCart();

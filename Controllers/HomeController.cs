@@ -155,6 +155,22 @@ namespace WebFayre.Controllers
             }
         }
 
+        public IActionResult RedirectProfile()
+        {
+            if (HttpContext.Session.GetInt32("utilizadorId") == null)
+            {
+                return RedirectToAction("login", "home");
+            }
+            else if(HttpContext.Session.GetInt32("isFuncionario") == 0)
+            {
+                return RedirectToAction("ViewProfile", "utilizadores");
+            }
+            else
+            {
+                return RedirectToAction("ViewProfile", "funcionarios");
+            }
+        }
+
 
         public ActionResult Logout()
         {
@@ -171,6 +187,9 @@ namespace WebFayre.Controllers
                 HttpContext.Session.Remove("utilizadorId");
                 HttpContext.Session.Remove("utilizadorNome");
                 HttpContext.Session.Remove("StandShoppingCart");
+                HttpContext.Session.Remove("isFuncionario");
+                HttpContext.Session.Remove("Funcao");
+                
             }
 
             return RedirectToAction("login", "home");

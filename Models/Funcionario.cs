@@ -30,11 +30,12 @@ public partial class Funcionario
         }
     }
 
+    [Display(Name = "Imagem de perfil")]
     public string? FuncionarioPath { get; set; }
 
     [ForeignKey("funcao_funcionario")]
     public int Funcao { get; set; }
-
+    [Display(Name = "Função")]
     public virtual Funcao? FuncaoNavigation { get; set; } = null!;
 
     public virtual ICollection<Promocaofeira> Promocaofeiras { get; } = new List<Promocaofeira>();

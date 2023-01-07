@@ -185,5 +185,17 @@ namespace WebFayre.Controllers
         {
           return (_context.Funcionarios?.Any(e => e.IdFuncionario == id)).GetValueOrDefault();
         }
+
+        public async Task<IActionResult> ViewProfile()
+        {
+            if (HttpContext.Session.GetInt32("utilizadorId") == null)
+            {
+                return RedirectToAction("login", "home");
+            }
+            var userid = (int)HttpContext.Session.GetInt32("utilizadorId");
+            var user = await _context.Funcionarios.FirstOrDefaultAsync(m => m.IdFuncionario == userid);
+            ViewBag.Nome = user.Nome;
+            return View(user);
+        }
     }
 }

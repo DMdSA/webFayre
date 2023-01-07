@@ -67,6 +67,38 @@ namespace WebFayre.Controllers
                         Problem("Entity set 'WebFayreContext.Venda'  is null.");
         }
 
+        public async Task<IActionResult> ViewProfile()
+        {
+            if (HttpContext.Session.GetInt32("utilizadorId") == null)
+            {
+                return RedirectToAction("login", "home");
+            }
+            var userid = (int)HttpContext.Session.GetInt32("utilizadorId");
+            var user = await _context.Utilizadors.FirstOrDefaultAsync(m => m.Id == userid);
+            ViewBag.Nome = user.Nome;
+            return View(user);
+        }
+
+        public async Task<IActionResult> MyStands()
+        {
+            if (HttpContext.Session.GetInt32("utilizadorId") == null)
+            {
+                return RedirectToAction("login", "home");
+            }
+            var userid = (int)HttpContext.Session.GetInt32("utilizadorId");
+            var user = await _context.Utilizadors.Where(u => u.Id == userid).FirstOrDefaultAsync();
+            var email = user.Email;
+
+            var stands = _context.Standstaffs.Where(u => u.StaffEmail == email).ToList();
+            List<Stand> list = new List<Stand>();
+            foreach (var a in stands)
+            {
+                var s = await _context.Stands.Where(u => u.IdStand == a.IdStand).FirstOrDefaultAsync();
+                list.Add(s);
+            }
+            return View(list);
+        }
+
 
         // GET: Utilizadors/Details/5
         public async Task<IActionResult> Details(int? id)
@@ -149,10 +181,15 @@ namespace WebFayre.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Nome,Email,Password,Rua,Porta,CodigoPostal,Telemovel,Nif,DataNascimento,UtilizadorPath")] Utilizador utilizador)
         {
+            Console.Write("HERE");
             if (id != utilizador.Id)
             {
                 return NotFound();
             }
+            var user = await _context.Utilizadors.Where(u => u.Id == id).FirstOrDefaultAsync();
+            utilizador.DataNascimento = user.DataNascimento;
+            utilizador.Email = user.Email;
+            utilizador.Password = user.Password;
 
             if (ModelState.IsValid)
             {

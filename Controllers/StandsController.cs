@@ -19,6 +19,21 @@ namespace WebFayre.Controllers
         {
             _context = context;
         }
+
+        private Boolean userHasSession()
+        {
+            return (HttpContext.Session.GetInt32("utilizadorId") != null);
+        }
+
+        private int getUserType()
+        {
+            return (int)HttpContext.Session.GetInt32("isFuncionario");
+        }
+
+        private int getUserId()
+        {
+            return (int)HttpContext.Session.GetInt32("utilizadorId");
+        }
         private string getFuncFuncao()
         {
             return HttpContext.Session.GetString("Funcao");
@@ -267,7 +282,24 @@ namespace WebFayre.Controllers
 
             if (StandExists(id))
             {
+                if (!userHasSession())
+                {
+                    return RedirectToAction("Login", "Home");
+                }
+                if (getUserType() == 0)
+                {
+                    var user = await _context.Utilizadors.Where(u => u.Id == getUserId()).FirstOrDefaultAsync();
+                    var email = user.Email;
+                    if (email != null)
+                    {
+                        var staff = _context.Standstaffs.Where(u => u.StaffEmail == email).ToList().Select(s => s.IdStand);
+                        if (staff.Contains(id))
+                        {
+                            return RedirectToAction("StaffIndex", "produtos", new { feiraId, id });
+                        }
 
+                    }
+                }
                 //HttpContext.Session.SetObject("StandShoppingCart", ssc);
 
                 return RedirectToAction("RedirectIndex", "produtos", new { feiraId, id }); //Redirect para um href com o id do stand
