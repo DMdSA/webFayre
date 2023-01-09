@@ -50,7 +50,11 @@ namespace WebFayre.Controllers
         }
 
         public IActionResult RedirectIndex(string nameFeira)
-        {   
+        {
+            if (!userHasSession())
+            {
+                return RedirectToAction("Login", "Home");
+            }
 
             if (getFuncFuncao() == "Admin")
             {
@@ -115,6 +119,10 @@ namespace WebFayre.Controllers
         // POST: Feiras/SearchResults
         public async Task<IActionResult> SearchResults(String searchTerm)
         {
+            if (!userHasSession())
+            {
+                return RedirectToAction("Login", "Home");
+            }
             if (getFuncFuncao() == "Admin")
             {
                 return View("Index", await _context.Feiras.Include(f => f.FeiraCategoria1s).Where(f => f.Nome.Contains(searchTerm)).ToListAsync());
@@ -476,7 +484,6 @@ namespace WebFayre.Controllers
             return 3;
         }
         */
-
         public async Task<IActionResult> AddFavorite(int id)
         {
 

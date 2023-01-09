@@ -44,6 +44,33 @@ namespace WebFayre.Controllers
             return View(standstaff);
         }
 
+        public IActionResult CreateStaff()
+        {
+            ViewData["IdStand"] = new SelectList(_context.Stands, "IdStand", "Nome");
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateStaff([Bind("IdStand,StaffEmail")] Standstaff standstaff)
+        {
+            if (ModelState.IsValid)
+            {
+                //Emails de todos os utilizadores para verificar se o email introduzido é válido
+                var emails = _context.Utilizadors.ToList().Select(s => s.Email); 
+                //Emails de todos os staffs do stand pretendido para verificar se o email introduzido já faz parte do staff desse stand
+                var jobs = _context.Standstaffs.Where(s => s.IdStand == standstaff.IdStand).ToList().Select(s=> s.StaffEmail);
+                if (emails.Contains(standstaff.StaffEmail) && !jobs.Contains(standstaff.StaffEmail))
+                {
+                    _context.Add(standstaff);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
+            }
+            ViewData["IdStand"] = new SelectList(_context.Stands, "IdStand", "Nome", standstaff.IdStand);
+            return View(standstaff);
+        }
+
         // GET: Standstaffs/Create
         public IActionResult Create()
         {
