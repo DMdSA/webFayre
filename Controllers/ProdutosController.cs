@@ -256,6 +256,10 @@ namespace WebFayre.Controllers
         public async Task<StandShoppingCart> ReadJsonCart([FromBody] StandShoppingCart ssc)
         {
             List<ProductInfo> products = ssc.Products;
+            if (products == null || products.Count == 0)
+            {
+                return null;
+            }
             products.RemoveAll(p => p == null);
             ssc.Products = products;
 
@@ -271,8 +275,11 @@ namespace WebFayre.Controllers
         {
 
             StandShoppingCart? ssc = HttpContext.Session.GetObject<StandShoppingCart>("CartObject");
-            if (ssc == null) return NoContent();
-            decimal total = calculateTotal(ssc.Products);
+            if (ssc == null || ssc.Products.Count == 0)
+            {
+                return NoContent();
+            }
+                decimal total = calculateTotal(ssc.Products);
             ViewBag.Total = total;
             return View(ssc);
         }

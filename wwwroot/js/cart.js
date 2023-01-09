@@ -157,7 +157,9 @@ function transplantCart() {
         }
     });
 
-    document.getElementById("process_cart").click();
+    if (answer != null)
+        document.getElementById("process_cart").click();
+    else alert("Your cart is empty!");
     return answer;
 }
 
