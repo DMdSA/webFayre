@@ -4,95 +4,51 @@
     ViewData["Title"] = "Details";
 }
 
-<h1>Details</h1>
 
-<div>
-    <h4>Feira</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Nome)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Nome)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Descricao)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Descricao)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.DataInicio)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.DataInicio)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.DataFim)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.DataFim)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CapacidadeClientes)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CapacidadeClientes)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.NStands)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.NStands)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Email)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Email)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Telefone)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Telefone)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Morada)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Morada)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.FeiraPath)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.FeiraPath)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.FeiraCategoria1s)
-        </dt>
-        <dd class="col-sm-10">
+<div class="container">
+    <div class="details-content">
+        <div class="fairs">
+            <div class="fairs-content">
+                <div class="fairs-image">
+                    <div>
+                        <img src="https://via.placeholder.com/210?text=1" class="fairsImg"alt="feira1" />
+                    </div>
+                    <div class="fairs-info flex-row">
+                        <span><b>From:&nbsp;</b><i class="fas fa-calendar-alt text-gray"></i>&nbsp;@Html.DisplayFor(model => model.DataInicio)&nbsp;</span>
+                        <span><b>To:&nbsp;</b><i class="fas fa-calendar-alt text-gray"></i>&nbsp;@Html.DisplayFor(model => model.DataFim)&nbsp;</span>
+                    </div>
+                </div>
+                <div class="fairs-title">
+                    <h1>@Html.DisplayFor(model => model.Nome)</h1>
+                    <p>
+                        <b>Descrição:<br></b> @Html.DisplayFor(model => model.Descricao)<br><b>Capacidade: </b> @Html.DisplayFor(model => model.CapacidadeClientes) <b>NºStands: </b>@Html.DisplayFor(model => model.NStands)<br>
+                    </p>
+                    <p>
+                        <b>Localização: </b>@Html.DisplayFor(model => model.Morada) <br>
+                        <b>Patrocionadores: </b>@foreach (var patrocinador in Model.Patrocinadors){@Html.DisplayFor(m => patrocinador.Nome);<br>}
+                    </p>
+                    <p>
+                        <b>Contactos:<br></b><i class="fas fa-envelope text-gray"></i>&nbsp;@Html.DisplayFor(model => model.Email)&nbsp;<br>
+                        <i class="fas fa-phone text-gray"></i>&nbsp;@Html.DisplayFor(model => model.Telefone)&nbsp;<br>
+                    </p>
+                    <a class="btn btn-primary" asp-action="Enter" asp-route-id="@Model.IdFeira">Enter</a> Visit Fair &nbsp;<i class="fas fa-arrow-right"></i>
+                   
+                </div>
+            </div>
             
+        </div>
+        <aside class="catFairs">
+            <h1> Categorias </h1>
+
             @foreach (var category in Model.FeiraCategoria1s)
             {
                 @Html.DisplayFor(m => category.Descricao)
 
             }
-        <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.Patrocinadors)
-        </dt>
-        <dd class="col-sm-10">
+        </aside>
+    </div>
 
-                @foreach (var patrocinador in Model.Patrocinadors)
-                {
-                    @Html.DisplayFor(m => patrocinador.Nome)
 
-                }
-
-        </dd>
-    </dl>
 </div>
 <div>
     <a asp-action="Edit" asp-route-id="@Model?.IdFeira">Edit</a> |

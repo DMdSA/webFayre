@@ -43,6 +43,10 @@ hr.light {
 }
 /*-- Bottom of the page styling ends --*/
 
+.text-gray{
+    color: var(--text-gray);
+}
+
 /* 1 rem/em = 16px */
 .navbar{
     padding: .8rem; 
@@ -365,6 +369,48 @@ hr.light {
 
 
 
+/* #################### MAIN FAIR INFO PAGE #################### */
+
+.details-content{
+    display: grid;
+    grid-template-columns: 70% 30%;
+
+}
+
+.fairs-content{
+    width:100%;
+    margin-bottom: 5rem;
+}
+
+.details-content .fairs-content > .fairs-image, .fairs-title{
+    padding: 1rem 2rem;
+    position: relative;
+
+}
+
+.details-content .fairs-content > .fairs-image .fairs-info {
+    background: #ff8e76;
+    padding: 1rem;
+    position: absolute;
+    bottom: 0%;
+    left: 20vw;
+    border-radius: 3rem;
+}
+
+.details-content .fairs-content > .fairs-image > div{
+    overflow:hidden;
+}
+.details-content .post-content > .fairs-image .fairsImg{
+    width: 100%;
+}
+
+/* XXXXXXXXXXXXXXXXXXXXX MAIN FAIR INFO PAGE XXXXXXXXXXXXXXXXXXXXXX */
+
+
+/* #################### PROFILE DISPLAY PAGE #################### */
+
+/* XXXXXXXXXXXXXXXXXXXXX PROFILE DISPLAY PAGE XXXXXXXXXXXXXXXXXXXXXX */
+
 /*-- LOGIN PAGE STYLE--*/
 /*-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! --*/
 
@@ -376,6 +422,17 @@ hr.light {
     -moz-box-shadow: -1px 4px 26px 11px rgba(0, 0, 0, 0.75);
     box-shadow: -1px 4px 26px 11px rgba(0, 0, 0, 0.75);
 }
+
+
+.profile {
+    width: 30%;
+    margin: 0 auto;
+    padding: 2rem 4rem;
+    -webkit-box-shadow: -1px 4px 26px 11px rgba(0, 0, 0, 0.75);
+    -moz-box-shadow: -1px 4px 26px 11px rgba(0, 0, 0, 0.75);
+    box-shadow: -1px 4px 26px 11px rgba(0, 0, 0, 0.75);
+}
+
 
 
 /*-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! --*/
