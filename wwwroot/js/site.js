@@ -95,8 +95,10 @@ function onHandleClick(handle) {
 
 //Pagination 
 function getPageList(totalPages, page, maxLength) {
+
     function range(start, end) {
-        return Array.from(Array(end - start + 1), (_, i) => 1 + start);
+
+        return Array.from(Array(end - start + 1), (_, i) => i + start);
     }
 
     var sideWidth = maxLength < 9 ? 1 : 2;
@@ -114,6 +116,7 @@ function getPageList(totalPages, page, maxLength) {
     if (page >= totalPages - sideWidth - 1 - rightWidth) {
         return range(1, sideWidth).concat(0, range(totalPages - sideWidth - 1 - rightWidth - leftWidth, totalPages));
     }
+
     return range(1, sideWidth).concat(0, range(page - leftWidth, page + rightWidth), 0, range(totalPages - sideWidth + 1, totalPages));
 }
 
@@ -127,43 +130,46 @@ $(function () {
     var currentPage;
 
     function showPage(whichPage) {
+
         if (whichPage < 1 || whichPage > totalPages) return false;
 
         currentPage = whichPage;
 
         $(".card-content .card-display").hide().slice((currentPage - 1) * limitPerPage, currentPage * limitPerPage).show();
 
-        $(".pagination-card li").slice(1, -1).remove();
+        $(".pagination li").slice(1, -1).remove();
 
         getPageList(totalPages, currentPage, paginationSize).forEach(item => {
-            $("<li>").addClass("page-card").addClass(item ? "current-page" : "dots")
-                .toggleClass("actPage", item === currentPage).append($("<a>").addClass("card-link")
-                    .attr({ hreft: "javascript:void(0)" }).text(item || "...")).insertBefore(".nxtPage");
+
+            $("<li>").addClass("page-item").addClass(item ? "current-page" : "dots")
+                .toggleClass("active", item === currentPage).append($("<a>").addClass("page-link")
+                    .attr({ hreft: "javascript:void(0)" }).text(item || "...")).insertBefore(".next-page");
         });
 
-        $(".prvPage").toggleClass("disable", currentPage === 1);
-        $(".nxtPage").toggleClass("disable", currentPage === totalPages);
+        $(".previous-page").toggleClass("disable", currentPage === 1);
+        $(".next-page").toggleClass("disable", currentPage === totalPages);
         return true;
     }
 
-    $(".pagination-card").append(
-        $("<li>").addClass("page-card").addClass("prvPage").append($("<a>").addClass("card-link")
+    $(".pagination").append(
+        $("<li>").addClass("page-item").addClass("previous-page").append($("<a>").addClass("page-link")
             .attr({ href: "javascript:void(0)" }).text("Prev")),
-        $("<li>").addClass("page-card").addClass("nxtPage").append($("<a>").addClass("card-link")
-            .attr({ href: "javascript:void(0)" }).text("Next"))
+        $("<li>").addClass("page-item").addClass("next-page").append($("<a>").addClass("card-link")
+            .attr({ href: "javascript:void(0)" }).text("Next")),
     );
-    $(".card-content".show());
+
+    $(".card-content").show();
     showPage(1);
 
-    $(document).on("click", ".pagination-card li.current-page:not(.actPage)", function () {
+    $(document).on("click", ".pagination li.current-page:not(.active)", function () {
         return showPage(+$(this).text());
     });
 
-    $("nxtPage").on("click", function () {
+    $(".next-page").on("click", function () {
         return showPage(currentPage + 1);
     });
 
-    $("prvPage").on("click", function () {
+    $(".previous-page").on("click", function () {
         return showPage(currentPage - 1);
     });
 });

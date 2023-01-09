@@ -335,7 +335,7 @@ hr.light {
     line-height: 45px;
 }   
 
-.prvPage, .nxtPage {
+.previous-page, .next-page{
     background: #ccc;
     width: 5rem;
     border-radius: 2rem;
@@ -343,10 +343,10 @@ hr.light {
     transition: 0.3s ease;
 }
 
-.prvPage:hover{
+.previous-page:hover{
     transform: translateX(-.25rem);
 }
-.nxtPage:hover {
+.next-page:hover {
     transform: translateX(+.25rem);
 }
 
@@ -357,7 +357,7 @@ hr.light {
     cursor: pointer;
 }
 
-.actPage{
+.active{
     background: var(--btnColor)
 }
 
