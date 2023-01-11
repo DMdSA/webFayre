@@ -18,11 +18,30 @@ namespace WebFayre.Controllers
             _context = context;
         }
 
+        private string getFuncFuncao()
+        {
+            return HttpContext.Session.GetString("Funcao");
+        }
+        private int VerifyAdmin()
+        {
+            if (HttpContext.Session.GetInt32("utilizadorId") == null || getFuncFuncao() != "Admin")
+                return 0;
+            else
+                return 1;
+        }
+
         // GET: Vendas
         public async Task<IActionResult> Index()
         {
-            var webFayreContext = _context.Venda.Include(v => v.Stand).Include(v => v.Utilizador);
-            return View(await webFayreContext.ToListAsync());
+            if (VerifyAdmin() == 0)
+            {
+                return RedirectToAction("index", "home");
+            }
+            else
+            {
+                var webFayreContext = _context.Venda.Include(v => v.Stand).Include(v => v.Utilizador);
+                return View(await webFayreContext.ToListAsync());
+            }
         }
 
         // GET: Vendas/Details/5
@@ -48,9 +67,16 @@ namespace WebFayre.Controllers
         // GET: Vendas/Create
         public IActionResult Create()
         {
-            ViewData["StandId"] = new SelectList(_context.Stands, "IdStand", "IdStand");
-            ViewData["UtilizadorId"] = new SelectList(_context.Utilizadors, "Id", "Id");
-            return View();
+            if (VerifyAdmin() == 0)
+            {
+                return RedirectToAction("index", "home");
+            }
+            else
+            {
+                ViewData["StandId"] = new SelectList(_context.Stands, "IdStand", "IdStand");
+                ViewData["UtilizadorId"] = new SelectList(_context.Utilizadors, "Id", "Id");
+                return View();
+            }
         }
 
         // POST: Vendas/Create
@@ -75,19 +101,26 @@ namespace WebFayre.Controllers
         // GET: Vendas/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.Venda == null)
+            if (VerifyAdmin() == 0)
             {
-                return NotFound();
+                return RedirectToAction("index", "home");
             }
+            else
+            {
+                if (id == null || _context.Venda == null)
+                {
+                    return NotFound();
+                }
 
-            var vendum = await _context.Venda.FindAsync(id);
-            if (vendum == null)
-            {
-                return NotFound();
+                var vendum = await _context.Venda.FindAsync(id);
+                if (vendum == null)
+                {
+                    return NotFound();
+                }
+                ViewData["StandId"] = new SelectList(_context.Stands, "IdStand", "IdStand", vendum.StandId);
+                ViewData["UtilizadorId"] = new SelectList(_context.Utilizadors, "Id", "Id", vendum.UtilizadorId);
+                return View(vendum);
             }
-            ViewData["StandId"] = new SelectList(_context.Stands, "IdStand", "IdStand", vendum.StandId);
-            ViewData["UtilizadorId"] = new SelectList(_context.Utilizadors, "Id", "Id", vendum.UtilizadorId);
-            return View(vendum);
         }
 
         // POST: Vendas/Edit/5
@@ -130,21 +163,28 @@ namespace WebFayre.Controllers
         // GET: Vendas/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.Venda == null)
+            if (VerifyAdmin() == 0)
             {
-                return NotFound();
+                return RedirectToAction("index", "home");
             }
-
-            var vendum = await _context.Venda
-                .Include(v => v.Stand)
-                .Include(v => v.Utilizador)
-                .FirstOrDefaultAsync(m => m.IdVenda == id);
-            if (vendum == null)
+            else
             {
-                return NotFound();
-            }
+                if (id == null || _context.Venda == null)
+                {
+                    return NotFound();
+                }
 
-            return View(vendum);
+                var vendum = await _context.Venda
+                    .Include(v => v.Stand)
+                    .Include(v => v.Utilizador)
+                    .FirstOrDefaultAsync(m => m.IdVenda == id);
+                if (vendum == null)
+                {
+                    return NotFound();
+                }
+
+                return View(vendum);
+            }
         }
 
         // POST: Vendas/Delete/5

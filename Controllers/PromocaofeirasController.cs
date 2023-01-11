@@ -28,24 +28,58 @@ namespace WebFayre.Controllers
             return (int)HttpContext.Session.GetInt32("utilizadorId");
         }
 
+        private string getFuncFuncao()
+        {
+            return HttpContext.Session.GetString("Funcao");
+        }
+
+        private int VerifyAdmin()
+        {
+            if (HttpContext.Session.GetInt32("utilizadorId") == null || getFuncFuncao() != "Admin")
+                return 0;
+            else
+                return 1;
+        }
+
         // GET: Promocaofeiras
         public async Task<IActionResult> Index()
         {
-            var webFayreContext = _context.Promocaofeiras.Include(p => p.IdUtilizadorNavigation);
-            return View(await webFayreContext.ToListAsync());
+            if (VerifyAdmin() == 0)
+            {
+                return RedirectToAction("index", "home");
+            }
+            else
+            {
+                var webFayreContext = _context.Promocaofeiras.Include(p => p.IdUtilizadorNavigation);
+                return View(await webFayreContext.ToListAsync());
+            }
         }
 
         public async Task<IActionResult> IndexByUser()
         {
-            var userid = (int)HttpContext.Session.GetInt32("utilizadorId");
-            var webFayreContext = _context.Promocaofeiras.Include(p => p.IdUtilizadorNavigation).Where(p => p.IdUtilizador == userid);
-            return View(await webFayreContext.ToListAsync());
+            if (getUserType() != 0)
+            {
+                return RedirectToAction("index", "home");
+            }
+            else
+            {
+                var userid = (int)HttpContext.Session.GetInt32("utilizadorId");
+                var webFayreContext = _context.Promocaofeiras.Include(p => p.IdUtilizadorNavigation).Where(p => p.IdUtilizador == userid);
+                return View(await webFayreContext.ToListAsync());
+            }
         }
 
         public async Task<IActionResult> IndexFuncionario()
         {
-            var webFayreContext = _context.Promocaofeiras.Include(p => p.IdUtilizadorNavigation).Where(p => p.IdFuncionario == null);
-            return View(await webFayreContext.ToListAsync());
+            if (getUserType() != 1)
+            {
+                return RedirectToAction("index", "home");
+            }
+            else
+            {
+                var webFayreContext = _context.Promocaofeiras.Include(p => p.IdUtilizadorNavigation).Where(p => p.IdFuncionario == null);
+                return View(await webFayreContext.ToListAsync());
+            }
         }
 
         /**
@@ -121,8 +155,15 @@ namespace WebFayre.Controllers
         // GET: Promocaofeiras/Create
         public IActionResult Create()
         {
-            ViewData["IdUtilizador"] = new SelectList(_context.Utilizadors, "Id", "Id");
-            return View();
+            if (getUserType() != 0)
+            {
+                return RedirectToAction("index", "home");
+            }
+            else
+            {
+                ViewData["IdUtilizador"] = new SelectList(_context.Utilizadors, "Id", "Id");
+                return View();
+            }
         }
 
         // POST: Promocaofeiras/Create
@@ -132,41 +173,48 @@ namespace WebFayre.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("IdPromocaoFeira,CapacidadeUtilizadores,Descricao,Nome,NStands,IdUtilizador,IdFuncionario")] Promocaofeira promocaofeira)
         {
-            if (ModelState.IsValid)
-            {
-                var userid = HttpContext.Session.GetInt32("utilizadorId");
-                promocaofeira.IdUtilizador = (int)userid;
-                promocaofeira.IdFuncionario = null;
-                _context.Add(promocaofeira);
-                await _context.SaveChangesAsync();
-                if (getUserType() == 0)
+                if (ModelState.IsValid)
                 {
-                    return RedirectToAction("IndexByUser");
+                    var userid = HttpContext.Session.GetInt32("utilizadorId");
+                    promocaofeira.IdUtilizador = (int)userid;
+                    promocaofeira.IdFuncionario = null;
+                    _context.Add(promocaofeira);
+                    await _context.SaveChangesAsync();
+                    if (getUserType() == 0)
+                    {
+                        return RedirectToAction("IndexByUser");
+                    }
+                    else
+                    {
+                        return RedirectToAction(nameof(Index));
+                    }
                 }
-                else
-                {
-                    return RedirectToAction(nameof(Index));
-                }
-            }
-            ViewData["IdUtilizador"] = new SelectList(_context.Utilizadors, "Id", "Id", promocaofeira.IdUtilizador);
-            return View(promocaofeira);
+                ViewData["IdUtilizador"] = new SelectList(_context.Utilizadors, "Id", "Id", promocaofeira.IdUtilizador);
+                return View(promocaofeira);
         }
 
         // GET: Promocaofeiras/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.Promocaofeiras == null)
+            if (VerifyAdmin() == 0)
             {
-                return NotFound();
+                return RedirectToAction("index", "home");
             }
+            else
+            {
+                if (id == null || _context.Promocaofeiras == null)
+                {
+                    return NotFound();
+                }
 
-            var promocaofeira = await _context.Promocaofeiras.FindAsync(id);
-            if (promocaofeira == null)
-            {
-                return NotFound();
+                var promocaofeira = await _context.Promocaofeiras.FindAsync(id);
+                if (promocaofeira == null)
+                {
+                    return NotFound();
+                }
+                ViewData["IdUtilizador"] = new SelectList(_context.Utilizadors, "Id", "Id", promocaofeira.IdUtilizador);
+                return View(promocaofeira);
             }
-            ViewData["IdUtilizador"] = new SelectList(_context.Utilizadors, "Id", "Id", promocaofeira.IdUtilizador);
-            return View(promocaofeira);
         }
 
         // POST: Promocaofeiras/Edit/5
@@ -176,52 +224,59 @@ namespace WebFayre.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("IdPromocaoFeira,CapacidadeUtilizadores,Descricao,Nome,NStands,IdUtilizador,IdFuncionario")] Promocaofeira promocaofeira)
         {
-            if (id != promocaofeira.IdPromocaoFeira)
-            {
-                return NotFound();
-            }
+                if (id != promocaofeira.IdPromocaoFeira)
+                {
+                    return NotFound();
+                }
 
-            if (ModelState.IsValid)
-            {
-                try
+                if (ModelState.IsValid)
                 {
-                    _context.Update(promocaofeira);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!PromocaofeiraExists(promocaofeira.IdPromocaoFeira))
+                    try
                     {
-                        return NotFound();
+                        _context.Update(promocaofeira);
+                        await _context.SaveChangesAsync();
                     }
-                    else
+                    catch (DbUpdateConcurrencyException)
                     {
-                        throw;
+                        if (!PromocaofeiraExists(promocaofeira.IdPromocaoFeira))
+                        {
+                            return NotFound();
+                        }
+                        else
+                        {
+                            throw;
+                        }
                     }
+                    return RedirectToAction(nameof(Index));
                 }
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["IdUtilizador"] = new SelectList(_context.Utilizadors, "Id", "Id", promocaofeira.IdUtilizador);
-            return View(promocaofeira);
+                ViewData["IdUtilizador"] = new SelectList(_context.Utilizadors, "Id", "Id", promocaofeira.IdUtilizador);
+                return View(promocaofeira);
         }
 
         // GET: Promocaofeiras/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.Promocaofeiras == null)
+            if (VerifyAdmin() == 0)
             {
-                return NotFound();
+                return RedirectToAction("index", "home");
             }
-
-            var promocaofeira = await _context.Promocaofeiras
-                .Include(p => p.IdUtilizadorNavigation)
-                .FirstOrDefaultAsync(m => m.IdPromocaoFeira == id);
-            if (promocaofeira == null)
+            else
             {
-                return NotFound();
-            }
+                if (id == null || _context.Promocaofeiras == null)
+                {
+                    return NotFound();
+                }
 
-            return View(promocaofeira);
+                var promocaofeira = await _context.Promocaofeiras
+                    .Include(p => p.IdUtilizadorNavigation)
+                    .FirstOrDefaultAsync(m => m.IdPromocaoFeira == id);
+                if (promocaofeira == null)
+                {
+                    return NotFound();
+                }
+
+                return View(promocaofeira);
+            }
         }
 
         // POST: Promocaofeiras/Delete/5
@@ -229,18 +284,18 @@ namespace WebFayre.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.Promocaofeiras == null)
-            {
-                return Problem("Entity set 'WebFayreContext.Promocaofeiras'  is null.");
-            }
-            var promocaofeira = await _context.Promocaofeiras.FindAsync(id);
-            if (promocaofeira != null)
-            {
-                _context.Promocaofeiras.Remove(promocaofeira);
-            }
-            
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+                if (_context.Promocaofeiras == null)
+                {
+                    return Problem("Entity set 'WebFayreContext.Promocaofeiras'  is null.");
+                }
+                var promocaofeira = await _context.Promocaofeiras.FindAsync(id);
+                if (promocaofeira != null)
+                {
+                    _context.Promocaofeiras.Remove(promocaofeira);
+                }
+
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
         }
 
         private bool PromocaofeiraExists(int id)

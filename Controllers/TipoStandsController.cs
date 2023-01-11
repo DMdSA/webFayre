@@ -18,36 +18,70 @@ namespace WebFayre.Controllers
             _context = context;
         }
 
+        private string getFuncFuncao()
+        {
+            return HttpContext.Session.GetString("Funcao");
+        }
+        private int VerifyAdmin()
+        {
+            if (HttpContext.Session.GetInt32("utilizadorId") == null || getFuncFuncao() != "Admin")
+                return 0;
+            else
+                return 1;
+        }
+
+
         // GET: TipoStands
         public async Task<IActionResult> Index()
         {
-              return _context.TipoStands != null ? 
+            if (VerifyAdmin() == 0)
+            {
+                return RedirectToAction("index", "home");
+            }
+            else
+            {
+                return _context.TipoStands != null ?
                           View(await _context.TipoStands.ToListAsync()) :
                           Problem("Entity set 'WebFayreContext.TipoStands'  is null.");
+            }
         }
 
         // GET: TipoStands/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.TipoStands == null)
+            if (VerifyAdmin() == 0)
             {
-                return NotFound();
+                return RedirectToAction("index", "home");
             }
-
-            var tipoStand = await _context.TipoStands
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (tipoStand == null)
+            else
             {
-                return NotFound();
-            }
+                if (id == null || _context.TipoStands == null)
+                {
+                    return NotFound();
+                }
 
-            return View(tipoStand);
+                var tipoStand = await _context.TipoStands
+                    .FirstOrDefaultAsync(m => m.Id == id);
+                if (tipoStand == null)
+                {
+                    return NotFound();
+                }
+
+                return View(tipoStand);
+            }
         }
 
         // GET: TipoStands/Create
         public IActionResult Create()
         {
-            return View();
+            if (VerifyAdmin() == 0)
+            {
+                return RedirectToAction("index", "home");
+            }
+            else
+            {
+                return View();
+            }
         }
 
         // POST: TipoStands/Create
@@ -69,17 +103,24 @@ namespace WebFayre.Controllers
         // GET: TipoStands/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.TipoStands == null)
+            if (VerifyAdmin() == 0)
             {
-                return NotFound();
+                return RedirectToAction("index", "home");
             }
+            else
+            {
+                if (id == null || _context.TipoStands == null)
+                {
+                    return NotFound();
+                }
 
-            var tipoStand = await _context.TipoStands.FindAsync(id);
-            if (tipoStand == null)
-            {
-                return NotFound();
+                var tipoStand = await _context.TipoStands.FindAsync(id);
+                if (tipoStand == null)
+                {
+                    return NotFound();
+                }
+                return View(tipoStand);
             }
-            return View(tipoStand);
         }
 
         // POST: TipoStands/Edit/5
@@ -120,19 +161,26 @@ namespace WebFayre.Controllers
         // GET: TipoStands/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.TipoStands == null)
+            if (VerifyAdmin() == 0)
             {
-                return NotFound();
+                return RedirectToAction("index", "home");
             }
-
-            var tipoStand = await _context.TipoStands
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (tipoStand == null)
+            else
             {
-                return NotFound();
-            }
+                if (id == null || _context.TipoStands == null)
+                {
+                    return NotFound();
+                }
 
-            return View(tipoStand);
+                var tipoStand = await _context.TipoStands
+                    .FirstOrDefaultAsync(m => m.Id == id);
+                if (tipoStand == null)
+                {
+                    return NotFound();
+                }
+
+                return View(tipoStand);
+            }
         }
 
         // POST: TipoStands/Delete/5

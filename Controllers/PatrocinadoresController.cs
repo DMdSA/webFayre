@@ -17,13 +17,32 @@ namespace WebFayre.Controllers
         {
             _context = context;
         }
+        private string getFuncFuncao()
+        {
+            return HttpContext.Session.GetString("Funcao");
+        }
+
+        private int VerifyAdmin()
+        {
+            if (HttpContext.Session.GetInt32("utilizadorId") == null || getFuncFuncao() != "Admin")
+                return 0;
+            else
+                return 1;
+        }
 
         // GET: Patrocinadores
         public async Task<IActionResult> Index()
         {
-              return _context.Patrocinadors != null ? 
+            if (VerifyAdmin() == 0)
+            {
+                return RedirectToAction("index", "home");
+            }
+            else
+            {
+                return _context.Patrocinadors != null ?
                           View(await _context.Patrocinadors.ToListAsync()) :
                           Problem("Entity set 'WebFayreContext.Patrocinadors'  is null.");
+            }
         }
 
         public async Task RemoveFeiraAsync(Feira feira, int idPatroc)
@@ -36,25 +55,39 @@ namespace WebFayre.Controllers
         // GET: Patrocinadores/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.Patrocinadors == null)
+            if (VerifyAdmin() == 0)
             {
-                return NotFound();
+                return RedirectToAction("index", "home");
             }
-
-            var patrocinador = await _context.Patrocinadors
-                .FirstOrDefaultAsync(m => m.IdPatrocinador == id);
-            if (patrocinador == null)
+            else
             {
-                return NotFound();
-            }
+                if (id == null || _context.Patrocinadors == null)
+                {
+                    return NotFound();
+                }
 
-            return View(patrocinador);
+                var patrocinador = await _context.Patrocinadors
+                    .FirstOrDefaultAsync(m => m.IdPatrocinador == id);
+                if (patrocinador == null)
+                {
+                    return NotFound();
+                }
+
+                return View(patrocinador);
+            }
         }
 
         // GET: Patrocinadores/Create
         public IActionResult Create()
         {
-            return View();
+            if (VerifyAdmin() == 0)
+            {
+                return RedirectToAction("index", "home");
+            }
+            else
+            {
+                return View();
+            }
         }
 
         // POST: Patrocinadores/Create
@@ -64,29 +97,36 @@ namespace WebFayre.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("IdPatrocinador,Nome,Email,Descricao,Telefone")] Patrocinador patrocinador)
         {
-            if (ModelState.IsValid)
-            {
-                _context.Add(patrocinador);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(patrocinador);
+                if (ModelState.IsValid)
+                {
+                    _context.Add(patrocinador);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
+                return View(patrocinador);
         }
 
         // GET: Patrocinadores/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.Patrocinadors == null)
+            if (VerifyAdmin() == 0)
             {
-                return NotFound();
+                return RedirectToAction("index", "home");
             }
+            else
+            {
+                if (id == null || _context.Patrocinadors == null)
+                {
+                    return NotFound();
+                }
 
-            var patrocinador = await _context.Patrocinadors.FindAsync(id);
-            if (patrocinador == null)
-            {
-                return NotFound();
+                var patrocinador = await _context.Patrocinadors.FindAsync(id);
+                if (patrocinador == null)
+                {
+                    return NotFound();
+                }
+                return View(patrocinador);
             }
-            return View(patrocinador);
         }
 
         // POST: Patrocinadores/Edit/5
@@ -96,50 +136,57 @@ namespace WebFayre.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("IdPatrocinador,Nome,Email,Descricao,Telefone")] Patrocinador patrocinador)
         {
-            if (id != patrocinador.IdPatrocinador)
-            {
-                return NotFound();
-            }
+                if (id != patrocinador.IdPatrocinador)
+                {
+                    return NotFound();
+                }
 
-            if (ModelState.IsValid)
-            {
-                try
+                if (ModelState.IsValid)
                 {
-                    _context.Update(patrocinador);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!PatrocinadorExists(patrocinador.IdPatrocinador))
+                    try
                     {
-                        return NotFound();
+                        _context.Update(patrocinador);
+                        await _context.SaveChangesAsync();
                     }
-                    else
+                    catch (DbUpdateConcurrencyException)
                     {
-                        throw;
+                        if (!PatrocinadorExists(patrocinador.IdPatrocinador))
+                        {
+                            return NotFound();
+                        }
+                        else
+                        {
+                            throw;
+                        }
                     }
+                    return RedirectToAction(nameof(Index));
                 }
-                return RedirectToAction(nameof(Index));
-            }
-            return View(patrocinador);
+                return View(patrocinador);
         }
 
         // GET: Patrocinadores/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.Patrocinadors == null)
+            if (VerifyAdmin() == 0)
             {
-                return NotFound();
+                return RedirectToAction("index", "home");
             }
-
-            var patrocinador = await _context.Patrocinadors
-                .FirstOrDefaultAsync(m => m.IdPatrocinador == id);
-            if (patrocinador == null)
+            else
             {
-                return NotFound();
-            }
+                if (id == null || _context.Patrocinadors == null)
+                {
+                    return NotFound();
+                }
 
-            return View(patrocinador);
+                var patrocinador = await _context.Patrocinadors
+                    .FirstOrDefaultAsync(m => m.IdPatrocinador == id);
+                if (patrocinador == null)
+                {
+                    return NotFound();
+                }
+
+                return View(patrocinador);
+            }
         }
 
         // POST: Patrocinadores/Delete/5
@@ -147,18 +194,18 @@ namespace WebFayre.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.Patrocinadors == null)
-            {
-                return Problem("Entity set 'WebFayreContext.Patrocinadors'  is null.");
-            }
-            var patrocinador = await _context.Patrocinadors.FindAsync(id);
-            if (patrocinador != null)
-            {
-                _context.Patrocinadors.Remove(patrocinador);
-            }
-            
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+                if (_context.Patrocinadors == null)
+                {
+                    return Problem("Entity set 'WebFayreContext.Patrocinadors'  is null.");
+                }
+                var patrocinador = await _context.Patrocinadors.FindAsync(id);
+                if (patrocinador != null)
+                {
+                    _context.Patrocinadors.Remove(patrocinador);
+                }
+
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
         }
 
         private bool PatrocinadorExists(int id)

@@ -17,12 +17,30 @@ namespace WebFayre.Controllers
         {
             _context = context;
         }
+        private string getFuncFuncao()
+        {
+            return HttpContext.Session.GetString("Funcao");
+        }
+        private int VerifyAdmin()
+        {
+            if (HttpContext.Session.GetInt32("utilizadorId") == null || getFuncFuncao() != "Admin")
+                return 0;
+            else
+                return 1;
+        }
 
         // GET: VendaProdutos
         public async Task<IActionResult> Index()
         {
-            var webFayreContext = _context.VendaProdutos.Include(v => v.Produto).Include(v => v.Venda);
-            return View(await webFayreContext.ToListAsync());
+            if (VerifyAdmin() == 0)
+            {
+                return RedirectToAction("index", "home");
+            }
+            else
+            {
+                var webFayreContext = _context.VendaProdutos.Include(v => v.Produto).Include(v => v.Venda);
+                return View(await webFayreContext.ToListAsync());
+            }
         }
 
         // GET: VendaProdutos/Details/5
@@ -48,9 +66,16 @@ namespace WebFayre.Controllers
         // GET: VendaProdutos/Create
         public IActionResult Create()
         {
-            ViewData["ProdutoId"] = new SelectList(_context.Produtos, "IdProduto", "IdProduto");
-            ViewData["VendaId"] = new SelectList(_context.Venda, "IdVenda", "IdVenda");
-            return View();
+            if (VerifyAdmin() == 0)
+            {
+                return RedirectToAction("index", "home");
+            }
+            else
+            {
+                ViewData["ProdutoId"] = new SelectList(_context.Produtos, "IdProduto", "IdProduto");
+                ViewData["VendaId"] = new SelectList(_context.Venda, "IdVenda", "IdVenda");
+                return View();
+            }
         }
 
         // POST: VendaProdutos/Create
@@ -75,19 +100,26 @@ namespace WebFayre.Controllers
         // GET: VendaProdutos/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.VendaProdutos == null)
+            if (VerifyAdmin() == 0)
             {
-                return NotFound();
+                return RedirectToAction("index", "home");
             }
+            else
+            {
+                if (id == null || _context.VendaProdutos == null)
+                {
+                    return NotFound();
+                }
 
-            var vendaProduto = await _context.VendaProdutos.FindAsync(id);
-            if (vendaProduto == null)
-            {
-                return NotFound();
+                var vendaProduto = await _context.VendaProdutos.FindAsync(id);
+                if (vendaProduto == null)
+                {
+                    return NotFound();
+                }
+                ViewData["ProdutoId"] = new SelectList(_context.Produtos, "IdProduto", "IdProduto", vendaProduto.ProdutoId);
+                ViewData["VendaId"] = new SelectList(_context.Venda, "IdVenda", "IdVenda", vendaProduto.VendaId);
+                return View(vendaProduto);
             }
-            ViewData["ProdutoId"] = new SelectList(_context.Produtos, "IdProduto", "IdProduto", vendaProduto.ProdutoId);
-            ViewData["VendaId"] = new SelectList(_context.Venda, "IdVenda", "IdVenda", vendaProduto.VendaId);
-            return View(vendaProduto);
         }
 
         // POST: VendaProdutos/Edit/5
@@ -130,21 +162,28 @@ namespace WebFayre.Controllers
         // GET: VendaProdutos/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.VendaProdutos == null)
+            if (VerifyAdmin() == 0)
             {
-                return NotFound();
+                return RedirectToAction("index", "home");
             }
-
-            var vendaProduto = await _context.VendaProdutos
-                .Include(v => v.Produto)
-                .Include(v => v.Venda)
-                .FirstOrDefaultAsync(m => m.VendaId == id);
-            if (vendaProduto == null)
+            else
             {
-                return NotFound();
-            }
+                if (id == null || _context.VendaProdutos == null)
+                {
+                    return NotFound();
+                }
 
-            return View(vendaProduto);
+                var vendaProduto = await _context.VendaProdutos
+                    .Include(v => v.Produto)
+                    .Include(v => v.Venda)
+                    .FirstOrDefaultAsync(m => m.VendaId == id);
+                if (vendaProduto == null)
+                {
+                    return NotFound();
+                }
+
+                return View(vendaProduto);
+            }
         }
 
         // POST: VendaProdutos/Delete/5

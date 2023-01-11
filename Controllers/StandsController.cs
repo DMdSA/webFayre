@@ -38,13 +38,27 @@ namespace WebFayre.Controllers
         {
             return HttpContext.Session.GetString("Funcao");
         }
+        private int VerifyAdmin()
+        {
+            if (HttpContext.Session.GetInt32("utilizadorId") == null || getFuncFuncao() != "Admin")
+                return 0;
+            else
+                return 1;
+        }
 
         // GET: Stands
         public async Task<IActionResult> Index()
         {
-            HttpContext.Session.Remove("CartObject");
-            var webFayreContext = _context.Stands.Include(s => s.Feira).Include(s => s.StandTipo);
-            return View(await webFayreContext.ToListAsync());
+            if (VerifyAdmin() == 0)
+            {
+                return RedirectToAction("index", "home");
+            }
+            else
+            {
+                HttpContext.Session.Remove("CartObject");
+                var webFayreContext = _context.Stands.Include(s => s.Feira).Include(s => s.StandTipo);
+                return View(await webFayreContext.ToListAsync());
+            }
         }
 
         public IActionResult RedirectIndex(int idFeira)
@@ -83,20 +97,27 @@ namespace WebFayre.Controllers
         {
             if (HttpContext.Session.GetInt32("utilizadorId") == null)
                 return RedirectToAction("login", "home");
-
-            int userid = (int)HttpContext.Session.GetInt32("utilizadorId");
-            HttpContext.Session.Remove("CartObject");
-            var standlist = await _context.Stands.Include(s => s.Feira).Include(s => s.StandTipo).Where(s => s.FeiraId == idFeira).ToListAsync();
-            var feira = await _context.Feiras.Where(s => s.IdFeira == idFeira).FirstOrDefaultAsync();
-            ViewBag.FeiraNome = feira.Nome;
-            /*
-            if (standlist.Count == 0)
+            if (VerifyAdmin() == 0)
             {
-                RedirectToAction("index", "feiras", userid);
-                return NoContent();
-            }*/
+                return RedirectToAction("index", "home");
+            }
+            else
+            {
 
-            return View(standlist);
+                int userid = (int)HttpContext.Session.GetInt32("utilizadorId");
+                HttpContext.Session.Remove("CartObject");
+                var standlist = await _context.Stands.Include(s => s.Feira).Include(s => s.StandTipo).Where(s => s.FeiraId == idFeira).ToListAsync();
+                var feira = await _context.Feiras.Where(s => s.IdFeira == idFeira).FirstOrDefaultAsync();
+                ViewBag.FeiraNome = feira.Nome;
+                /*
+                if (standlist.Count == 0)
+                {
+                    RedirectToAction("index", "feiras", userid);
+                    return NoContent();
+                }*/
+
+                return View(standlist);
+            }
         }
 
         public async Task<IActionResult> Sales(int id)
@@ -105,17 +126,23 @@ namespace WebFayre.Controllers
             {
                 return RedirectToAction("login", "home");
             }
-            
-            /*
-             * @todo => apenas se for um STAFF pode ter acesso a isto
-             * */
 
-            // get current user's id
-            var userid = (int)HttpContext.Session.GetInt32("utilizadorId");
+            var users = _context.Utilizadors.Where(p => p.Id == getUserId()).ToList().Select(p => p.Email);
+            var staff = _context.Standstaffs.Where(p => p.IdStand == id).ToList().Select(p => p.StaffEmail);
+            foreach (var email in users)
+            {
+                if (staff.Contains(email))
+                {
 
-            return _context.Venda != null ?
-                        View(await _context.Venda.Include(v => v.VendaProdutos).Where(v => v.StandId == id).ToListAsync()) :
-                        Problem("Entity set 'WebFayreContext.Venda'  is null.");
+                    // get current user's id
+                    var userid = (int)HttpContext.Session.GetInt32("utilizadorId");
+ 
+                    return _context.Venda != null ?
+                                View(await _context.Venda.Include(v => v.VendaProdutos).Where(v => v.StandId == id).ToListAsync()) :
+                                Problem("Entity set 'WebFayreContext.Venda'  is null.");
+                }
+            }
+            return RedirectToAction("index", "home");
         }
 
 
@@ -143,9 +170,16 @@ namespace WebFayre.Controllers
         // GET: Stands/Create
         public IActionResult Create()
         {
-            ViewData["FeiraId"] = new SelectList(_context.Feiras, "IdFeira", "Nome");
-            ViewData["StandTipoId"] = new SelectList(_context.TipoStands, "Id", "Descricao");
-            return View();
+            if (VerifyAdmin() == 0)
+            {
+                return RedirectToAction("index", "home");
+            }
+            else
+            {
+                ViewData["FeiraId"] = new SelectList(_context.Feiras, "IdFeira", "Nome");
+                ViewData["StandTipoId"] = new SelectList(_context.TipoStands, "Id", "Descricao");
+                return View();
+            }
         }
 
         // POST: Stands/Create
@@ -155,33 +189,40 @@ namespace WebFayre.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("IdStand,Descricao,Nome,Email,Telefone,Disponibilidade,Morada,FeiraId,StandPath,StandTipoId")] Stand stand)
         {
-            if (ModelState.IsValid)
-            {
-                _context.Add(stand);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["FeiraId"] = new SelectList(_context.Feiras, "IdFeira", "Nome", stand.FeiraId);
-            ViewData["StandTipoId"] = new SelectList(_context.TipoStands, "Id", "Descricao", stand.StandTipoId);
-            return View(stand);
+                if (ModelState.IsValid)
+                {
+                    _context.Add(stand);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
+                ViewData["FeiraId"] = new SelectList(_context.Feiras, "IdFeira", "Nome", stand.FeiraId);
+                ViewData["StandTipoId"] = new SelectList(_context.TipoStands, "Id", "Descricao", stand.StandTipoId);
+                return View(stand);
         }
 
         // GET: Stands/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.Stands == null)
+            if (VerifyAdmin() == 0)
             {
-                return NotFound();
+                return RedirectToAction("index", "home");
             }
+            else
+            {
+                if (id == null || _context.Stands == null)
+                {
+                    return NotFound();
+                }
 
-            var stand = await _context.Stands.FindAsync(id);
-            if (stand == null)
-            {
-                return NotFound();
+                var stand = await _context.Stands.FindAsync(id);
+                if (stand == null)
+                {
+                    return NotFound();
+                }
+                ViewData["FeiraId"] = new SelectList(_context.Feiras, "IdFeira", "IdFeira", stand.FeiraId);
+                ViewData["StandTipoId"] = new SelectList(_context.TipoStands, "Id", "Id", stand.StandTipoId);
+                return View(stand);
             }
-            ViewData["FeiraId"] = new SelectList(_context.Feiras, "IdFeira", "IdFeira", stand.FeiraId);
-            ViewData["StandTipoId"] = new SelectList(_context.TipoStands, "Id", "Id", stand.StandTipoId);
-            return View(stand);
         }
 
         // POST: Stands/Edit/5
@@ -191,54 +232,61 @@ namespace WebFayre.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("IdStand,Descricao,Nome,Email,Telefone,Disponibilidade,Morada,FeiraId,StandPath,StandTipoId")] Stand stand)
         {
-            if (id != stand.IdStand)
-            {
-                return NotFound();
-            }
+                if (id != stand.IdStand)
+                {
+                    return NotFound();
+                }
 
-            if (ModelState.IsValid)
-            {
-                try
+                if (ModelState.IsValid)
                 {
-                    _context.Update(stand);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!StandExists(stand.IdStand))
+                    try
                     {
-                        return NotFound();
+                        _context.Update(stand);
+                        await _context.SaveChangesAsync();
                     }
-                    else
+                    catch (DbUpdateConcurrencyException)
                     {
-                        throw;
+                        if (!StandExists(stand.IdStand))
+                        {
+                            return NotFound();
+                        }
+                        else
+                        {
+                            throw;
+                        }
                     }
+                    return RedirectToAction(nameof(Index));
                 }
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["FeiraId"] = new SelectList(_context.Feiras, "IdFeira", "IdFeira", stand.FeiraId);
-            ViewData["StandTipoId"] = new SelectList(_context.TipoStands, "Id", "Id", stand.StandTipoId);
-            return View(stand);
+                ViewData["FeiraId"] = new SelectList(_context.Feiras, "IdFeira", "IdFeira", stand.FeiraId);
+                ViewData["StandTipoId"] = new SelectList(_context.TipoStands, "Id", "Id", stand.StandTipoId);
+                return View(stand);
         }
 
         // GET: Stands/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.Stands == null)
+            if (VerifyAdmin() == 0)
             {
-                return NotFound();
+                return RedirectToAction("index", "home");
             }
-
-            var stand = await _context.Stands
-                .Include(s => s.Feira)
-                .Include(s => s.StandTipo)
-                .FirstOrDefaultAsync(m => m.IdStand == id);
-            if (stand == null)
+            else
             {
-                return NotFound();
-            }
+                if (id == null || _context.Stands == null)
+                {
+                    return NotFound();
+                }
 
-            return View(stand);
+                var stand = await _context.Stands
+                    .Include(s => s.Feira)
+                    .Include(s => s.StandTipo)
+                    .FirstOrDefaultAsync(m => m.IdStand == id);
+                if (stand == null)
+                {
+                    return NotFound();
+                }
+
+                return View(stand);
+            }
         }
 
         // POST: Stands/Delete/5
@@ -246,19 +294,19 @@ namespace WebFayre.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id, int feiraId)
         {
-            if (_context.Stands == null)
-            {
-                return Problem("Entity set 'WebFayreContext.Stands'  is null.");
-            }
-            var stand = await _context.Stands.FindAsync(id, feiraId);
+                if (_context.Stands == null)
+                {
+                    return Problem("Entity set 'WebFayreContext.Stands'  is null.");
+                }
+                var stand = await _context.Stands.FindAsync(id, feiraId);
 
-            if (stand != null)
-            {
-                _context.Stands.Remove(stand);
-            }
+                if (stand != null)
+                {
+                    _context.Stands.Remove(stand);
+                }
 
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
         }
 
         public async Task RemoveStand(int idstand, int idFeira)

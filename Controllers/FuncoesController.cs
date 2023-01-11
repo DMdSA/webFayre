@@ -18,36 +18,70 @@ namespace WebFayre.Controllers
             _context = context;
         }
 
+        private string getFuncFuncao()
+        {
+            return HttpContext.Session.GetString("Funcao");
+        }
+
+        private int VerifyAdmin()
+        {
+            if (HttpContext.Session.GetInt32("utilizadorId") == null || getFuncFuncao() != "Admin")
+                return 0;
+            else
+                return 1;
+        }
+
         // GET: Funcoes
         public async Task<IActionResult> Index()
         {
-              return _context.Funcaos != null ? 
+            if (VerifyAdmin() == 0)
+            {
+                return RedirectToAction("index", "home");
+            }
+            else
+            {
+                return _context.Funcaos != null ?
                           View(await _context.Funcaos.ToListAsync()) :
                           Problem("Entity set 'WebFayreContext.Funcaos'  is null.");
+            }
         }
 
         // GET: Funcoes/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.Funcaos == null)
+            if (VerifyAdmin() == 0)
             {
-                return NotFound();
+                return RedirectToAction("index", "home");
             }
-
-            var funcao = await _context.Funcaos
-                .FirstOrDefaultAsync(m => m.IdFuncao == id);
-            if (funcao == null)
+            else
             {
-                return NotFound();
-            }
+                if (id == null || _context.Funcaos == null)
+                {
+                    return NotFound();
+                }
 
-            return View(funcao);
+                var funcao = await _context.Funcaos
+                    .FirstOrDefaultAsync(m => m.IdFuncao == id);
+                if (funcao == null)
+                {
+                    return NotFound();
+                }
+
+                return View(funcao);
+            }
         }
 
         // GET: Funcoes/Create
         public IActionResult Create()
         {
-            return View();
+            if (VerifyAdmin() == 0)
+            {
+                return RedirectToAction("index", "home");
+            }
+            else
+            {
+                return View();
+            }
         }
 
         // POST: Funcoes/Create
@@ -57,29 +91,36 @@ namespace WebFayre.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("IdFuncao,Descricao")] Funcao funcao)
         {
-            if (ModelState.IsValid)
-            {
-                _context.Add(funcao);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(funcao);
+                if (ModelState.IsValid)
+                {
+                    _context.Add(funcao);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
+                return View(funcao);
         }
 
         // GET: Funcoes/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.Funcaos == null)
+            if (VerifyAdmin() == 0)
             {
-                return NotFound();
+                return RedirectToAction("index", "home");
             }
+            else
+            {
+                if (id == null || _context.Funcaos == null)
+                {
+                    return NotFound();
+                }
 
-            var funcao = await _context.Funcaos.FindAsync(id);
-            if (funcao == null)
-            {
-                return NotFound();
+                var funcao = await _context.Funcaos.FindAsync(id);
+                if (funcao == null)
+                {
+                    return NotFound();
+                }
+                return View(funcao);
             }
-            return View(funcao);
         }
 
         // POST: Funcoes/Edit/5
@@ -89,50 +130,57 @@ namespace WebFayre.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("IdFuncao,Descricao")] Funcao funcao)
         {
-            if (id != funcao.IdFuncao)
-            {
-                return NotFound();
-            }
+                if (id != funcao.IdFuncao)
+                {
+                    return NotFound();
+                }
 
-            if (ModelState.IsValid)
-            {
-                try
+                if (ModelState.IsValid)
                 {
-                    _context.Update(funcao);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!FuncaoExists(funcao.IdFuncao))
+                    try
                     {
-                        return NotFound();
+                        _context.Update(funcao);
+                        await _context.SaveChangesAsync();
                     }
-                    else
+                    catch (DbUpdateConcurrencyException)
                     {
-                        throw;
+                        if (!FuncaoExists(funcao.IdFuncao))
+                        {
+                            return NotFound();
+                        }
+                        else
+                        {
+                            throw;
+                        }
                     }
+                    return RedirectToAction(nameof(Index));
                 }
-                return RedirectToAction(nameof(Index));
-            }
-            return View(funcao);
+                return View(funcao);
         }
 
         // GET: Funcoes/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.Funcaos == null)
+            if (VerifyAdmin() == 0)
             {
-                return NotFound();
+                return RedirectToAction("index", "home");
             }
-
-            var funcao = await _context.Funcaos
-                .FirstOrDefaultAsync(m => m.IdFuncao == id);
-            if (funcao == null)
+            else
             {
-                return NotFound();
-            }
+                if (id == null || _context.Funcaos == null)
+                {
+                    return NotFound();
+                }
 
-            return View(funcao);
+                var funcao = await _context.Funcaos
+                    .FirstOrDefaultAsync(m => m.IdFuncao == id);
+                if (funcao == null)
+                {
+                    return NotFound();
+                }
+
+                return View(funcao);
+            }
         }
 
         // POST: Funcoes/Delete/5
@@ -140,18 +188,18 @@ namespace WebFayre.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.Funcaos == null)
-            {
-                return Problem("Entity set 'WebFayreContext.Funcaos'  is null.");
-            }
-            var funcao = await _context.Funcaos.FindAsync(id);
-            if (funcao != null)
-            {
-                _context.Funcaos.Remove(funcao);
-            }
-            
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+                if (_context.Funcaos == null)
+                {
+                    return Problem("Entity set 'WebFayreContext.Funcaos'  is null.");
+                }
+                var funcao = await _context.Funcaos.FindAsync(id);
+                if (funcao != null)
+                {
+                    _context.Funcaos.Remove(funcao);
+                }
+
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
         }
 
         private bool FuncaoExists(int id)

@@ -29,12 +29,31 @@ namespace WebFayre.Controllers
             _context = context;
         }
 
+        private string getFuncFuncao()
+        {
+            return HttpContext.Session.GetString("Funcao");
+        }
+        private int VerifyAdmin()
+        {
+            if (HttpContext.Session.GetInt32("utilizadorId") == null || getFuncFuncao() != "Admin")
+                return 0;
+            else
+                return 1;
+        }
+
         // GET: Utilizadors
         public async Task<IActionResult> Index()
         {
-              return _context.Utilizadors != null ? 
+            if (VerifyAdmin() == 0)
+            {
+                return RedirectToAction("index", "home");
+            }
+            else
+            {
+                return _context.Utilizadors != null ?
                           View(await _context.Utilizadors.ToListAsync()) :
                           Problem("Entity set 'WebFayreContext.Utilizadors'  is null.");
+            }
         }
 
         public async Task<IActionResult> Purchases()
@@ -43,12 +62,19 @@ namespace WebFayre.Controllers
             {
                 return RedirectToAction("login", "home");
             }
-            // get current user's id
-            var userid = (int)HttpContext.Session.GetInt32("utilizadorId");
+            if (HttpContext.Session.GetInt32("isFuncionario") != 0)
+            {
+                return RedirectToAction("index", "home");
+            }
+            else
+            {
+                // get current user's id
+                var userid = (int)HttpContext.Session.GetInt32("utilizadorId");
 
-            return _context.Venda != null ?
-                        View(await _context.Venda.Include(v => v.VendaProdutos).Where(v => v.UtilizadorId == userid).ToListAsync()) :
-                        Problem("Entity set 'WebFayreContext.Venda'  is null.");
+                return _context.Venda != null ?
+                            View(await _context.Venda.Include(v => v.VendaProdutos).Where(v => v.UtilizadorId == userid).ToListAsync()) :
+                            Problem("Entity set 'WebFayreContext.Venda'  is null.");
+            }
         }
 
         public async Task<IActionResult> VisitedFairs()
@@ -57,14 +83,21 @@ namespace WebFayre.Controllers
             {
                 return RedirectToAction("login", "home");
             }
-            // get current user's id
-            var userid = (int)HttpContext.Session.GetInt32("utilizadorId");
+            if (HttpContext.Session.GetInt32("isFuncionario") != 0)
+            {
+                return RedirectToAction("index", "home");
+            }
+            else
+            {
+                // get current user's id
+                var userid = (int)HttpContext.Session.GetInt32("utilizadorId");
 
-            var user = await _context.Utilizadors.Include(u => u.Tickets).Include(u => u.IdFeiras).FirstOrDefaultAsync(m => m.Id == userid);
-            var ticket_fairs = user.Tickets.Select(t => t.Feira).ToList();
-            return _context.Feiras != null ?
-                        View(ticket_fairs) :
-                        Problem("Entity set 'WebFayreContext.Venda'  is null.");
+                var user = await _context.Utilizadors.Include(u => u.Tickets).Include(u => u.IdFeiras).FirstOrDefaultAsync(m => m.Id == userid);
+                var ticket_fairs = user.Tickets.Select(t => t.Feira).ToList();
+                return _context.Feiras != null ?
+                            View(ticket_fairs) :
+                            Problem("Entity set 'WebFayreContext.Venda'  is null.");
+            }
         }
 
         public async Task<IActionResult> ViewProfile()
@@ -73,10 +106,17 @@ namespace WebFayre.Controllers
             {
                 return RedirectToAction("login", "home");
             }
-            var userid = (int)HttpContext.Session.GetInt32("utilizadorId");
-            var user = await _context.Utilizadors.FirstOrDefaultAsync(m => m.Id == userid);
-            ViewBag.Nome = user.Nome;
-            return View(user);
+            if (HttpContext.Session.GetInt32("isFuncionario") != 0)
+            {
+                return RedirectToAction("index", "home");
+            }
+            else
+            {
+                var userid = (int)HttpContext.Session.GetInt32("utilizadorId");
+                var user = await _context.Utilizadors.FirstOrDefaultAsync(m => m.Id == userid);
+                ViewBag.Nome = user.Nome;
+                return View(user);
+            }
         }
 
         public async Task<IActionResult> MyStands()
@@ -85,18 +125,25 @@ namespace WebFayre.Controllers
             {
                 return RedirectToAction("login", "home");
             }
-            var userid = (int)HttpContext.Session.GetInt32("utilizadorId");
-            var user = await _context.Utilizadors.Where(u => u.Id == userid).FirstOrDefaultAsync();
-            var email = user.Email;
-
-            var stands = _context.Standstaffs.Where(u => u.StaffEmail == email).ToList();
-            List<Stand> list = new List<Stand>();
-            foreach (var a in stands)
+            if (HttpContext.Session.GetInt32("isFuncionario") != 0)
             {
-                var s = await _context.Stands.Where(u => u.IdStand == a.IdStand).FirstOrDefaultAsync();
-                list.Add(s);
+                return RedirectToAction("index", "home");
             }
-            return View(list);
+            else
+            {
+                var userid = (int)HttpContext.Session.GetInt32("utilizadorId");
+                var user = await _context.Utilizadors.Where(u => u.Id == userid).FirstOrDefaultAsync();
+                var email = user.Email;
+
+                var stands = _context.Standstaffs.Where(u => u.StaffEmail == email).ToList();
+                List<Stand> list = new List<Stand>();
+                foreach (var a in stands)
+                {
+                    var s = await _context.Stands.Where(u => u.IdStand == a.IdStand).FirstOrDefaultAsync();
+                    list.Add(s);
+                }
+                return View(list);
+            }
         }
 
 
@@ -139,7 +186,14 @@ namespace WebFayre.Controllers
         // GET: Utilizadors/Create
         public IActionResult Create()
         {
-            return View();
+            if (VerifyAdmin() == 0)
+            {
+                return RedirectToAction("index", "home");
+            }
+            else
+            {
+                return View();
+            }
         }
 
         // POST: Utilizadors/Create
@@ -161,17 +215,17 @@ namespace WebFayre.Controllers
         // GET: Utilizadors/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.Utilizadors == null)
-            {
-                return NotFound();
-            }
+                if (id == null || _context.Utilizadors == null)
+                {
+                    return NotFound();
+                }
 
-            var utilizador = await _context.Utilizadors.FindAsync(id);
-            if (utilizador == null)
-            {
-                return NotFound();
-            }
-            return View(utilizador);
+                var utilizador = await _context.Utilizadors.FindAsync(id);
+                if (utilizador == null)
+                {
+                    return NotFound();
+                }
+                return View(utilizador);
         }
 
         // POST: Utilizadors/Edit/5
@@ -187,49 +241,68 @@ namespace WebFayre.Controllers
                 return NotFound();
             }
             var user = await _context.Utilizadors.Where(u => u.Id == id).FirstOrDefaultAsync();
-            utilizador.DataNascimento = user.DataNascimento;
-            utilizador.Email = user.Email;
-            utilizador.Password = user.Password;
-
-            if (ModelState.IsValid)
+            var emails = _context.Utilizadors.ToList().Select(u => u.Email);
+            if (user.Email == utilizador.Email || !emails.Contains(utilizador.Email))
             {
-                try
+                utilizador.DataNascimento = user.DataNascimento;
+                utilizador.Password = user.Password;
+                utilizador.IdFeiras = user.IdFeiras;
+                utilizador.Promocaofeiras = user.Promocaofeiras;
+                utilizador.Tickets = user.Tickets;
+                utilizador.Venda = user.Venda;
+
+                if (ModelState.IsValid)
                 {
-                    _context.Update(utilizador);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!UtilizadorExists(utilizador.Id))
+                    try
                     {
-                        return NotFound();
+                        _context.Update(utilizador);
+                        await _context.SaveChangesAsync();
                     }
-                    else
+                    catch (DbUpdateConcurrencyException)
                     {
-                        throw;
+                        if (!UtilizadorExists(utilizador.Id))
+                        {
+                            return NotFound();
+                        }
+                        else
+                        {
+                            throw;
+                        }
                     }
+                    return RedirectToAction(nameof(Index));
                 }
-                return RedirectToAction(nameof(Index));
+                return View(utilizador);
             }
-            return View(utilizador);
+            else
+            {
+                ViewBag.ErrorMessage = "Someone already has that email";
+                return RedirectToAction("ViewProfile", "Utilizadores");
+            }
         }
 
         // GET: Utilizadors/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.Utilizadors == null)
+            if (VerifyAdmin() == 0)
             {
-                return NotFound();
+                return RedirectToAction("index", "home");
             }
-
-            var utilizador = await _context.Utilizadors
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (utilizador == null)
+            else
             {
-                return NotFound();
-            }
+                if (id == null || _context.Utilizadors == null)
+                {
+                    return NotFound();
+                }
 
-            return View(utilizador);
+                var utilizador = await _context.Utilizadors
+                    .FirstOrDefaultAsync(m => m.Id == id);
+                if (utilizador == null)
+                {
+                    return NotFound();
+                }
+
+                return View(utilizador);
+            }
         }
 
         // POST: Utilizadors/Delete/5
@@ -433,19 +506,26 @@ namespace WebFayre.Controllers
 
         public async Task<IActionResult> FairHistory()
         {
-            if (HttpContext.Session.GetInt32("utilizadorId") == null)
+            if (HttpContext.Session.GetInt32("isFuncionario") != 0)
             {
-                return RedirectToAction("login", "home");
+                return RedirectToAction("index", "home");
             }
-            // get current user's id
-            var userid = (int)HttpContext.Session.GetInt32("utilizadorId");
+            else
+            {
+                if (HttpContext.Session.GetInt32("utilizadorId") == null)
+                {
+                    return RedirectToAction("login", "home");
+                }
+                // get current user's id
+                var userid = (int)HttpContext.Session.GetInt32("utilizadorId");
 
-            // get all tickets generated for him
-            var tickets = _context.Tickets != null ? await _context.Tickets.Where(t => t.UtilizadorId == userid).Select(t => t.FeiraId).ToListAsync() : null;
+                // get all tickets generated for him
+                var tickets = _context.Tickets != null ? await _context.Tickets.Where(t => t.UtilizadorId == userid).Select(t => t.FeiraId).ToListAsync() : null;
 
-            return _context.Feiras != null ?
-                          View(await _context.Feiras.Where(f => tickets.Contains(f.IdFeira)).ToListAsync()) :
-                          Problem("Entity set 'WebFayreContext.Feiras'  is null.");
+                return _context.Feiras != null ?
+                              View(await _context.Feiras.Where(f => tickets.Contains(f.IdFeira)).ToListAsync()) :
+                              Problem("Entity set 'WebFayreContext.Feiras'  is null.");
+            }
         }
 
 

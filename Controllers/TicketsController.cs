@@ -18,39 +18,72 @@ namespace WebFayre.Controllers
             _context = context;
         }
 
+        private string getFuncFuncao()
+        {
+            return HttpContext.Session.GetString("Funcao");
+        }
+        private int VerifyAdmin()
+        {
+            if (HttpContext.Session.GetInt32("utilizadorId") == null || getFuncFuncao() != "Admin")
+                return 0;
+            else
+                return 1;
+        }
+
         // GET: Tickets
         public async Task<IActionResult> Index()
         {
-            var webFayreContext = _context.Tickets.Include(t => t.Feira).Include(t => t.Utilizador);
-            return View(await webFayreContext.ToListAsync());
+            if (VerifyAdmin() == 0)
+            {
+                return RedirectToAction("index", "home");
+            }
+            else
+            {
+                var webFayreContext = _context.Tickets.Include(t => t.Feira).Include(t => t.Utilizador);
+                return View(await webFayreContext.ToListAsync());
+            }
         }
 
         // GET: Tickets/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.Tickets == null)
+            if (VerifyAdmin() == 0)
             {
-                return NotFound();
+                return RedirectToAction("index", "home");
             }
-
-            var ticket = await _context.Tickets
-                .Include(t => t.Feira)
-                .Include(t => t.Utilizador)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (ticket == null)
+            else
             {
-                return NotFound();
-            }
+                if (id == null || _context.Tickets == null)
+                {
+                    return NotFound();
+                }
 
-            return View(ticket);
+                var ticket = await _context.Tickets
+                    .Include(t => t.Feira)
+                    .Include(t => t.Utilizador)
+                    .FirstOrDefaultAsync(m => m.Id == id);
+                if (ticket == null)
+                {
+                    return NotFound();
+                }
+
+                return View(ticket);
+            }
         }
 
         // GET: Tickets/Create
         public IActionResult Create()
         {
-            ViewData["FeiraId"] = new SelectList(_context.Feiras, "IdFeira", "IdFeira");
-            ViewData["UtilizadorId"] = new SelectList(_context.Utilizadors, "Id", "Id");
-            return View();
+            if (VerifyAdmin() == 0)
+            {
+                return RedirectToAction("index", "home");
+            }
+            else
+            {
+                ViewData["FeiraId"] = new SelectList(_context.Feiras, "IdFeira", "IdFeira");
+                ViewData["UtilizadorId"] = new SelectList(_context.Utilizadors, "Id", "Id");
+                return View();
+            }
         }
 
         // POST: Tickets/Create
@@ -60,34 +93,43 @@ namespace WebFayre.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Data,UtilizadorId,FeiraId")] Ticket ticket)
         {
-            await _context.Tickets.Include(t => t.Feira).Include(t => t.Utilizador).LoadAsync();
-            if (ModelState.IsValid)
             {
-                _context.Add(ticket);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                await _context.Tickets.Include(t => t.Feira).Include(t => t.Utilizador).LoadAsync();
+                if (ModelState.IsValid)
+                {
+                    _context.Add(ticket);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
+                ViewData["FeiraId"] = new SelectList(_context.Feiras, "IdFeira", "IdFeira", ticket.FeiraId);
+                ViewData["UtilizadorId"] = new SelectList(_context.Utilizadors, "Id", "Id", ticket.UtilizadorId);
+                return View(ticket);
             }
-            ViewData["FeiraId"] = new SelectList(_context.Feiras, "IdFeira", "IdFeira", ticket.FeiraId);
-            ViewData["UtilizadorId"] = new SelectList(_context.Utilizadors, "Id", "Id", ticket.UtilizadorId);
-            return View(ticket);
         }
 
         // GET: Tickets/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.Tickets == null)
+            if (VerifyAdmin() == 0)
             {
-                return NotFound();
+                return RedirectToAction("index", "home");
             }
+            else
+            {
+                if (id == null || _context.Tickets == null)
+                {
+                    return NotFound();
+                }
 
-            var ticket = await _context.Tickets.FindAsync(id);
-            if (ticket == null)
-            {
-                return NotFound();
+                var ticket = await _context.Tickets.FindAsync(id);
+                if (ticket == null)
+                {
+                    return NotFound();
+                }
+                ViewData["FeiraId"] = new SelectList(_context.Feiras, "IdFeira", "IdFeira", ticket.FeiraId);
+                ViewData["UtilizadorId"] = new SelectList(_context.Utilizadors, "Id", "Id", ticket.UtilizadorId);
+                return View(ticket);
             }
-            ViewData["FeiraId"] = new SelectList(_context.Feiras, "IdFeira", "IdFeira", ticket.FeiraId);
-            ViewData["UtilizadorId"] = new SelectList(_context.Utilizadors, "Id", "Id", ticket.UtilizadorId);
-            return View(ticket);
         }
 
         // POST: Tickets/Edit/5
@@ -130,21 +172,28 @@ namespace WebFayre.Controllers
         // GET: Tickets/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.Tickets == null)
+            if (VerifyAdmin() == 0)
             {
-                return NotFound();
+                return RedirectToAction("index", "home");
             }
-
-            var ticket = await _context.Tickets
-                .Include(t => t.Feira)
-                .Include(t => t.Utilizador)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (ticket == null)
+            else
             {
-                return NotFound();
-            }
+                if (id == null || _context.Tickets == null)
+                {
+                    return NotFound();
+                }
 
-            return View(ticket);
+                var ticket = await _context.Tickets
+                    .Include(t => t.Feira)
+                    .Include(t => t.Utilizador)
+                    .FirstOrDefaultAsync(m => m.Id == id);
+                if (ticket == null)
+                {
+                    return NotFound();
+                }
+
+                return View(ticket);
+            }
         }
 
         // POST: Tickets/Delete/5

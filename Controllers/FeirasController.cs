@@ -49,6 +49,14 @@ namespace WebFayre.Controllers
             return HttpContext.Session.GetString("Funcao");
         }
 
+        private int VerifyAdmin()
+        {
+            if (HttpContext.Session.GetInt32("utilizadorId") == null || getFuncFuncao() != "Admin")
+                return 0;
+            else
+                return 1;
+        }
+
         public IActionResult RedirectIndex(string nameFeira)
         {
             if (!userHasSession())
@@ -73,46 +81,67 @@ namespace WebFayre.Controllers
         // GET: Feiras
         public async Task<IActionResult> Index(string nameFeira)
         {
-            if (String.IsNullOrEmpty(nameFeira))
+            if (VerifyAdmin() == 0)
             {
-                return _context.Feiras != null ?
-                        View(await _context.Feiras.Include(f => f.FeiraCategoria1s).ToListAsync()) :
-                        Problem("Entity set 'WebFayreContext.Feiras'  is null.");
+                return RedirectToAction("index", "home");
             }
             else
             {
-                var searchItems = await _context.Feiras.Include(f => f.FeiraCategoria1s).Where(s => s.Nome.Contains(nameFeira)).ToListAsync();
-                return View(searchItems);
+                if (String.IsNullOrEmpty(nameFeira))
+                {
+                    return _context.Feiras != null ?
+                            View(await _context.Feiras.Include(f => f.FeiraCategoria1s).ToListAsync()) :
+                            Problem("Entity set 'WebFayreContext.Feiras'  is null.");
+                }
+                else
+                {
+                    var searchItems = await _context.Feiras.Include(f => f.FeiraCategoria1s).Where(s => s.Nome.Contains(nameFeira)).ToListAsync();
+                    return View(searchItems);
+                }
             }
         }
 
         public async Task<IActionResult> IndexUser(string nameFeira)
         {
-            if (String.IsNullOrEmpty(nameFeira))
+            if (getUserType() != 0)
             {
-                return _context.Feiras != null ?
-                        View(await _context.Feiras.Include(f => f.FeiraCategoria1s).ToListAsync()) :
-                        Problem("Entity set 'WebFayreContext.Feiras'  is null.");
+                return RedirectToAction("index", "home");
             }
             else
             {
-                var searchItems = await _context.Feiras.Include(f => f.FeiraCategoria1s).Where(s => s.Nome.Contains(nameFeira)).ToListAsync();
-                return View(searchItems);
+                if (String.IsNullOrEmpty(nameFeira))
+                {
+                    return _context.Feiras != null ?
+                            View(await _context.Feiras.Include(f => f.FeiraCategoria1s).ToListAsync()) :
+                            Problem("Entity set 'WebFayreContext.Feiras'  is null.");
+                }
+                else
+                {
+                    var searchItems = await _context.Feiras.Include(f => f.FeiraCategoria1s).Where(s => s.Nome.Contains(nameFeira)).ToListAsync();
+                    return View(searchItems);
+                }
             }
         }
 
         public async Task<IActionResult> IndexFunc(string nameFeira)
         {
-            if (String.IsNullOrEmpty(nameFeira))
+            if (getUserType() != 1)
             {
-                return _context.Feiras != null ?
-                        View(await _context.Feiras.Include(f => f.FeiraCategoria1s).ToListAsync()) :
-                        Problem("Entity set 'WebFayreContext.Feiras'  is null.");
+                return RedirectToAction("index", "home");
             }
             else
             {
-                var searchItems = await _context.Feiras.Include(f => f.FeiraCategoria1s).Where(s => s.Nome.Contains(nameFeira)).ToListAsync();
-                return View(searchItems);
+                if (String.IsNullOrEmpty(nameFeira))
+                {
+                    return _context.Feiras != null ?
+                            View(await _context.Feiras.Include(f => f.FeiraCategoria1s).ToListAsync()) :
+                            Problem("Entity set 'WebFayreContext.Feiras'  is null.");
+                }
+                else
+                {
+                    var searchItems = await _context.Feiras.Include(f => f.FeiraCategoria1s).Where(s => s.Nome.Contains(nameFeira)).ToListAsync();
+                    return View(searchItems);
+                }
             }
         }
 
@@ -140,34 +169,38 @@ namespace WebFayre.Controllers
         // GET: Feiras/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.Feiras == null)
-            {
-                return NotFound();
-            }
+                if (id == null || _context.Feiras == null)
+                {
+                    return NotFound();
+                }
 
-            //var feira = await _context.Feiras.Include(x => x.FeiraCategoria1s)
-            //    .ThenInclude(y => y.IdCategoriaFeira)  //Devia ser o nome da table
-            //    .SingleOrDefaultAsync(m => m.IdFeira == id);
+                //var feira = await _context.Feiras.Include(x => x.FeiraCategoria1s)
+                //    .ThenInclude(y => y.IdCategoriaFeira)  //Devia ser o nome da table
+                //    .SingleOrDefaultAsync(m => m.IdFeira == id);
 
-            var feira = await _context.Feiras
-                .SingleOrDefaultAsync(m => m.IdFeira == id);
-            if (feira == null)
-            {
-                return NotFound();
-            }
-
-            
-
-            return View(feira);
+                var feira = await _context.Feiras
+                    .SingleOrDefaultAsync(m => m.IdFeira == id);
+                if (feira == null)
+                {
+                    return NotFound();
+                }
+                return View(feira);
         }
 
         // GET: Feiras/Create
         public IActionResult Create()
         {
+            if (VerifyAdmin() == 0)
+            {
+                return RedirectToAction("index", "home");
+            }
+            else
+            {
 
-            ViewData["Categorias"] = new MultiSelectList(_context.Categoriafeiras, "IdCategoriaFeira", "Descricao");
-            ViewData["Patrocinadores"] = new MultiSelectList(_context.Patrocinadors, "IdPatrocinador", "Nome");
-            return View();
+                ViewData["Categorias"] = new MultiSelectList(_context.Categoriafeiras, "IdCategoriaFeira", "Descricao");
+                ViewData["Patrocinadores"] = new MultiSelectList(_context.Patrocinadors, "IdPatrocinador", "Nome");
+                return View();
+            }
         }
 
         // POST: Feiras/Create
@@ -177,52 +210,59 @@ namespace WebFayre.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("IdFeira,Descricao,Nome,DataInicio,DataFim,CapacidadeClientes,NStands,Email,Telefone,Morada,FeiraPath,FeiraCategoria1s,Patrocinadors")] Feira feira)
         {
-            await _context.Feiras.Include(x => x.FeiraCategoria1s).Include(x => x.Patrocinadors).LoadAsync();
+                await _context.Feiras.Include(x => x.FeiraCategoria1s).Include(x => x.Patrocinadors).LoadAsync();
 
-            if (ModelState.IsValid)
-            {
-                var category_values = ModelState.Values.ToList()[9];
-                var category_ids = category_values.AttemptedValue.Split(",");
-                var category_idsList = category_ids.Select(int.Parse).ToList();
+                if (ModelState.IsValid)
+                {
+                    var category_values = ModelState.Values.ToList()[9];
+                    var category_ids = category_values.AttemptedValue.Split(",");
+                    var category_idsList = category_ids.Select(int.Parse).ToList();
 
-                var patroc_values = ModelState.Values.ToList()[10];
-                var patroc_ids = patroc_values.AttemptedValue.Split(",");
-                var patroc_idsList = patroc_ids.Select(int.Parse).ToList();
+                    var patroc_values = ModelState.Values.ToList()[10];
+                    var patroc_ids = patroc_values.AttemptedValue.Split(",");
+                    var patroc_idsList = patroc_ids.Select(int.Parse).ToList();
 
-                var category_entities = _context.Categoriafeiras.Where(x => category_idsList.Contains(x.IdCategoriaFeira));
-                var patroc_entities = _context.Patrocinadors.Where(x => patroc_idsList.Contains(x.IdPatrocinador));
-                feira.FeiraCategoria1s.AddRange(category_entities);
-                feira.Patrocinadors.AddRange(patroc_entities);
+                    var category_entities = _context.Categoriafeiras.Where(x => category_idsList.Contains(x.IdCategoriaFeira));
+                    var patroc_entities = _context.Patrocinadors.Where(x => patroc_idsList.Contains(x.IdPatrocinador));
+                    feira.FeiraCategoria1s.AddRange(category_entities);
+                    feira.Patrocinadors.AddRange(patroc_entities);
 
-                _context.Add(feira).Collection(c => c.FeiraCategoria1s);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-
-
-            ViewData["Categorias"] = new MultiSelectList(_context.Categoriafeiras, "IdCategoriaFeira", "Descricao", feira.FeiraCategoria1s);
-            ViewData["Patrocinadores"] = new MultiSelectList(_context.Patrocinadors, "IdPatrocinador", "Nome", feira.Patrocinadors);
+                    _context.Add(feira).Collection(c => c.FeiraCategoria1s);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
 
 
-            return View(feira);
+                ViewData["Categorias"] = new MultiSelectList(_context.Categoriafeiras, "IdCategoriaFeira", "Descricao", feira.FeiraCategoria1s);
+                ViewData["Patrocinadores"] = new MultiSelectList(_context.Patrocinadors, "IdPatrocinador", "Nome", feira.Patrocinadors);
+
+
+                return View(feira);
         }
 
         // GET: Feiras/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.Feiras == null)
+            if (VerifyAdmin() == 0)
             {
-                return NotFound();
+                return RedirectToAction("index", "home");
             }
+            else
+            {
+                if (id == null || _context.Feiras == null)
+                {
+                    return NotFound();
+                }
 
-            var feira = await _context.Feiras.FindAsync(id);
-            if (feira == null)
-            {
-                return NotFound();
+                var feira = await _context.Feiras.FindAsync(id);
+                if (feira == null)
+                {
+                    return NotFound();
+                }
+                ViewData["Categorias"] = new MultiSelectList(_context.Categoriafeiras, "IdCategoriaFeira", "Descricao", feira.FeiraCategoria1s);
+                ViewData["Patrocinadores"] = new MultiSelectList(_context.Patrocinadors, "IdPatrocinador", "Nome", feira.Patrocinadors);
+                return View(feira);
             }
-            ViewData["Categorias"] = new MultiSelectList(_context.Categoriafeiras, "IdCategoriaFeira", "Descricao", feira.FeiraCategoria1s);
-            ViewData["Patrocinadores"] = new MultiSelectList(_context.Patrocinadors, "IdPatrocinador", "Nome", feira.Patrocinadors);
-            return View(feira);
         }
 
         // POST: Feiras/Edit/5
@@ -232,73 +272,80 @@ namespace WebFayre.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("IdFeira,Descricao,Nome,DataInicio,DataFim,CapacidadeClientes,NStands,Email,Telefone,Morada,FeiraPath,FeiraCategoria1s,Patrocinadors")] Feira feira)
         {
-            if (id != feira.IdFeira)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
+                if (id != feira.IdFeira)
                 {
-                    var category_values = ModelState.Values.ToList()[12];
-                    var category_ids = category_values.AttemptedValue.Split(",");
-                    var category_idsList = category_ids.Select(int.Parse).ToList();
-
-                    var patroc_values = ModelState.Values.ToList()[11];
-                    var patroc_ids = patroc_values.AttemptedValue.Split(",");
-                    var patroc_idsList = patroc_ids.Select(int.Parse).ToList();
-
-                    foreach (var category in feira.FeiraCategoria1s.ToList())
-                    {
-                        feira.FeiraCategoria1s.Remove(category);
-                    }
-                    foreach (var patrocinador in feira.Patrocinadors.ToList())
-                    {
-                        feira.Patrocinadors.Remove(patrocinador);
-                    }
-
-                    var category_entities = _context.Categoriafeiras.Where(x => category_idsList.Contains(x.IdCategoriaFeira));
-                    var patroc_entities = _context.Patrocinadors.Where(x => patroc_idsList.Contains(x.IdPatrocinador));
-                    feira.FeiraCategoria1s.AddRange(category_entities);
-                    feira.Patrocinadors.AddRange(patroc_entities);
-                    _context.Update(feira);
-                    await _context.SaveChangesAsync();
+                    return NotFound();
                 }
-                catch (DbUpdateConcurrencyException)
+
+                if (ModelState.IsValid)
                 {
-                    if (!FeiraExists(feira.IdFeira))
+                    try
                     {
-                        return NotFound();
+                        var category_values = ModelState.Values.ToList()[12];
+                        var category_ids = category_values.AttemptedValue.Split(",");
+                        var category_idsList = category_ids.Select(int.Parse).ToList();
+
+                        var patroc_values = ModelState.Values.ToList()[11];
+                        var patroc_ids = patroc_values.AttemptedValue.Split(",");
+                        var patroc_idsList = patroc_ids.Select(int.Parse).ToList();
+
+                        foreach (var category in feira.FeiraCategoria1s.ToList())
+                        {
+                            feira.FeiraCategoria1s.Remove(category);
+                        }
+                        foreach (var patrocinador in feira.Patrocinadors.ToList())
+                        {
+                            feira.Patrocinadors.Remove(patrocinador);
+                        }
+
+                        var category_entities = _context.Categoriafeiras.Where(x => category_idsList.Contains(x.IdCategoriaFeira));
+                        var patroc_entities = _context.Patrocinadors.Where(x => patroc_idsList.Contains(x.IdPatrocinador));
+                        feira.FeiraCategoria1s.AddRange(category_entities);
+                        feira.Patrocinadors.AddRange(patroc_entities);
+                        _context.Update(feira);
+                        await _context.SaveChangesAsync();
                     }
-                    else
+                    catch (DbUpdateConcurrencyException)
                     {
-                        throw;
+                        if (!FeiraExists(feira.IdFeira))
+                        {
+                            return NotFound();
+                        }
+                        else
+                        {
+                            throw;
+                        }
                     }
+                    return RedirectToAction(nameof(Index));
                 }
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["FeiraCategoria1s"] = new MultiSelectList(_context.Categoriafeiras, "IdCategoriaFeira", "IdCategoriaFeira", feira.FeiraCategoria1s);
-            ViewData["Patrocinadores"] = new MultiSelectList(_context.Patrocinadors, "IdPatrocinador", "Nome", feira.Patrocinadors);
-            return View(feira);
+                ViewData["FeiraCategoria1s"] = new MultiSelectList(_context.Categoriafeiras, "IdCategoriaFeira", "IdCategoriaFeira", feira.FeiraCategoria1s);
+                ViewData["Patrocinadores"] = new MultiSelectList(_context.Patrocinadors, "IdPatrocinador", "Nome", feira.Patrocinadors);
+                return View(feira);
         }
 
         // GET: Feiras/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.Feiras == null)
+            if (VerifyAdmin() == 0)
             {
-                return NotFound();
+                return RedirectToAction("index", "home");
             }
-
-            var feira = await _context.Feiras.Include(x => x.Stands).Include(x => x.Tickets).Include(x => x.FeiraCategoria1s)
-                .FirstOrDefaultAsync(m => m.IdFeira == id);
-            if (feira == null)
+            else
             {
-                return NotFound();
-            }
+                if (id == null || _context.Feiras == null)
+                {
+                    return NotFound();
+                }
 
-            return View(feira);
+                var feira = await _context.Feiras.Include(x => x.Stands).Include(x => x.Tickets).Include(x => x.FeiraCategoria1s)
+                    .FirstOrDefaultAsync(m => m.IdFeira == id);
+                if (feira == null)
+                {
+                    return NotFound();
+                }
+
+                return View(feira);
+            }
         }
 
         // POST: Feiras/Delete/5
@@ -306,42 +353,42 @@ namespace WebFayre.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.Feiras == null)
-            {
-                return Problem("Entity set 'WebFayreContext.Feiras'  is null.");
-            }
-            var feira = await _context.Feiras.Include(f => f.FeiraCategoria1s).FirstOrDefaultAsync(f => f.IdFeira == id);
-            if (feira != null)
-            {
-                CategoriafeirasController categoriaController = new CategoriafeirasController(_context);
-                foreach (var category in feira.FeiraCategoria1s.ToList())
+                if (_context.Feiras == null)
                 {
-                    feira.FeiraCategoria1s.Remove(category);
-                    await categoriaController.RemoveFeiraAsync(feira, category.IdCategoriaFeira);
+                    return Problem("Entity set 'WebFayreContext.Feiras'  is null.");
+                }
+                var feira = await _context.Feiras.Include(f => f.FeiraCategoria1s).FirstOrDefaultAsync(f => f.IdFeira == id);
+                if (feira != null)
+                {
+                    CategoriafeirasController categoriaController = new CategoriafeirasController(_context);
+                    foreach (var category in feira.FeiraCategoria1s.ToList())
+                    {
+                        feira.FeiraCategoria1s.Remove(category);
+                        await categoriaController.RemoveFeiraAsync(feira, category.IdCategoriaFeira);
+                    }
+
+                    PatrocinadoresController patrocinadoresController = new PatrocinadoresController(_context);
+                    foreach (var patrocinador in feira.Patrocinadors.ToList())
+                    {
+                        feira.Patrocinadors.Remove(patrocinador);
+                        await patrocinadoresController.RemoveFeiraAsync(feira, patrocinador.IdPatrocinador);
+                    }
+
+                    StandsController standsController = new StandsController(_context);
+                    foreach (var stand in feira.Stands.ToList())
+                    {
+                        await standsController.RemoveStand(stand.IdStand, stand.FeiraId);
+                    }
+                    TicketsController tc = new TicketsController(_context);
+                    foreach (var ticket in feira.Tickets.ToList())
+                    {
+                        await tc.RemoveTicket(ticket.Id);
+                    }
+                    _context.Feiras.Remove(feira);
                 }
 
-                PatrocinadoresController patrocinadoresController = new PatrocinadoresController(_context);
-                foreach (var patrocinador in feira.Patrocinadors.ToList())
-                {
-                    feira.Patrocinadors.Remove(patrocinador);
-                    await patrocinadoresController.RemoveFeiraAsync(feira, patrocinador.IdPatrocinador);
-                }
-
-                StandsController standsController = new StandsController(_context);
-                foreach (var stand in feira.Stands.ToList())
-                {
-                    await standsController.RemoveStand(stand.IdStand, stand.FeiraId);
-                }
-                TicketsController tc = new TicketsController(_context);
-                foreach (var ticket in feira.Tickets.ToList())
-                {
-                    await tc.RemoveTicket(ticket.Id);
-                }
-                _context.Feiras.Remove(feira);
-            }
-            
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
         }
 
         private bool FeiraExists(int id)

@@ -18,30 +18,62 @@ namespace WebFayre.Controllers
             _context = context;
         }
 
+        private Boolean userHasSession()
+        {
+            return (HttpContext.Session.GetInt32("utilizadorId") != null);
+        }
+
+        private string getFuncFuncao()
+        {
+            return HttpContext.Session.GetString("Funcao");
+        }
+
+        private int VerifyAdmin()
+        {
+            if (HttpContext.Session.GetInt32("utilizadorId") == null || getFuncFuncao() != "Admin")
+                return 0;
+            else
+                return 1;
+        }
+
         // GET: Categoriafeiras
         public async Task<IActionResult> Index()
         {
-              return _context.Categoriafeiras != null ? 
+            if (VerifyAdmin() == 0)
+            {
+                return RedirectToAction("index", "home");
+            }
+            else
+            {
+                return _context.Categoriafeiras != null ?
                           View(await _context.Categoriafeiras.ToListAsync()) :
                           Problem("Entity set 'WebFayreContext.Categoriafeiras'  is null.");
+            }
         }
 
         // GET: Categoriafeiras/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.Categoriafeiras == null)
+            if (VerifyAdmin() == 0)
             {
-                return NotFound();
+                return RedirectToAction("index", "home");
             }
-
-            var categoriafeira = await _context.Categoriafeiras
-                .FirstOrDefaultAsync(m => m.IdCategoriaFeira == id);
-            if (categoriafeira == null)
+            else
             {
-                return NotFound();
-            }
+                if (id == null || _context.Categoriafeiras == null)
+                {
+                    return NotFound();
+                }
 
-            return View(categoriafeira);
+                var categoriafeira = await _context.Categoriafeiras
+                    .FirstOrDefaultAsync(m => m.IdCategoriaFeira == id);
+                if (categoriafeira == null)
+                {
+                    return NotFound();
+                }
+
+                return View(categoriafeira);
+            }
         }
 
         public async Task RemoveFeiraAsync(Feira feira, int idCateg)
@@ -54,7 +86,14 @@ namespace WebFayre.Controllers
         // GET: Categoriafeiras/Create
         public IActionResult Create()
         {
-            return View();
+            if (VerifyAdmin() == 0)
+            {
+                return RedirectToAction("index", "home");
+            }
+            else
+            {
+                return View();
+            }
         }
 
         // POST: Categoriafeiras/Create
@@ -64,32 +103,38 @@ namespace WebFayre.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("IdCategoriaFeira,Descricao")] Categoriafeira categoriafeira)
         {
+                _context.Categoriafeiras.Include(f => f.Feiras);
 
-            _context.Categoriafeiras.Include(f => f.Feiras);
-
-            if (ModelState.IsValid)
-            {
-                _context.Add(categoriafeira);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(categoriafeira);
+                if (ModelState.IsValid)
+                {
+                    _context.Add(categoriafeira);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
+                return View(categoriafeira);
         }
 
         // GET: Categoriafeiras/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.Categoriafeiras == null)
+            if (VerifyAdmin() == 0)
             {
-                return NotFound();
+                return RedirectToAction("index", "home");
             }
+            else
+            {
+                if (id == null || _context.Categoriafeiras == null)
+                {
+                    return NotFound();
+                }
 
-            var categoriafeira = await _context.Categoriafeiras.FindAsync(id);
-            if (categoriafeira == null)
-            {
-                return NotFound();
+                var categoriafeira = await _context.Categoriafeiras.FindAsync(id);
+                if (categoriafeira == null)
+                {
+                    return NotFound();
+                }
+                return View(categoriafeira);
             }
-            return View(categoriafeira);
         }
 
         // POST: Categoriafeiras/Edit/5
@@ -99,50 +144,57 @@ namespace WebFayre.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("IdCategoriaFeira,Descricao")] Categoriafeira categoriafeira)
         {
-            if (id != categoriafeira.IdCategoriaFeira)
-            {
-                return NotFound();
-            }
+                if (id != categoriafeira.IdCategoriaFeira)
+                {
+                    return NotFound();
+                }
 
-            if (ModelState.IsValid)
-            {
-                try
+                if (ModelState.IsValid)
                 {
-                    _context.Update(categoriafeira);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!CategoriafeiraExists(categoriafeira.IdCategoriaFeira))
+                    try
                     {
-                        return NotFound();
+                        _context.Update(categoriafeira);
+                        await _context.SaveChangesAsync();
                     }
-                    else
+                    catch (DbUpdateConcurrencyException)
                     {
-                        throw;
+                        if (!CategoriafeiraExists(categoriafeira.IdCategoriaFeira))
+                        {
+                            return NotFound();
+                        }
+                        else
+                        {
+                            throw;
+                        }
                     }
+                    return RedirectToAction(nameof(Index));
                 }
-                return RedirectToAction(nameof(Index));
+                return View(categoriafeira);
             }
-            return View(categoriafeira);
-        }
 
         // GET: Categoriafeiras/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.Categoriafeiras == null)
+            if (VerifyAdmin() == 0)
             {
-                return NotFound();
+                return RedirectToAction("index", "home");
             }
-
-            var categoriafeira = await _context.Categoriafeiras
-                .FirstOrDefaultAsync(m => m.IdCategoriaFeira == id);
-            if (categoriafeira == null)
+            else
             {
-                return NotFound();
-            }
+                if (id == null || _context.Categoriafeiras == null)
+                {
+                    return NotFound();
+                }
 
-            return View(categoriafeira);
+                var categoriafeira = await _context.Categoriafeiras
+                    .FirstOrDefaultAsync(m => m.IdCategoriaFeira == id);
+                if (categoriafeira == null)
+                {
+                    return NotFound();
+                }
+
+                return View(categoriafeira);
+            }
         }
 
         // POST: Categoriafeiras/Delete/5
@@ -150,18 +202,18 @@ namespace WebFayre.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.Categoriafeiras == null)
-            {
-                return Problem("Entity set 'WebFayreContext.Categoriafeiras'  is null.");
-            }
-            var categoriafeira = await _context.Categoriafeiras.FindAsync(id);
-            if (categoriafeira != null)
-            {
-                _context.Categoriafeiras.Remove(categoriafeira);
-            }
-            
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+                if (_context.Categoriafeiras == null)
+                {
+                    return Problem("Entity set 'WebFayreContext.Categoriafeiras'  is null.");
+                }
+                var categoriafeira = await _context.Categoriafeiras.FindAsync(id);
+                if (categoriafeira != null)
+                {
+                    _context.Categoriafeiras.Remove(categoriafeira);
+                }
+
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
         }
 
         private bool CategoriafeiraExists(int id)
