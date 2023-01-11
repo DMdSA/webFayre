@@ -532,9 +532,17 @@ namespace WebFayre.Controllers
         public async Task<IActionResult> Restock(int stock, int standId, int id)
         {
             var prod = await _context.Produtos.Where(p => p.IdProduto == id).FirstOrDefaultAsync();
-            prod.Stock = stock;
-            _context.Update(prod);
-            await _context.SaveChangesAsync();
+            if (stock > 0)
+            {
+                prod.Stock = stock;
+                _context.Update(prod);
+                await _context.SaveChangesAsync();
+            }
+            else
+            {
+                ViewBag.Message = "Invalid number";
+                return View(prod);
+            }
 
             return RedirectToAction("StaffIndex", "Produtos", new {id = standId});
         }
