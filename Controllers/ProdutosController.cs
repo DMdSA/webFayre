@@ -49,11 +49,11 @@ namespace WebFayre.Controllers
 
         public IActionResult RedirectIndex(int feiraId, int id)
         {
-            if(getUserType() == 0)
+            if (getUserType() == 0)
             {
-                return RedirectToAction("produtosByStand", "produtos", new { feiraId, id});
+                return RedirectToAction("produtosByStand", "produtos", new { feiraId, id });
             }
-            else if(getFuncFuncao() == "Admin")
+            else if (getFuncFuncao() == "Admin")
             {
                 return RedirectToAction("prodByStandAdmin", "produtos", new { id });
             }
@@ -109,53 +109,101 @@ namespace WebFayre.Controllers
             }
         }
 
-        public async Task<IActionResult> StaffIndex(int feiraId, int id)
+        public async Task<IActionResult> StaffIndex(int id)
         {
-            if(!userHasSession())
+            if (!userHasSession())
             {
                 return RedirectToAction("login", "home");
             }
             var users = _context.Utilizadors.Where(p => p.Id == getUserId()).ToList().Select(p => p.Email);
             var staff = _context.Standstaffs.Where(p => p.IdStand == id).ToList().Select(p => p.StaffEmail);
-            foreach(var email in users)
+            foreach (var email in users)
             {
                 if (staff.Contains(email))
                 {
                     var prodList = _context.Produtos.Include(s => s.Stand).Where(s => s.StandId == id);
                     var stand = await _context.Stands.Where(p => p.IdStand == id).FirstOrDefaultAsync();
                     if (stand != null)
+                    {
                         ViewBag.NomeStand = stand.Nome;
+                        ViewBag.IdStand = id;
+
+                        if (stand.Disponibilidade == 1)
+                        {
+                            ViewBag.Disponibilidade = "Aberto";
+                        }
+                        else
+                        {
+                            ViewBag.Disponibilidade = "Fechado";
+                        }
+                    }
+
                     return View(await prodList.ToListAsync());
                 }
             }
             return RedirectToAction("index", "home");
         }
 
+        public async Task<IActionResult> ChangeDisp(int id)
+        {
+            var stand = await _context.Stands.Where(s => s.IdStand == id).FirstOrDefaultAsync();
+            if (stand.Disponibilidade == 0)
+            {
+                stand.Disponibilidade = 1;
+            }
+            else
+            {
+                stand.Disponibilidade = 0;
+            }
+            _context.Update(stand);
+            await _context.SaveChangesAsync();
+            return RedirectToAction("staffIndex", "Produtos", new { feiraId = id, id });
+        }
+
         public async Task<IActionResult> ProdutosByStand(int feiraId, int id)
         {
-            if (getUserType() != 0)
+            if (HttpContext.Session.GetInt32("utilizadorId") == null)
             {
                 return RedirectToAction("index", "home");
             }
             else
             {
-                StandShoppingCart ssc = new StandShoppingCart();
-                ssc.StandId = id;
-                ssc.FeiraId = feiraId;
-                ssc.Products = new List<ProductInfo>();
-                ViewBag.StandShoppingCart = ssc;
-                //if (HttpContext.Session.GetObject<StandShoppingCart>("StandShoppingCart") != null)
-                //    ViewBag.StandShoppingCart = HttpContext.Session.GetObject<StandShoppingCart>("StandShoppingCart");
+                if (getUserType() != 0)
+                {
+                    return RedirectToAction("index", "home");
+                }
+                else
+                {
+                    StandShoppingCart ssc = new StandShoppingCart();
+                    ssc.StandId = id;
+                    ssc.FeiraId = feiraId;
+                    ssc.Products = new List<ProductInfo>();
+                    ViewBag.StandShoppingCart = ssc;
+                    //if (HttpContext.Session.GetObject<StandShoppingCart>("StandShoppingCart") != null)
+                    //    ViewBag.StandShoppingCart = HttpContext.Session.GetObject<StandShoppingCart>("StandShoppingCart");
 
-                var prodList = _context.Produtos.Include(s => s.Stand).Where(s => s.StandId == id);
-                var stand = await _context.Stands.Where(p => p.IdStand == id).FirstOrDefaultAsync();
-                if (stand != null)
-                    ViewBag.NomeStand = stand.Nome;
-                return View(await prodList.ToListAsync());
+                    var prodList = _context.Produtos.Include(s => s.Stand).Where(s => s.StandId == id);
+                    var stand = await _context.Stands.Where(p => p.IdStand == id).FirstOrDefaultAsync();
+                    if (stand != null)
+                    {
+                        ViewBag.NomeStand = stand.Nome;
+                        ViewBag.IdStand = id;
+
+                        if (stand.Disponibilidade == 1)
+                        {
+                            ViewBag.Disponibilidade = "Aberto";
+                        }
+                        else
+                        {
+                            ViewBag.Disponibilidade = "Fechado";
+                        }
+                    }
+                    return View(await prodList.ToListAsync());
+                }
             }
         }
 
-            // GET: Produtoes/Details/5
+        // GET: Produtoes/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null || _context.Produtos == null)
@@ -197,14 +245,14 @@ namespace WebFayre.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("IdProduto,Stock,Descricao,Preco,Iva,ImagemPath,StandId")] Produto produto)
         {
-                if (ModelState.IsValid)
-                {
-                    _context.Add(produto);
-                    await _context.SaveChangesAsync();
-                    return RedirectToAction(nameof(Index));
-                }
-                ViewData["StandId"] = new SelectList(_context.Stands, "IdStand", "Nome", produto.StandId);
-                return View(produto);
+            if (ModelState.IsValid)
+            {
+                _context.Add(produto);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            ViewData["StandId"] = new SelectList(_context.Stands, "IdStand", "Nome", produto.StandId);
+            return View(produto);
         }
 
         // GET: Produtoes/Edit/5
@@ -238,33 +286,33 @@ namespace WebFayre.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("IdProduto,Stock,Descricao,Preco,Iva,ImagemPath,StandId")] Produto produto)
         {
-                if (id != produto.IdProduto)
-                {
-                    return NotFound();
-                }
+            if (id != produto.IdProduto)
+            {
+                return NotFound();
+            }
 
-                if (ModelState.IsValid)
+            if (ModelState.IsValid)
+            {
+                try
                 {
-                    try
-                    {
-                        _context.Update(produto);
-                        await _context.SaveChangesAsync();
-                    }
-                    catch (DbUpdateConcurrencyException)
-                    {
-                        if (!ProdutoExists(produto.IdProduto))
-                        {
-                            return NotFound();
-                        }
-                        else
-                        {
-                            throw;
-                        }
-                    }
-                    return RedirectToAction(nameof(Index));
+                    _context.Update(produto);
+                    await _context.SaveChangesAsync();
                 }
-                ViewData["StandId"] = new SelectList(_context.Stands, "IdStand", "Nome", produto.StandId);
-                return View(produto);
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!ProdutoExists(produto.IdProduto))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction(nameof(Index));
+            }
+            ViewData["StandId"] = new SelectList(_context.Stands, "IdStand", "Nome", produto.StandId);
+            return View(produto);
         }
 
         // GET: Produtoes/Delete/5
@@ -298,18 +346,18 @@ namespace WebFayre.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-                if (_context.Produtos == null)
-                {
-                    return Problem("Entity set 'WebFayreContext.Produtos'  is null.");
-                }
-                var produto = await _context.Produtos.FindAsync(id);
-                if (produto != null)
-                {
-                    _context.Produtos.Remove(produto);
-                }
+            if (_context.Produtos == null)
+            {
+                return Problem("Entity set 'WebFayreContext.Produtos'  is null.");
+            }
+            var produto = await _context.Produtos.FindAsync(id);
+            if (produto != null)
+            {
+                _context.Produtos.Remove(produto);
+            }
 
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
         }
 
         private bool ProdutoExists(int id)
@@ -458,6 +506,37 @@ namespace WebFayre.Controllers
                 return RedirectToAction("index", "home");
             }
 
+        }
+        [HttpGet]
+        public IActionResult Restock(int? id, int standId)
+        {
+            if (getUserType() != 0)
+            {
+                return RedirectToAction("index", "home");
+            }
+            var users = _context.Utilizadors.Where(p => p.Id == getUserId()).ToList().Select(p => p.Email);
+            var staff = _context.Standstaffs.Where(p => p.IdStand == standId).ToList().Select(p => p.StaffEmail);
+            foreach (var email in users)
+            {
+                if (staff.Contains(email))
+                {
+                    var prod = _context.Produtos.Where(p => p.IdProduto == id).FirstOrDefault();
+                    ViewBag.Stock = prod.Stock;
+                    return View(prod);
+                }
+            }
+            return RedirectToAction("index", "home");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Restock(int stock, int standId, int id)
+        {
+            var prod = await _context.Produtos.Where(p => p.IdProduto == id).FirstOrDefaultAsync();
+            prod.Stock = stock;
+            _context.Update(prod);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("StaffIndex", "Produtos", new {id = standId});
         }
     }
 }

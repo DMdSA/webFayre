@@ -235,27 +235,27 @@ namespace WebFayre.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Nome,Email,Password,Rua,Porta,CodigoPostal,Telemovel,Nif,DataNascimento,UtilizadorPath")] Utilizador utilizador)
         {
-            Console.Write("HERE");
             if (id != utilizador.Id)
             {
                 return NotFound();
             }
             var user = await _context.Utilizadors.Where(u => u.Id == id).FirstOrDefaultAsync();
             var emails = _context.Utilizadors.ToList().Select(u => u.Email);
-            if (user.Email == utilizador.Email || !emails.Contains(utilizador.Email))
+            var emailsFunc = _context.Funcionarios.ToList().Select(u => u.Email);
+            if (user.Email == utilizador.Email || (!emails.Contains(utilizador.Email) && !emailsFunc.Contains(utilizador.Email)))
             {
-                utilizador.DataNascimento = user.DataNascimento;
-                utilizador.Password = user.Password;
-                utilizador.IdFeiras = user.IdFeiras;
-                utilizador.Promocaofeiras = user.Promocaofeiras;
-                utilizador.Tickets = user.Tickets;
-                utilizador.Venda = user.Venda;
-
+                user.Nome = utilizador.Nome;
+                user.Email = utilizador.Email;
+                user.Rua = utilizador.Rua;
+                user.Porta = utilizador.Porta;
+                user.CodigoPostal = utilizador.CodigoPostal;
+                user.Telemovel = utilizador.Telemovel;
+                user.Nif = utilizador.Nif;
                 if (ModelState.IsValid)
                 {
                     try
                     {
-                        _context.Update(utilizador);
+                        _context.Update(user);
                         await _context.SaveChangesAsync();
                     }
                     catch (DbUpdateConcurrencyException)
@@ -269,13 +269,17 @@ namespace WebFayre.Controllers
                             throw;
                         }
                     }
-                    return RedirectToAction(nameof(Index));
+                    ViewBag.UpdateMessage = "Your details have been updated";
+                    return RedirectToAction("ViewProfile", "Utilizadores");
                 }
-                return View(utilizador);
+                else
+                {
+                    return RedirectToAction("ViewProfile", "Utilizadores");
+                }
             }
             else
             {
-                ViewBag.ErrorMessage = "Someone already has that email";
+                ViewBag.UpdateMessage = "Someone already has that email";
                 return RedirectToAction("ViewProfile", "Utilizadores");
             }
         }

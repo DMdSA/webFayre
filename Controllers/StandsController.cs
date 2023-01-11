@@ -343,7 +343,7 @@ namespace WebFayre.Controllers
                         var staff = _context.Standstaffs.Where(u => u.StaffEmail == email).ToList().Select(s => s.IdStand);
                         if (staff.Contains(id))
                         {
-                            return RedirectToAction("StaffIndex", "produtos", new { feiraId, id });
+                            return RedirectToAction("StaffIndex", "produtos", new { id });
                         }
 
                     }

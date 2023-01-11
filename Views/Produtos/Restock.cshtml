@@ -1,0 +1,24 @@
+﻿@model WebFayre.Models.Produto
+
+@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+</head>
+<body>
+    <h2>Restock</h2>
+    @using (Html.BeginForm("Restock", "Produtos"))
+    {       
+        <p>Stock Atual: @Html.Raw(ViewBag.Stock)</p>
+        <span>Novo Stock:</span>
+
+        <input name="stock" id="stock" value=@Model.Stock />
+        <input name="standId" id="standId" value=@Model.StandId type="hidden"/>
+        <input name="id" id="id" value=@Model.IdProduto type="hidden"/>
+            <input type ="submit" id="s" value="Finalizar"/> 
+    }
+
+</body>
+</html>

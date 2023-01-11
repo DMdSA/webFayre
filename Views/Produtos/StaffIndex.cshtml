@@ -3,6 +3,10 @@
 <p>
     <a asp-action="Create">Create New</a>
 </p>
+<h4>Disponibilidade: @Html.Raw(ViewBag.Disponibilidade)</h4>
+<p>
+    <a asp-action="ChangeDisp" asp-route-id="@Model.FirstOrDefault().StandId">Abrir/Fechar Stand</a>
+</p>
 <table class="table">
     <thead>
         <tr>
@@ -43,7 +47,7 @@
                 @Html.DisplayFor(modelItem => item.ImagemPath)
             </td>
             <td>
-                <a asp-action="Restock" asp-route-id="@item.IdProduto">Restock</a> |
+                <a asp-action="Restock" asp-route-id="@item.IdProduto" asp-route-standId="@item.StandId">Restock</a> |
                 <a asp-action="Edit" asp-route-id="@item.IdProduto">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.IdProduto">Details</a> |
                 <a asp-action="Delete" asp-route-id="@item.IdProduto">Delete</a>
