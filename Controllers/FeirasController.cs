@@ -103,7 +103,7 @@ namespace WebFayre.Controllers
 
         public async Task<IActionResult> IndexUser(string nameFeira)
         {
-            if (getUserType() != 0)
+            if (!userHasSession() || getUserType() != 0)
             {
                 return RedirectToAction("index", "home");
             }
@@ -112,12 +112,12 @@ namespace WebFayre.Controllers
                 if (String.IsNullOrEmpty(nameFeira))
                 {
                     return _context.Feiras != null ?
-                            View(await _context.Feiras.Include(f => f.FeiraCategoria1s).Where(f => f.DataFim >= DateTime.Today).ToListAsync()) :
+                            View(await _context.Feiras.Include(f => f.FeiraCategoria1s).ToListAsync()) :
                             Problem("Entity set 'WebFayreContext.Feiras'  is null.");
                 }
                 else
                 {
-                    var searchItems = await _context.Feiras.Include(f => f.FeiraCategoria1s).Where(f => f.DataFim >= DateTime.Today).Where(s => s.Nome.Contains(nameFeira)).ToListAsync();
+                    var searchItems = await _context.Feiras.Include(f => f.FeiraCategoria1s).Where(f => f.DataFim >= DateTime.Today).OrderBy(f => f.DataInicio).Where(s => s.Nome.Contains(nameFeira)).ToListAsync();
                     return View(searchItems);
                 }
             }
@@ -134,12 +134,12 @@ namespace WebFayre.Controllers
                 if (String.IsNullOrEmpty(nameFeira))
                 {
                     return _context.Feiras != null ?
-                            View(await _context.Feiras.Include(f => f.FeiraCategoria1s).Where(f => f.DataFim >= DateTime.Today).ToListAsync()) :
+                            View(await _context.Feiras.Include(f => f.FeiraCategoria1s).Where(f => f.DataFim >= DateTime.Today).OrderBy(f => f.DataInicio).ToListAsync()) :
                             Problem("Entity set 'WebFayreContext.Feiras'  is null.");
                 }
                 else
                 {
-                    var searchItems = await _context.Feiras.Include(f => f.FeiraCategoria1s).Where(f => f.DataFim >= DateTime.Today).Where(s => s.Nome.Contains(nameFeira)).ToListAsync();
+                    var searchItems = await _context.Feiras.Include(f => f.FeiraCategoria1s).Where(f => f.DataFim >= DateTime.Today).OrderBy(f => f.DataInicio).Where(s => s.Nome.Contains(nameFeira)).ToListAsync();
                     return View(searchItems);
                 }
             }

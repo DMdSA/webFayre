@@ -22,7 +22,7 @@ namespace WebFayre.Controllers
             WebFayreContext wfc = new WebFayreContext();
 
             return wfc.Feiras != null ?
-                    View(await wfc.Feiras.ToListAsync()) :
+                    View(await wfc.Feiras.Where(f => f.DataFim >= DateTime.Today).OrderBy(f => f.DataInicio).ToListAsync()) :
                     Problem("Entity set 'WebFayreContext.Feiras'  is null.");
         }
 
@@ -57,7 +57,7 @@ namespace WebFayre.Controllers
         public async Task<IActionResult> SearchResult(String nameFeira)
         {
             WebFayreContext wfc = new WebFayreContext();
-            var result = await wfc.Feiras.Where(f => f.Nome.Contains(nameFeira)).ToListAsync();
+            var result = await wfc.Feiras.Where(f => f.DataFim >= DateTime.Today).OrderBy(f => f.DataInicio).Where(f => f.Nome.Contains(nameFeira)).ToListAsync();
             return View("Index" , result);
         }
 
