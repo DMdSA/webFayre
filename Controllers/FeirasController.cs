@@ -90,12 +90,12 @@ namespace WebFayre.Controllers
                 if (String.IsNullOrEmpty(nameFeira))
                 {
                     return _context.Feiras != null ?
-                            View(await _context.Feiras.Include(f => f.FeiraCategoria1s).ToListAsync()) :
+                            View(await _context.Feiras.Include(f => f.FeiraCategoria1s).Where(f => f.DataInicio >= DateTime.Today).ToListAsync()) :
                             Problem("Entity set 'WebFayreContext.Feiras'  is null.");
                 }
                 else
                 {
-                    var searchItems = await _context.Feiras.Include(f => f.FeiraCategoria1s).Where(s => s.Nome.Contains(nameFeira)).ToListAsync();
+                    var searchItems = await _context.Feiras.Include(f => f.FeiraCategoria1s).Where(f => f.DataInicio >= DateTime.Today).Where(s => s.Nome.Contains(nameFeira)).ToListAsync();
                     return View(searchItems);
                 }
             }
@@ -112,12 +112,12 @@ namespace WebFayre.Controllers
                 if (String.IsNullOrEmpty(nameFeira))
                 {
                     return _context.Feiras != null ?
-                            View(await _context.Feiras.Include(f => f.FeiraCategoria1s).ToListAsync()) :
+                            View(await _context.Feiras.Include(f => f.FeiraCategoria1s).Where(f => f.DataInicio >= DateTime.Today).ToListAsync()) :
                             Problem("Entity set 'WebFayreContext.Feiras'  is null.");
                 }
                 else
                 {
-                    var searchItems = await _context.Feiras.Include(f => f.FeiraCategoria1s).Where(s => s.Nome.Contains(nameFeira)).ToListAsync();
+                    var searchItems = await _context.Feiras.Include(f => f.FeiraCategoria1s).Where(f => f.DataInicio >= DateTime.Today).Where(s => s.Nome.Contains(nameFeira)).ToListAsync();
                     return View(searchItems);
                 }
             }
@@ -134,12 +134,12 @@ namespace WebFayre.Controllers
                 if (String.IsNullOrEmpty(nameFeira))
                 {
                     return _context.Feiras != null ?
-                            View(await _context.Feiras.Include(f => f.FeiraCategoria1s).ToListAsync()) :
+                            View(await _context.Feiras.Include(f => f.FeiraCategoria1s).Where(f => f.DataInicio >= DateTime.Today).ToListAsync()) :
                             Problem("Entity set 'WebFayreContext.Feiras'  is null.");
                 }
                 else
                 {
-                    var searchItems = await _context.Feiras.Include(f => f.FeiraCategoria1s).Where(s => s.Nome.Contains(nameFeira)).ToListAsync();
+                    var searchItems = await _context.Feiras.Include(f => f.FeiraCategoria1s).Where(f => f.DataInicio >= DateTime.Today).Where(s => s.Nome.Contains(nameFeira)).ToListAsync();
                     return View(searchItems);
                 }
             }
