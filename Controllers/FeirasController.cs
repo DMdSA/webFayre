@@ -430,14 +430,15 @@ namespace WebFayre.Controllers
                     
                     TempData["feiraticket"] = "Ticket gerado com sucesso!";
                     //return RedirectToAction("standsByFeira", "stands", new { id });
-                    return await addUserToFair(id, userid, useremail);
+                    //return await addUserToFair(id, userid, useremail);
                 }
                 // se o ticket já tinha sido gerado
 
                 TempData["feiraticket"] = "Já tinhas um ticket! podes entrar! :)";
-
+                return RedirectToAction("RedirectIndex", "stands", new { idFeira = id });
+                
                 // entrar nos stands associados à feira em questão
-                return await addUserToFair(id, userid, useremail);
+                //return await addUserToFair(id, userid, useremail);
                 //return RedirectToAction("standsByFeira", "stands", new { id });
             }
 
