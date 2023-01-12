@@ -5,6 +5,23 @@
     <h1>@ViewBag.message</h1>
 }
 
+<script type="text/javascript">
+
+    let viewbag_message = "";
+    if (@Html.Raw(ViewBag.message) != null) {
+        viewbag_message = @Html.Raw(ViewBag.message);
+    }
+
+    if (viewbag_message === false) {
+        console.log("really jele...");
+        alert("really jele...");
+    }
+    else {
+        console.log(viewbag_message);
+        alert("coiso...");
+    }
+</script>
+
 @if (ViewBag.message == null && ViewBag.triedOnce == "yes"){
     <!-- $('#errorModal').modal(options)     -->   
 }
