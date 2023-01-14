@@ -61,7 +61,7 @@ function updateValue(productId, quantity) {
 }
 
 function incrementValue(productId) {
-
+    console.log(productId);
     if (productId) {
         var value = parseInt(document.getElementById(productId).value, 10);
         value = isNaN(value) ? 0 : value;
@@ -86,8 +86,8 @@ function decrementValue(productId) {
     }
 }
 
-function addProduct(productId, price, iva, stock) {
-
+function addProduct(name, productId, price, iva, stock) {
+    console.log(name);
     if (productId in official_cart.Products) {
 
         // se já existir, o preço e a quantidade devem ser atualizados
@@ -101,7 +101,8 @@ function addProduct(productId, price, iva, stock) {
     else {
 
         // se nao existir, deve ser criada uma entrada para esse produto
-        ((official_cart.Products)[productId]) = { Id: productId, Quantity: 1, FinalPrice: price, IVA: iva}
+
+        ((official_cart.Products)[productId]) = { Name: name, Id: productId, Quantity: 1, FinalPrice: price, IVA: iva }
         incrementValue(productId);
     }
     //console.log(official_cart);

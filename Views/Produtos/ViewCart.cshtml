@@ -4,39 +4,68 @@
     ViewData["Title"] = "ViewCart";
 }
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Products)
-            </th>
+<!-- Button trigger modal-->
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalCart">Buy</button>
+<!-- Modal: modalCart -->
+<div class="modal fade" id="modalCart" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <!--Header-->
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">Your cart</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <!--Body-->
+            <div class="modal-body">
 
-        </tr>
-    </thead>
-    <tbody>
-            <tr>
-                    @Html.DisplayFor(model => model.Products)
-                <td>
-                    @foreach (var prod in Model.Products)
-                    {
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Qt.</th>
+                            <th>Product Name</th>
+                            <th>Price</th>
+                            <th>Remove</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var prod in Model.Products)
+                        {
+                            <tr>
                                 <td>
-                            @Html.DisplayFor(proditem => prod.Id)
+                                    @Html.DisplayFor(proditem => prod.Quantity)
                                 </td>
-                         <td>
-                            @Html.DisplayFor(proditem => prod.Quantity)
-                            </td>
-                                 <td>
-                            @Html.DisplayFor(proditem => prod.Iva)
-                            </td>
-                                 <td>
-                            @Html.DisplayFor(proditem => prod.FinalPrice)
+                                <td>
+                                    @Html.DisplayFor(proditem => prod.Name)
                                 </td>
-                    }
-                </td>
-            </tr>
-    </tbody>
-</table>
-<p>Preço final: @Html.Raw(ViewBag.Total)</p>
+                                <td>
+                                    @Html.DisplayFor(proditem => prod.FinalPrice)
+                                </td>
+                                <td><a><i class="fas fa-times"></i></a></td>
+                            </tr>
+                        }
+                        <tr class="total">
+                            <td></td>
+                            <td><b>Total:</b></td>
+                            <td><b>@Html.Raw(ViewBag.Total)</b></td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+            </div>
+            <!--Footer-->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-primary" data-dismiss="modal">Close</button>
+                <button class="btn btn-primary">Checkout</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal: modalCart -->
+
 <p>
     <a asp-action="FinalizePurchase">Comprar</a>
 </p>

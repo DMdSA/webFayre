@@ -1,51 +1,15 @@
 ﻿@model IEnumerable<WebFayre.Models.Feira>
 @{
+    IEnumerable<Feira> favorites = ViewData["favorite"] as IEnumerable<Feira>;
+}
+
+@{
     ViewData["Title"] = "Home Page";
 }
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.3/jquery.min.js" charset="utf-8"></script>
 <script type="text/javascript" src="/js/site.js"></script>
 
-<!-- WELCOME Section -->
-<div class="container-fluid padding">
-    <div class="row about text-center">
-        <div class="col-12">
-            <h1 class="display-4"> WebFayre </h1>
-        </div>
-        <hr />
-    </div>
-</div>
 
-<!-- SEARCH BAR -->
-<div class="container-fluid padding">
-    <div class="row search-bar text-center">
-        <div class="col-12">
-
-            <form asp-action="SearchResult" asp-controller="Home">
-                <div class="input-group">
-                    <label for="nameFeira" class="control-label"></label>
-                    <input name="nameFeira" placeholder="Search ... " class="form-control" />
-                    <div class="input-group-append">
-                        <div class="input-group">
-                            <button type="submit" value="Search" class="btn btn-primary" id="search">
-                                <i class="fas fa-search"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </form>
-            @section scripts{
-                <script>
-                    $(function (){
-                        $("#search").click(function (){
-                            $("Form").submit();
-                        })
-                    });
-                </script>
-            }
-
-        </div>
-    </div>
-</div>
 
 
 <!-- ###################### CAROUSEL STARTS HERE ###################### -->
@@ -72,33 +36,54 @@
 
             <!-- Carousel displaying favorite fairs cards -->
             <div class="carousel-slider">
+                @foreach(var item in favorites)
+                {
+                    <div class="card">
+                        <div class="card-body">
+                            <img class="card-img-top" src="https://via.placeholder.com/210?text=1" alt="">
+                            <h5 class="card-title dynamic-name">@item.Nome</h5>
+                            <p class="card-text">@item.Descricao</p>
+                            <a class="btn btn-primary" asp-area="" asp-controller="Feiras" asp-action="AddFavorite" asp-route-id="@item.IdFeira">Fav</a>
+                            <a class="btn btn-primary" asp-area="" asp-controller="Feiras" asp-action="Details" asp-route-id="@item.IdFeira">More Info</a>
+                        </div>
+                    </div>
+                }         
                 <div class="card">
                     <div class="card-body">
                         <img class="card-img-top" src="https://via.placeholder.com/210?text=1" alt="">
-                        <h5 class="card-title">Card title</h5>
-                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                        <a class="btn btn-primary" asp-area="" asp-controller="Feiras" asp-action="RedirectIndex">fav</a>
-                        <a class="btn btn-primary" asp-area="" asp-controller="Feiras" asp-action="RedirectIndex">Feiras</a>
+                        <h5 class="card-title dynamic-name">Nome</h5>
+                        <p class="card-text">Descricao</p>
+                        <a class="btn btn-primary" asp-area="" asp-controller="Feiras" asp-action="AddFavorite" asp-route-id="IdFeira">Fav</a>
+                        <a class="btn btn-primary" asp-area="" asp-controller="Feiras" asp-action="Details" asp-route-id="IdFeira">More Info</a>
                     </div>
                 </div>
                 <div class="card">
                     <div class="card-body">
-                        <img class="card-img-top" src="https://via.placeholder.com/220?text=2" alt="">
-                        <h5 class="card-title">Card title</h5>
-                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                        <a class="btn btn-primary" asp-area="" asp-controller="Feiras" asp-action="RedirectIndex">fav</a>
-                        <a class="btn btn-primary" asp-area="" asp-controller="Feiras" asp-action="RedirectIndex">Feiras</a>
+                        <img class="card-img-top" src="https://via.placeholder.com/210?text=1" alt="">
+                        <h5 class="card-title dynamic-name">Nome</h5>
+                        <p class="card-text">Descricao</p>
+                        <a class="btn btn-primary" asp-area="" asp-controller="Feiras" asp-action="AddFavorite" asp-route-id="IdFeira">Fav</a>
+                        <a class="btn btn-primary" asp-area="" asp-controller="Feiras" asp-action="Details" asp-route-id="IdFeira">More Info</a>
                     </div>
                 </div>
-                <!--
-                <img src="https://via.placeholder.com/220?text=2" alt="">
-                <img src="https://via.placeholder.com/230?text=3" alt="">
-                <img src="https://via.placeholder.com/240?text=4" alt="">
-                <img src="https://via.placeholder.com/250?text=5" alt="">
-                <img src="https://via.placeholder.com/260?text=6" alt="">
-                <img src="https://via.placeholder.com/270?text=7" alt="">
-                <img src="https://via.placeholder.com/280?text=8" alt="">
-                <img src="https://via.placeholder.com/290?text=9" alt="">-->
+                <div class="card">
+                    <div class="card-body">
+                        <img class="card-img-top" src="https://via.placeholder.com/210?text=1" alt="">
+                        <h5 class="card-title dynamic-name">Nome</h5>
+                        <p class="card-text">Descricao</p>
+                        <a class="btn btn-primary" asp-area="" asp-controller="Feiras" asp-action="AddFavorite" asp-route-id="IdFeira">Fav</a>
+                        <a class="btn btn-primary" asp-area="" asp-controller="Feiras" asp-action="Details" asp-route-id="IdFeira">More Info</a>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-body">
+                        <img class="card-img-top" src="https://via.placeholder.com/210?text=1" alt="">
+                        <h5 class="card-title dynamic-name">Nome</h5>
+                        <p class="card-text">Descricao</p>
+                        <a class="btn btn-primary" asp-area="" asp-controller="Feiras" asp-action="AddFavorite" asp-route-id="IdFeira">Fav</a>
+                        <a class="btn btn-primary" asp-area="" asp-controller="Feiras" asp-action="Details" asp-route-id="IdFeira">More Info</a>
+                    </div>
+                </div>
             </div>
 
             <button class="carousel-handler next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
@@ -112,6 +97,40 @@
 </section>
 <!-- XXXXXXXXXXXXXXXXXXXX CAROUSEL ENDS HERE XXXXXXXXXXXXXXXXXXXX -->
 
+
+<!-- SEARCH BAR -->
+<div class="container-fluid padding">
+    <div class="row search-bar text-center">
+        <div class="col-12">
+
+            <form asp-action="SearchResult" asp-controller="Home">
+                <div class="input-group">
+                    <label for="nameFeira" class="control-label"></label>
+                    <input name="nameFeira" placeholder="Search ... " class="form-control" />
+                    <div class="input-group-append">
+                        <div class="input-group">
+                            <button type="submit" value="Search" class="btn btn-primary" id="search">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            @section scripts{
+                <script>
+                    $(function () {
+                        $("#search").click(function () {
+                            $("Form").submit();
+                        })
+                    });
+                </script>
+            }
+
+        </div>
+    </div>
+</div>
+
+
 <!-- ##################### DISPLAY CONTENT STARTS HERE #################### -->
 <!-- List of X fairs sorted by date without any search -->
 <div class="displayContainer">
@@ -121,197 +140,16 @@
         <div class="card-display">
             <div class="card-image"><img src="https://mdbcdn.b-cdn.net/img/new/standard/city/041.webp"></div>
             <div class="card-info">
-                <h3> @item.Nome </h3>
+                    <a asp-area="" asp-controller="Feiras" asp-action="Details" asp-route-id="@item.IdFeira"><h3>@item.Nome</h3></a>
                 <p> @item.DataInicio </p>
-                <a class="btn btn-outline-secondary">Visit</a>
             </div>
         </div>
         }
-        <div class="card-display">
-            <div class="card-image"><img src="https://mdbcdn.b-cdn.net/img/new/standard/city/041.webp"></div>
-            <div class="card-info">
-                <h3> Title </h3>
-                <p> TEXT </p>
-            </div>
-        </div>
-
-        <div class="card-display">
-            <div class="card-image"><img src="https://mdbcdn.b-cdn.net/img/new/standard/city/041.webp"></div>
-            <div class="card-info">
-                <h3> Title </h3>
-                <p> TEXT </p>
-            </div>
-        </div>
-        <div class="card-display">
-            <div class="card-image"><img src="https://mdbcdn.b-cdn.net/img/new/standard/city/041.webp"></div>
-            <div class="card-info">
-                <h3> Title </h3>
-                <p> TEXT </p>
-            </div>
-        </div>
-        <div class="card-display">
-            <div class="card-image"><img src="https://mdbcdn.b-cdn.net/img/new/standard/city/041.webp"></div>
-            <div class="card-info">
-                <h3> Title </h3>
-                <p> TEXT </p>
-            </div>
-        </div>
-        <div class="card-display">
-            <div class="card-image"><img src="https://mdbcdn.b-cdn.net/img/new/standard/city/041.webp"></div>
-            <div class="card-info">
-                <h3> Title </h3>
-                <p> TEXT </p>
-            </div>
-        </div>
-        <div class="card-display">
-            <div class="card-image"><img src="https://mdbcdn.b-cdn.net/img/new/standard/city/041.webp"></div>
-            <div class="card-info">
-                <h3> Title </h3>
-                <p> TEXT </p>
-            </div>
-        </div>
-        <div class="card-display">
-            <div class="card-image"><img src="https://mdbcdn.b-cdn.net/img/new/standard/city/041.webp"></div>
-            <div class="card-info">
-                <h3> Title </h3>
-                <p> TEXT </p>
-            </div>
-        </div>
-        <div class="card-display">
-            <div class="card-image"><img src="https://mdbcdn.b-cdn.net/img/new/standard/city/041.webp"></div>
-            <div class="card-info">
-                <h3> Title </h3>
-                <p> TEXT </p>
-            </div>
-        </div>
-        <div class="card-display">
-            <div class="card-image"><img src="https://mdbcdn.b-cdn.net/img/new/standard/city/041.webp"></div>
-            <div class="card-info">
-                <h3> Title </h3>
-                <p> TEXT </p>
-            </div>
-        </div>
-        <div class="card-display">
-            <div class="card-image"><img src="https://mdbcdn.b-cdn.net/img/new/standard/city/041.webp"></div>
-            <div class="card-info">
-                <h3> Title </h3>
-                <p> TEXT </p>
-            </div>
-        </div>
-        <div class="card-display">
-            <div class="card-image"><img src="https://mdbcdn.b-cdn.net/img/new/standard/city/041.webp"></div>
-            <div class="card-info">
-                <h3> Title </h3>
-                <p> TEXT </p>
-            </div>
-        </div>
-        <div class="card-display">
-            <div class="card-image"><img src="https://mdbcdn.b-cdn.net/img/new/standard/city/041.webp"></div>
-            <div class="card-info">
-                <h3> Title </h3>
-                <p> TEXT </p>
-            </div>
-        </div>
-        <div class="card-display">
-            <div class="card-image"><img src="https://mdbcdn.b-cdn.net/img/new/standard/city/041.webp"></div>
-            <div class="card-info">
-                <h3> Title </h3>
-                <p> TEXT </p>
-            </div>
-        </div>
-        <div class="card-display">
-            <div class="card-image"><img src="https://mdbcdn.b-cdn.net/img/new/standard/city/041.webp"></div>
-            <div class="card-info">
-                <h3> Title </h3>
-                <p> TEXT </p>
-            </div>
-        </div>
-        <div class="card-display">
-            <div class="card-image"><img src="https://mdbcdn.b-cdn.net/img/new/standard/city/041.webp"></div>
-            <div class="card-info">
-                <h3> Title </h3>
-                <p> TEXT </p>
-            </div>
-        </div>
-        <div class="card-display">
-            <div class="card-image"><img src="https://mdbcdn.b-cdn.net/img/new/standard/city/041.webp"></div>
-            <div class="card-info">
-                <h3> Title </h3>
-                <p> TEXT </p>
-            </div>
-        </div>
-        <div class="card-display">
-            <div class="card-image"><img src="https://mdbcdn.b-cdn.net/img/new/standard/city/041.webp"></div>
-            <div class="card-info">
-                <h3> Title </h3>
-                <p> TEXT </p>
-            </div>
-        </div>
-        <div class="card-display">
-            <div class="card-image"><img src="https://mdbcdn.b-cdn.net/img/new/standard/city/041.webp"></div>
-            <div class="card-info">
-                <h3> Title </h3>
-                <p> TEXT </p>
-            </div>
-        </div>
-                <div class="card-display">
-            <div class="card-image"><img src="https://mdbcdn.b-cdn.net/img/new/standard/city/041.webp"></div>
-            <div class="card-info">
-                <h3> Title </h3>
-                <p> TEXT </p>
-            </div>
-        </div>
-        <div class="card-display">
-            <div class="card-image"><img src="https://mdbcdn.b-cdn.net/img/new/standard/city/041.webp"></div>
-            <div class="card-info">
-                <h3> Title </h3>
-                <p> TEXT </p>
-            </div>
-        </div>
-        <div class="card-display">
-            <div class="card-image"><img src="https://mdbcdn.b-cdn.net/img/new/standard/city/041.webp"></div>
-            <div class="card-info">
-                <h3> Title </h3>
-                <p> TEXT </p>
-            </div>
-        </div>
-        <div class="card-display">
-            <div class="card-image"><img src="https://mdbcdn.b-cdn.net/img/new/standard/city/041.webp"></div>
-            <div class="card-info">
-                <h3> Title </h3>
-                <p> TEXT </p>
-            </div>
-        </div>
-        <div class="card-display">
-            <div class="card-image"><img src="https://mdbcdn.b-cdn.net/img/new/standard/city/041.webp"></div>
-            <div class="card-info">
-                <h3> Title </h3>
-                <p> TEXT </p>
-            </div>
-        </div>
-        <div class="card-display">
-            <div class="card-image"><img src="https://mdbcdn.b-cdn.net/img/new/standard/city/041.webp"></div>
-            <div class="card-info">
-                <h3> Title </h3>
-                <p> TEXT </p>
-            </div>
-        </div>
-        <div class="card-display">
-            <div class="card-image"><img src="https://mdbcdn.b-cdn.net/img/new/standard/city/041.webp"></div>
-            <div class="card-info">
-                <h3> Title </h3>
-                <p> TEXT </p>
-            </div>
-        </div>
-
-        <div class="pagination">
-            
-        </div>
-    
     </div>
 
-   
-
+    <div class="pagination">
+    </div>
 
 </div>
 <!-- XXXXXXXXXXXXXXXXXXXX DISPLAY CONTENT ENDS HERE XXXXXXXXXXXXXXXXXXXX -->
+

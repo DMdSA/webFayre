@@ -115,37 +115,14 @@ namespace WebFayre.Controllers
                 var userid = (int)HttpContext.Session.GetInt32("utilizadorId");
                 var user = await _context.Utilizadors.FirstOrDefaultAsync(m => m.Id == userid);
                 ViewBag.Nome = user.Nome;
+                var stands_ids = _context.Standstaffs.Where(ss => ss.StaffEmail == user.Email).Select(ss => ss.IdStand).ToList();
+                var stands = await _context.Stands.Where(s => stands_ids.Contains(s.IdStand)).ToListAsync();
+                ViewData["Stands"] = stands;
                 return View(user);
             }
         }
 
-        public async Task<IActionResult> MyStands()
-        {
-            if (HttpContext.Session.GetInt32("utilizadorId") == null)
-            {
-                return RedirectToAction("login", "home");
-            }
-            if (HttpContext.Session.GetInt32("isFuncionario") != 0)
-            {
-                return RedirectToAction("index", "home");
-            }
-            else
-            {
-                var userid = (int)HttpContext.Session.GetInt32("utilizadorId");
-                var user = await _context.Utilizadors.Where(u => u.Id == userid).FirstOrDefaultAsync();
-                var email = user.Email;
-
-                var stands = _context.Standstaffs.Where(u => u.StaffEmail == email).ToList();
-                List<Stand> list = new List<Stand>();
-                foreach (var a in stands)
-                {
-                    var s = await _context.Stands.Where(u => u.IdStand == a.IdStand).FirstOrDefaultAsync();
-                    list.Add(s);
-                }
-                return View(list);
-            }
-        }
-
+     
 
         // GET: Utilizadors/Details/5
         public async Task<IActionResult> Details(int? id)

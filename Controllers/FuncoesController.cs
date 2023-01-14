@@ -40,7 +40,7 @@ namespace WebFayre.Controllers
             }
             else
             {
-                return _context.Funcaos != null ?
+                 return _context.Funcaos != null ?
                           View(await _context.Funcaos.ToListAsync()) :
                           Problem("Entity set 'WebFayreContext.Funcaos'  is null.");
             }

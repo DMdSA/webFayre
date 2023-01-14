@@ -3,6 +3,7 @@
 @using WebFayre.Common;
 @using Newtonsoft.Json;
 
+
 <script type="text/javascript">
     let standCart = @Html.Raw(JsonConvert.SerializeObject(ViewBag.StandShoppingCart));
 </script>
@@ -14,12 +15,14 @@
 
 
 <h1>@Html.Raw(ViewBag.NomeStand)</h1>
-<h4>Disponibilidade: @Html.Raw(ViewBag.Disponibilidade)</h4>
+<h4>@Html.Raw(ViewBag.Disponibilidade)</h4>
 
-@ViewBag.EmptyCart
+
 <form asp-action="ViewCart">
         <input type="submit" id ="process_cart" value="Create" class="btn btn-primary d-none"/>
+
 </form>
+
 
 <input id="buy" type="button" value="Comprar" onclick="transplantCart()" />
 
@@ -69,7 +72,7 @@
                         var price = item.Preco.ToString().Replace(",", ".");
                         var iva = item.Iva.ToString().Replace(",", ".");
                     }
-                    <button onclick="addProduct(@item.IdProduto, @price, @iva, @item.Stock)">Adicionar</button>
+                    <button onclick="addProduct('@item.Descricao.ToString()', @item.IdProduto, @price, @iva, @item.Stock)">Adicionar</button>
                     <input type="number" id="@item.IdProduto" value="0" min="0" max="@item.Stock" readonly/>
                     <button onclick="removeProduct(@item.IdProduto, @price)">Remover</button>
 
@@ -79,3 +82,5 @@
         }
     </tbody>
 </table>
+
+

@@ -193,6 +193,11 @@ function setFooterStyle() {
 }
 
 
+//Erro modal call
+function erroModal(id) {
+    $(id).modal()
+}
+
 $(document).ready(function () {
 
     //footer resize

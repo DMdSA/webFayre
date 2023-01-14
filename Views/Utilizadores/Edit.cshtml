@@ -4,10 +4,8 @@
     ViewData["Title"] = "Edit";
 }
 
-<h1>Edit</h1>
 
-<h4>Utilizador</h4>
-<hr />
+
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Edit">
@@ -59,9 +57,6 @@
     </div>
 </div>
 
-<div>
-    <a asp-action="ViewProfile" asp-controller="Utilizadores">Back to List</a>
-</div>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

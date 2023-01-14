@@ -96,7 +96,17 @@ hr.light {
 }
 /*-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! --*/
 
+.btn-profile {
+    margin-top: 1.5rem;
+    background-color: #FC7F03;
+    color:#fff;
+    border: 1px solid #C35817;
+}
 
+.modal-content {
+    background-image: linear-gradient(rgba(0, 0, 0, 0.527),rgba(0, 0, 0, 0.5)), url('../img/webFayre_bg.png');
+    overflow: hidden;
+}
 
 /*-- Search bar and Carousel displayed on index page --*/
 /*-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! --*/
@@ -285,12 +295,14 @@ hr.light {
     height: auto;
     margin: 2rem;
     box-shadow: 0 5px 25px rgb(1 1 1 / 20%);
-    border-radius: 10px;
     overflow:hidden;
 }
 
 .displayContainer .card-image{
-    max-height: 200px;
+    flex: 0 0 25%;
+    max-width: 100%;
+    aspect-ratio: 16/9;
+    padding: var(--img-gap);
 }
 
 .displayContainer .card-image img{
@@ -317,22 +329,22 @@ hr.light {
 
 
 /* !!!!!!!!!!! NEEDS WORK STYLING !!!!!!!!!!!!!!!*/
-.pagination-card {
+.pagination {
     text-align: center;
     margin: .5rem .5rem 1rem;
     user-select: none;
 }
-.pagination-card li {
+.pagination li {
     display: inline-block;
     margin: .25rem;
     box-shadow: 0 5px 25px rgb(1 1 1 / 10%);
 }
 
-.pagination-card li a {
+.pagination li a {
     color: #C35817;
     text-decoration: none;
     font-size: 1.2em;
-    line-height: 45px;
+    line-height: 20px;
 }   
 
 .previous-page, .next-page{
@@ -425,7 +437,7 @@ hr.light {
 
 
 .profile {
-    width: 30%;
+    width: 70%;
     margin: 0 auto;
     padding: 2rem 4rem;
     -webkit-box-shadow: -1px 4px 26px 11px rgba(0, 0, 0, 0.75);

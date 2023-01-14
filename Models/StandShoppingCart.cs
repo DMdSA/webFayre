@@ -20,6 +20,9 @@ namespace WebFayre.Models
         [Display(Name = "ID")]
         public int Id { get; set; }
 
+        [Display(Name = "Name")]
+        public string Name { get; set; }
+
         [Display(Name = "Quantity")]
         public int Quantity { get; set; }
 

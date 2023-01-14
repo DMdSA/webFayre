@@ -20,8 +20,15 @@ namespace WebFayre.Controllers
         public async Task<IActionResult> IndexAsync()
         {
             WebFayreContext wfc = new WebFayreContext();
+            if (HttpContext.Session.GetInt32("utilizadorId") == null)
+            {
+                return RedirectToAction("login", "home");
+            }
+                var userid = (int)HttpContext.Session.GetInt32("utilizadorId");
+                var user = await wfc.Utilizadors.Include(u => u.IdFeiras).FirstOrDefaultAsync(m => m.Id == userid);
+                ViewData["favorite"] = user.IdFeiras;
 
-            return wfc.Feiras != null ?
+                return wfc.Feiras != null ?
                     View(await wfc.Feiras.Where(f => f.DataFim >= DateTime.Today).OrderBy(f => f.DataInicio).ToListAsync()) :
                     Problem("Entity set 'WebFayreContext.Feiras'  is null.");
         }

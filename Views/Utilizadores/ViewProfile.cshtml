@@ -1,66 +1,178 @@
 ﻿@model WebFayre.Models.Utilizador
-
+@{
+   IEnumerable<Stand> stands = ViewData["Stands"] as IEnumerable<Stand>;
+}
 <h4>@Html.Raw(ViewBag.UpdateMessage)</h4>
 
-<div class="row">
-    <div class = "col-sm-2">
-        @Html.DisplayNameFor(model => model.Nome)
-    </div>
-    <div class = "col-sm-10">
-        @Html.DisplayFor(model => model.Nome)
-    </div>
-    <div class = "col-sm-2">
-        @Html.DisplayNameFor(model => model.Email)
-    </div>
-    <div class = "col-sm-10">
-        @Html.DisplayFor(model => model.Email)
-    </div>
-    <div class = "col-sm-2">
-        @Html.DisplayNameFor(model => model.Password)
-    </div>
-    <div class = "col-sm-10">
-        @Html.DisplayFor(model => model.Password)
-    </div>
-    <div class = "col-sm-2">
-        @Html.DisplayNameFor(model => model.Rua)
-    </div>
-    <div class = "col-sm-10">
-        @Html.DisplayFor(model => model.Rua)
-    </div>
-    <div class = "col-sm-2">
-        @Html.DisplayNameFor(model => model.Porta)
-    </div>
-    <div class = "col-sm-10">
-        @Html.DisplayFor(model => model.Porta)
-    </div>
-    <div class = "col-sm-2">
-        @Html.DisplayNameFor(model => model.CodigoPostal)
-    </div>
-    <div class = "col-sm-10">
-        @Html.DisplayFor(model => model.CodigoPostal)
-    </div>
-    <div class = "col-sm-2">
-        @Html.DisplayNameFor(model => model.Telemovel)
-    </div>
-    <div class = "col-sm-10">
-        @Html.DisplayFor(model => model.Telemovel)
-    </div>
-    <div class = "col-sm-2">
-        @Html.DisplayNameFor(model => model.Nif)
-    </div>
-    <div class = "col-sm-10">
-        @Html.DisplayFor(model => model.Nif)
-    </div>
-    <div class = "col-sm-2">
-        @Html.DisplayNameFor(model => model.DataNascimento)
-    </div>
-    <div class = "col-sm-10">
-        @Html.DisplayFor(model => model.DataNascimento)
+<div class="container-fluid padding">
+    <div class="profile">
+        <div class="row">        
+            <div class="col-8">
+                Name: @Html.DisplayFor(model => model.Nome) <br>
+
+                Email: @Html.DisplayFor(model => model.Email) <br>
+
+                Address: @Html.DisplayFor(model => model.Rua), @Html.DisplayFor(model => model.Porta) <br>
+
+                Zip-Code: @Html.DisplayFor(model => model.CodigoPostal) <br>
+
+                Phone: @Html.DisplayFor(model => model.Telemovel) <br>
+
+                NIF: @Html.DisplayFor(model => model.Nif) <br>
+
+                Birthday: @Html.DisplayFor(model => model.DataOnly) <br>
+            </div>
+            <div class="col">
+                <a class="btn btn-profile" data-toggle="modal" data-target="#editProfile" asp-action="Edit" asp-controller="Utilizadores" asp-route-id="@Model.Id">Edit Profile</a> <br>
+                <a class="btn btn-profile" data-toggle="modal" data-target="#myStands" asp-action="MyStands" asp-controller="Utilizadores">My Stands</a><br>
+                <a class="btn btn-profile" asp-action="Index" asp-controller="Home">Purchases</a><br>
+                <a class="btn btn-profile" asp-action="Index" asp-controller="Home">Visited Fairs</a>
+            </div>
+        </div>
+
     </div>
 </div>
 
-<div>
-    <a asp-action="Edit" asp-controller="Utilizadores" asp-route-id="@Model.Id">Editar Dados</a> |
-    <a asp-action="MyStands" asp-controller="Utilizadores">Os meus Stands</a> |
-    <a asp-action="Index" asp-controller="Home">Menu Principal</a>
+<!-- MODAL EDIT PROFILE-->
+<div class="modal fade" id="editProfile" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">Edit Profile</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+            <div class="col">
+                <form asp-action="Edit">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <input type="hidden" value="@Model?.Id" asp-for="Id" />
+
+                    <div class="form-group">
+                        <label asp-for="Nome" class="control-label"></label>
+                        <input asp-for="Nome" class="form-control" />
+                        <span asp-validation-for="Nome" class="text-danger"></span>
+                    </div>
+                    <input asp-for="Password" value="@Model?.Password" type="hidden" class="form-control" />
+                    <div class="form-group">
+                        <label asp-for="Email" class="control-label"></label>
+                        <input asp-for="Email" class="form-control" />
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Rua" class="control-label"></label>
+                        <input asp-for="Rua" class="form-control" />
+                        <span asp-validation-for="Rua" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Porta" class="control-label"></label>
+                        <input asp-for="Porta" class="form-control" />
+                        <span asp-validation-for="Porta" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="CodigoPostal" class="control-label"></label>
+                        <input asp-for="CodigoPostal" class="form-control" />
+                        <span asp-validation-for="CodigoPostal" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Telemovel" class="control-label"></label>
+                        <input asp-for="Telemovel" class="form-control" />
+                        <span asp-validation-for="Telemovel" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Nif" class="control-label"></label>
+                        <input asp-for="Nif" class="form-control" />
+                        <span asp-validation-for="Nif" class="text-danger"></span>
+                    </div>
+                    <input asp-for="DataNascimento" value="@Model?.DataNascimento" type="hidden" class="form-control" />
+                    <input asp-for="UtilizadorPath" value="@Model?.UtilizadorPath" type="hidden" class="form-control" />
+                    <div class="modal-footer">
+                        <div class="form-group">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <input type="submit" value="Save" class="btn btn-primary" />
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
+
+<!-- MODAL MY STANDS (LIST OF STANDS I HAVE ACESS TO AS "MANAGER")-->
+<div class="modal fade" id="myStands" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">My Stands</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>
+                                Stand Name
+                            </th>
+                            <th>
+                                Fairs
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach(var item in stands)
+                        {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Nome)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Feira.Nome)
+                            </td>
+                        </tr>
+                        }
+                    </tbody>
+                </table>
+        
+            </div>
+        </div>
+    </div>
+</div>
+<!--
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" data-whatever="mdo">Open modal for mdo</button>
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" data-whatever="fat">Open modal for fat</button>
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" data-whatever="getbootstrap">Open modal for getbootstrap</button>
+
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">New message</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="form-group">
+            <label for="recipient-name" class="col-form-label">Recipient:</label>
+            <input type="text" class="form-control" id="recipient-name">
+          </div>
+          <div class="form-group">
+            <label for="message-text" class="col-form-label">Message:</label>
+            <textarea class="form-control" id="message-text"></textarea>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Send message</button>
+      </div>
+    </div>
+  </div>
+</div>-->
