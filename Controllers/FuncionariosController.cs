@@ -44,15 +44,15 @@ namespace WebFayre.Controllers
         // GET: Funcionarios
         public async Task<IActionResult> Index()
         {
-            if (VerifyAdmin() == 0)
-            {
-                return RedirectToAction("index", "home");
-            }
-            else
-            {
-                var webFayreContext = _context.Funcionarios.Include(f => f.FuncaoNavigation);
+            //if (VerifyAdmin() == 0)
+            //{
+            // return RedirectToAction("index", "home");
+            // }
+            //else
+            //{
+            var webFayreContext = _context.Funcionarios.Include(f => f.FuncaoNavigation);
                 return View(await webFayreContext.ToListAsync());
-            }
+            //}
         }
 
         // GET: Funcionarios/Details/5
@@ -86,13 +86,13 @@ namespace WebFayre.Controllers
         {
             if (VerifyAdmin() == 0)
             {
-                return RedirectToAction("index", "home");
+            return RedirectToAction("index", "home");
             }
             else
             {
-                if (HttpContext.Session.GetInt32("utilizadorId") == null || getFuncFuncao() != "Admin")
-                    return RedirectToAction("login", "home");
-                ViewData["Funcao"] = new SelectList(_context.Funcaos, "IdFuncao", "IdFuncao");
+            if (HttpContext.Session.GetInt32("utilizadorId") == null || getFuncFuncao() != "Admin")
+                return RedirectToAction("login", "home");
+                ViewData["Funcao"] = new SelectList(_context.Funcaos, "IdFuncao", "Descricao");
                 return View();
             }
         }
