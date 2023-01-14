@@ -184,6 +184,11 @@ namespace WebFayre.Controllers
                 return NotFound();
             }
 
+            if (getUserType() == 1)
+            {
+                return View(feira);
+            }
+
             int userid = getUserId();
             var user = await _context.Utilizadors.Include(u => u.IdFeiras).Where(u => u.Id == userid).FirstOrDefaultAsync();
 
@@ -548,6 +553,12 @@ namespace WebFayre.Controllers
             if (!userHasSession())
             {
                 return RedirectToAction("Login", "Home");
+            }
+
+            // o admin/funcionario nao vai fazer isto
+            if (getUserType() == 1)
+            {
+                return NoContent();
             }
 
             // get current user id

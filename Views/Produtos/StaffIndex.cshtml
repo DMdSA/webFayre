@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<WebFayre.Models.Produto>
 
 <p>
-    <a asp-action="Create" asp-route-id="@Model.FirstOrDefault().StandId">Create New</a>
+    <a asp-action="Create" asp-route-id="@Model.FirstOrDefault().StandId">Create new product</a>
 </p>
 <h4>Disponibilidade: @Html.Raw(ViewBag.Disponibilidade)</h4>
 <p>
@@ -22,9 +22,6 @@
             <th>
                 @Html.DisplayNameFor(model => model.Iva)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ImagemPath)
-            </th>
             <th></th>
         </tr>
     </thead>
@@ -42,9 +39,6 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Iva)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ImagemPath)
             </td>
             <td>
                 <a asp-action="Restock" asp-route-id="@item.IdProduto" asp-route-standId="@item.StandId">Restock</a> |
