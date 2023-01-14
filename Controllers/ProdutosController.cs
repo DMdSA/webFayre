@@ -101,7 +101,7 @@ namespace WebFayre.Controllers
             }
             else
             {
-                var prodList = _context.Produtos.Include(s => s.Stand).Where(s => s.StandId == id);
+                var prodList = _context.Produtos.Include(s => s.Stand).Where(s => s.StandId == id).Where(s => s.Stock > 0);
                 var stand = await _context.Stands.Where(p => p.IdStand == id).FirstOrDefaultAsync();
                 if (stand != null)
                     ViewBag.NomeStand = stand.Nome;
@@ -182,7 +182,7 @@ namespace WebFayre.Controllers
                     //if (HttpContext.Session.GetObject<StandShoppingCart>("StandShoppingCart") != null)
                     //    ViewBag.StandShoppingCart = HttpContext.Session.GetObject<StandShoppingCart>("StandShoppingCart");
 
-                    var prodList = _context.Produtos.Include(s => s.Stand).Where(s => s.StandId == id);
+                    var prodList = _context.Produtos.Include(s => s.Stand).Where(s => s.StandId == id).Where(s => s.Stock > 0);
                     var stand = await _context.Stands.Where(p => p.IdStand == id).FirstOrDefaultAsync();
                     if (stand != null)
                     {
@@ -225,16 +225,34 @@ namespace WebFayre.Controllers
 
 
         // GET: Produtoes/Create
-        public IActionResult Create()
+        public IActionResult Create(int id)
         {
-            if (VerifyAdmin() == 0)
+            if (HttpContext.Session.GetInt32("utilizadorId") == null)
             {
-                return RedirectToAction("index", "home");
+                return RedirectToAction("login", "home");
             }
             else
             {
-                ViewData["StandId"] = new SelectList(_context.Stands, "IdStand", "Nome");
-                return View();
+
+                var users = _context.Utilizadors.Where(p => p.Id == getUserId()).ToList().Select(p => p.Email);
+                var staff = _context.Standstaffs.Where(p => p.IdStand == id).ToList().Select(p => p.StaffEmail);
+                if (staff.Contains(users.First()) || VerifyAdmin() != 0)
+                {
+                    if (id == 0)
+                    {
+                        ViewData["StandId"] = new SelectList(_context.Stands, "IdStand", "Nome");
+                    }
+                    else
+                    {
+                        var stands = _context.Stands.Where(p => p.IdStand == id);
+                        ViewData["StandId"] = new SelectList(stands, "IdStand", "Nome");
+                    }
+                    return View();
+                }
+                else
+                {
+                    return RedirectToAction("index", "home");
+                }
             }
         }
 
@@ -252,7 +270,11 @@ namespace WebFayre.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["StandId"] = new SelectList(_context.Stands, "IdStand", "Nome", produto.StandId);
-            return View(produto);
+            if(getFuncFuncao() == "Admin")
+            {
+                return View(produto);
+            }
+            return RedirectToAction("standstaff", "produtos");
         }
 
         // GET: Produtoes/Edit/5
