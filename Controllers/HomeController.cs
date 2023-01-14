@@ -118,6 +118,7 @@ namespace WebFayre.Controllers
             }
             else
             {
+                ViewBag.message = "empty";
                 return View();
             }
         }
@@ -168,6 +169,7 @@ namespace WebFayre.Controllers
             }
             else
             {
+                ViewBag.message = "false";
                 ViewBag.triedOnce = "yes";
                 return View();
             }
