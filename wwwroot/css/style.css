@@ -10,38 +10,147 @@
     --handle-size: 3rem;
     --img-gap: 0.25rem;
     /* Colors */
-    --btnColor: #FFAA33;
+    --btnColor2: #FFAA33;
+    --btnColor: #FFA500;
+    --txtColor: #FF4500;
+    --bgColor: #FF7F50;
 }
-html{
-    height: 100%;
-    width: 100%;
-    font-family: 'Poppins', sans-serif;
+html {
+    position: relative;
     color: #222;
 }
 body {
     background: url('../img/webFayre_bg.png') no-repeat center center fixed;
     background-size: cover;
-    height: 100%;
-    width: 100%;
-    font-family: 'Poppins', sans-serif;
-    color: white;
+    font-family: Poppins, Arial;
+    color: #fff;
+    font-size: 14px;
+    line-height: 1.3em;
+    font-weight: 400;
+    padding: 0;
     margin: 0;
+    -webkit-text-size-adjust: none
 }
 
-/*-- Bottom of the page styling starts --*/
-#footer {
-    padding: 2rem;
-    background-color: #3f3f3f;
-    color: #d5d5d5;
+
+a {
+    color: #fff;
+    text-decoration: none !important;
+    outline: 0;
+    -moz-outline: none
 }
 
-hr.light {
-    border-top: 1px solid #d5d5d5;
-    width: 75%;
-    margin-top: .8rem;
-    margin-bottom: 1rem;
+    a:hover {
+        color: var(--txtColor);
+    }
+
+
+.container {
+    width: 100%;
 }
-/*-- Bottom of the page styling ends --*/
+
+.container, .container-fluid {
+    width: 100%;
+    padding-right: 15px;
+    padding-left: 15px;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+#wrapper {
+    width: 100%;
+    position: relative;
+    margin: 0 auto;
+    padding-top: 100px
+}
+
+
+/* HEADER STYLING: LOGOS and BUTTONS */
+#header #logo {
+    display: block;
+    height: 40px;
+    margin: 0;
+    float: left
+}
+
+    #header #logo img {
+        height: 180%;
+        width: auto
+    }
+
+    #header #logo span {
+        line-height: 40px;
+        font-size: 20px;
+        font-weight: 600;
+        color: #fff !important
+    }
+
+.btn-primary {
+    background: none !important;
+    color: var(--btnColor) !important;
+    border-color: transparent !important;
+    box-shadow: none !important;
+}
+
+    .btn-primary:hover {
+        color: var(--txtColor)!important;
+        background-color: transparent;
+        border-color: transparent;
+        transform: scale(1.2)!important;
+    }
+
+#header {
+    background: #ffffff;
+    height: 70px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 102;
+    padding: 0
+}
+
+
+    #header .container {
+        position: relative;
+        padding-left: 15px
+    }
+
+.header-setting {
+    float: left;
+    text-align: center;
+    height: 70px;
+    position: relative;
+    margin-left: 20px
+}
+
+.header-group, .header-setting {
+    margin-left: 30px
+}
+
+#header-right {
+    float: right;
+    text-align: center;
+    height: 70px;
+    position: relative;
+    padding: 15px 0;
+}
+
+
+#header .btn-user {
+    height: 40px;
+    line-height: 40px;
+    padding: 0;
+    font-weight: 400;
+    margin-left: 15px
+}
+
+
+#header.active {
+    z-index: 102
+}
+
+
 
 .text-gray{
     color: var(--text-gray);
@@ -233,9 +342,6 @@ hr.light {
     display: block;
 }
 
-.container{
-    margin: 0 5vw;
-}
 
 .slider-row {
 }
@@ -329,25 +435,26 @@ hr.light {
 
 
 /* !!!!!!!!!!! NEEDS WORK STYLING !!!!!!!!!!!!!!!*/
-.pagination {
+.paginationFairs {
     text-align: center;
     margin: .5rem .5rem 1rem;
     user-select: none;
 }
-.pagination li {
-    display: inline-block;
-    margin: .25rem;
-    box-shadow: 0 5px 25px rgb(1 1 1 / 10%);
-}
 
-.pagination li a {
-    color: #C35817;
-    text-decoration: none;
-    font-size: 1.2em;
-    line-height: 20px;
-}   
+    .paginationFairs li {
+        display: inline-block;
+        margin: .25rem;
+        box-shadow: 0 5px 25px rgb(1 1 1 / 10%);
+    }
 
-.previous-page, .next-page{
+        .paginationFairs li a {
+            color: #C35817!important;
+            text-decoration: none;
+            font-size: 1.2em;
+            line-height: 20px;
+        }
+
+.previous-page, .next-page {
     background: #ccc;
     width: 5rem;
     border-radius: 2rem;
@@ -355,73 +462,254 @@ hr.light {
     transition: 0.3s ease;
 }
 
-.previous-page:hover{
-    transform: translateX(-.25rem);
-}
-.next-page:hover {
-    transform: translateX(+.25rem);
-}
-
-.current-page, .dots{
+.current-page, .dots {
     background: #ccc;
     width: 45px;
     border-radius: 50%;
     cursor: pointer;
 }
 
-.active{
+.activePage {
     background: var(--btnColor)
 }
 
-.disable{
+.disablePage {
     background: rgba(0, 0, 0, 0.75);
 }
+
+.previous-page:hover {
+    transform: translateX(-.25rem);
+}
+
+.next-page:hover {
+    transform: translateX(+.25rem);
+}
+
 /* XXXXXXXXXXXXXXXXXXXXX display cards section ending XXXXXXXXXXXXXXXXXXXXXX */
 
 
 
+/* UPCOMING EVENTS STYLING */
+#main-wrapper {
+    margin-bottom: 70px;
+    min-height: calc(100vh - 350px);
+}
 
-/* #################### MAIN FAIR INFO PAGE #################### */
-
-.details-content{
-    display: grid;
-    grid-template-columns: 70% 30%;
+#main-content {
+    width: 75%;
+    float: left;
 
 }
 
-.fairs-content{
+#main-sidebar{
+    width: 25%;
+    float:right;
+
+}
+
+#stand-content{
     width:100%;
-    margin-bottom: 5rem;
+    float: left;
+
 }
 
-.details-content .fairs-content > .fairs-image, .fairs-title{
-    padding: 1rem 2rem;
+.block-area {
+    display: block;
+    margin-bottom: 30px;
+
+}
+
+.block-area {
     position: relative;
-
 }
 
-.details-content .fairs-content > .fairs-image .fairs-info {
-    background: #ff8e76;
-    padding: 1rem;
-    position: absolute;
-    bottom: 0%;
-    left: 20vw;
-    border-radius: 3rem;
-}
-
-.details-content .fairs-content > .fairs-image > div{
-    overflow:hidden;
-}
-.details-content .post-content > .fairs-image .fairsImg{
+.cbox.cbox-search{
+    padding: 1rem 1rem;
+    display: inline-block;
     width: 100%;
+    position: relative;
+}
+
+.fairs_list {
+    display: block
+}
+
+.fairs-list .fairs-list-wrap {
+    margin: 0 -7px;
+    list-style: none;
+    padding: 0
+}
+
+    .fairs-list .fairs-list-wrap .flw-item {
+        width: calc(25% - 14px);
+        margin: 0 7px 14px;
+        float: left;
+        background: #2a2c31;
+        border-radius: 0;
+        position: relative
+    }
+
+    .fairs-list .fairs-list-wrap .stand-item {
+        width: calc(16% - 14px);
+        margin: 0 7px 14px;
+        float: left;
+        background: #2a2c31;
+        border-radius: 0;
+        position: relative
+    }
+
+.fairs-poster {
+    width: 100%;
+    padding-bottom: 148%;
+    position: relative;
+    overflow: hidden;
+    background-color: rgba(255,255,255,.1);
+    display: block
+}
+
+.fairs-list .fairs-list-wrap .flw-item .fairs-poster, .fairs-list .fairs-list-wrap .stand-item .fairs-poster {
+    border-radius: 0;
+    padding-bottom: 100%;
+    font-size: 0
+}
+
+.fairs-poster .fairs-poster-img {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0
+}
+
+.fairs-list .fairs-list-wrap .flw-item .fairs-detail, .fairs-list .fairs-list-wrap .stand-item .fairs-detail{
+    color: #aaa;
+    font-size: 12px;
+    padding: 10px;
+    border-radius: 0 0 10px 10px;
+    min-height: 84px
+}
+
+    .fairs-list .fairs-list-wrap .flw-item .fairs-detail .fairs-name{
+        font-size: 14px;
+        line-height: 1.3em;
+        margin: 0;
+        font-weight: 500;
+        margin-bottom: 8px;
+        height: 25px;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden
+    }
+    .fairs-list .fairs-list-wrap .stand-item .fairs-detail .fairs-name {
+        font-size: 14px;
+        line-height: 1.3em;
+        margin: 0;
+        font-weight: 200;
+        margin-bottom: 8px;
+        height: 52px;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden
+    }
+
+    .fairs-list .fairs-list-wrap .flw-item .fairs-detail .fd-infor {
+        display: -webkit-box;
+        -webkit-line-clamp: 1;
+        -webkit-box-orient: horizontal;
+        overflow: hidden
+    }
+ 
+
+.fdi-item {
+    white-space: nowrap
+}
+.fdi-preço {
+    white-space: nowrap;
+}
+
+.dot {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: rgba(255,255,255,.3);
+    display: inline-block;
+    margin: 3px 6px
+}
+
+.tick.fav {
+    right: .6em;
+}
+
+.tick {
+    position: absolute;
+    top: 10px;
+    z-index: 10;
+}
+
+    .tick.fav .tick-item {
+        margin-right: -15px;
+    }
+
+.tick-item {
+    font-size: 42px;
+    font-family: arial;
+    font-weight: 200;
+    display: inline-block;
+    line-height: .6em;
+    padding: 2px 4px;
+    border-radius: 2px;
+    background: none;
+    color: #FFA500;
 }
 
 /* XXXXXXXXXXXXXXXXXXXXX MAIN FAIR INFO PAGE XXXXXXXXXXXXXXXXXXXXXX */
 
 
-/* #################### PROFILE DISPLAY PAGE #################### */
+.quantity {
+    display: flex;
+}
 
-/* XXXXXXXXXXXXXXXXXXXXX PROFILE DISPLAY PAGE XXXXXXXXXXXXXXXXXXXXXX */
+    /* it will support chrome and firefox */
+    .quantity input[type=number]::-webkit-inner-spin-button,
+    .quantity input[type=number]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+    }
+
+    .quantity input, .quantity button {
+        color: white;
+        width: 12px;
+        padding: 0;
+        font-size: 1rem;
+        text-align: center;
+        font-weight: 200;
+        background: transparent;
+        border: transparent;
+    }
+
+    .quantity input {
+        border-left: none;
+        border-right: none;
+    }
+
+/*-- Bottom of the page styling starts --*/
+#footer {
+    position: relative;
+    background-color: #3f3f3f;
+    color: #d5d5d5;
+}
+
+hr.light {
+    border-top: 1px solid #d5d5d5;
+    width: 75%;
+    margin-top: 0;
+    margin-bottom: 45px;
+}
+/*-- Bottom of the page styling ends --*/
 
 /*-- LOGIN PAGE STYLE--*/
 /*-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! --*/
@@ -447,60 +735,6 @@ hr.light {
 
 
 
-/*-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! --*/
-/*-- Favorites display home page 
-.img-wrapper{
-    max-width: 100%;
-    height: 13em;
-}
-img{
-    max-width: 100%;
-    max-height: 100%;
-}
-.carousel-inner{
-    display: flex;
-    padding: 7em;
-    width: 100%;
-}
-
-.carousel-item{
-    display: block;
-    margin-right: 0;
-    flex: 0 0 calc(100%/3);
-}
-.carousel-inner img {
-    width: 100%;
-    height: 100%;
-}
-
-.carousel-caption {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-}
-
-.carousel-caption h1 {
-    font-size: 500%;
-    text-transform: uppercase;
-    text-shadow: 1px 1px 15px #000;
-}
-
-.carousel-caption h3 {
-    font-size: 200%;
-    font-weight: 500;
-    text-shadow: 1px 1px 10px #000;
-    padding-bottom: 1rem;
-}
-.card {
-margin: 0 .5em;
-border-radius: 0;
-box-shadow: 2px 6px 8px 0 rgba(22, 22, 26, .18)
-}
-
-
-    --*/
-
-
 
 /*---Media Queries --*/
 @media (max-width: 992px) {
@@ -514,7 +748,6 @@ box-shadow: 2px 6px 8px 0 rgba(22, 22, 26, .18)
 @media (max-width: 576px) {
 
 }
-
 
 /*---Firefox Bug Fix --*/
 .carousel-item {

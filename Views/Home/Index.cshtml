@@ -97,23 +97,69 @@
 
 <!-- ##################### DISPLAY CONTENT STARTS HERE #################### -->
 <!-- List of X fairs sorted by date without any search -->
-<div class="displayContainer">
-    <div class="card-content" style="display: 10">
-        @foreach (var item in Model)
-        {
-        <div class="card-display">
-            <div class="card-image"><img src="https://mdbcdn.b-cdn.net/img/new/standard/city/041.webp"></div>
-            <div class="card-info">
-                    <a asp-area="" asp-controller="Feiras" asp-action="Details" asp-route-id="@item.IdFeira"><h3>@item.Nome</h3></a>
-                <p> @item.DataInicio </p>
-            </div>
+<div id="main-wrapper">
+    <div class="container">
+        <div id="main-content">
+            <section class="block-area block-area-home">
+                <div class="block-area-header">
+                    <div class="float-left fv-heading mr-4">
+                        <h2 class="fav-heading">Upcoming Fairs</h2>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="tab-content">
+                    <div class="block-area-content block-area-list fairs-list fairs-list-grid">
+                        <div class="fairs-list-wrap">
+                            @foreach (var item in Model)
+                            {
+                            <div class="flw-item">
+                                <div class="fairs-poster">
+                                    <div class="tick fav">
+                                        <div class="tick-item">&#9734;</div>
+                                    </div>
+                                        <img class="fairs-poster-img lazyload" src="https://mdbcdn.b-cdn.net/img/new/standard/city/041.webp" alt="@item.Nome">
+                                </div>
+                                <div class="fairs-detail">
+                                    <h3 class="fairs-name">
+                                            <a class="dynamic-name" asp-area="" asp-controller="Feiras" asp-action="Details" asp-route-id="@item.IdFeira">@item.Nome</a>
+                                    </h3>
+                                    <div class="fd-infor">
+                                        <span class="fdi-item">@item.DataInicio</span><br>
+                                        <span class="fdi-item fdi-duration">@item.DataFim</span>
+                                    </div>
+                                </div>
+                                <div class="clearfix"></div>
+                            </div>                           
+                            }
+
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+            </section>
+            <div class="paginationFairs"></div>
+            <div class="clearfix"></div>
         </div>
-        }
-    </div>
+        <div id="main-sidebar">
+            <section class="block-area block-area-sidebar block-area-search">
+                <div class="block-area-header">
+                    <div class="float-left fv-heading mr-4">
+                        <h2 class="fav-heading">Search</h2>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="block-area-content">
+                    <div class="cbox cbox-search">
 
-    <div class="pagination">
-    </div>
+                    </div>
 
+                    <div class="clearfix"></div>
+                </div>
+            </section>
+        </div>
+    </div>
 </div>
+
+<div class="clearfix"></div>
 <!-- XXXXXXXXXXXXXXXXXXXX DISPLAY CONTENT ENDS HERE XXXXXXXXXXXXXXXXXXXX -->
 

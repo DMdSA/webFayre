@@ -18,39 +18,36 @@
 
 
 <body>
-    <!-- #################### STARTING HEADER ####################  -->
-    <!-- navbar-expand-md breakpoint at 768px to change from mobile to full -->
-    <nav class="navbar navbar-expand-md navbar-light bg-light sticky-top">
-        <div class="container-fluid"> <!-- container-fluid - Takes up 100% of the screen -->
+    <div id="wrapper">
+        <!-- #################### STARTING HEADER ####################  -->
+        <!-- navbar-expand-md breakpoint at 768px to change from mobile to full -->
+        <!-- #################### STARTING HEADER ####################  -->
+        <div id="header" class="header-homer fixed">
+            <div class="container">
 
-            <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index"> <img width="165" height="80" src="~/img/logo-no-background.png"> </a>
+                <a id="logo" asp-area="" asp-controller="Home" asp-action="Index">
+                    <!-- <img width="165" height="80" > -->
+                    <img src="~/img/logo-no-background.png" alt="WebFayre">
+                    <div class="clearfix"></div>
+                </a>
 
-            <!-- toggle button when certain window size breakpoints are met-->
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive">
-                <span class="navbar-toggler-icon"></span>
-            </button>
+                <div id="header-right">
+                    <div class="header-right-user">
 
-            <div class="collapse navbar-collapse" id="navbarResponsive">
-                <!-- ml-auto places the navigation links to the right side when at full width -->
-                <ul class="navbar-nav ml-auto"> 
-                    <!-- active: highlights the active page slightly darker -->
-                    <li class="nav-item active">
-                        <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Login">Login</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Register">Register</a>
-                    </li>
-                    <li class ="nav-item">
-                        <a class="nav-link" asp-area="" asp-controller="Home" asp-action="RedirectProfile">Profile</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Logout">Log out</a>
-                    </li>
-                </ul>
+                        <a class="btn-user btn btn-sm btn-primary btn-login" asp-area="" asp-controller="Home" asp-action="Login">Login</a>
+
+                        <a class="btn-user btn btn-sm btn-primary btn-login" asp-area="" asp-controller="Home" asp-action="Register">Register</a>
+
+                        <a class="btn-user btn btn-sm btn-primary btn-login" asp-area="" asp-controller="Home" asp-action="RedirectProfile">Profile</a>
+
+                        <a class="btn-user btn btn-sm btn-primary btn-login" asp-area="" asp-controller="Home" asp-action="Logout">Log out</a>
+                    </div>
+                </div>
+
+                <div class="clearfix"></div>
             </div>
-
         </div>
-    </nav>
+        <!-- xxxxxxxxxxxxxxxxxxxx ENDING HEADER xxxxxxxxxxxxxxxxxxxx -->
     <!-- xxxxxxxxxxxxxxxxxxxx ENDING HEADER xxxxxxxxxxxxxxxxxxxx -->
 
     <!-- #################### STARTING MAIN ####################  -->
@@ -59,19 +56,18 @@
     </main>
     <!-- xxxxxxxxxxxxxxxxxxxx ENDING MAIN xxxxxxxxxxxxxxxxxxxx -->
 
-    <!-- Footer -->
-    <div id="footer" class="invisible">
-        <div class="container-fluid padding">
+        <!-- Footer -->
+        <div id="footer" class="invisible">
             <div class="row text-center">
-            <div class="col-12">
-                <hr class="light">
-                <h5>&copy; 2022 - WebFayre - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a></h5>
-                <h5><a class="nav-link" asp-area="" asp-controller="Utilizadores" asp-action="ForgotPassword">About</a></h5>
+                <div class="col-12">
+                    <hr class="light">
+                    <h5>&copy; 2022 - WebFayre - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a></h5>
+                    <h5><a class="nav-link" asp-area="" asp-controller="Utilizadores" asp-action="ForgotPassword">About</a></h5>
+                </div>
             </div>
-            </div>
+            
         </div>
     </div>
-
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
 
     <!-- --------- bootstrap js ------------------->

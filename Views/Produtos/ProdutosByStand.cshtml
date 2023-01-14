@@ -13,81 +13,68 @@
     ViewData["Title"] = "Index";
 }
 
-
-<h1>@Html.Raw(ViewBag.NomeStand)</h1>
-<h4>@Html.Raw(ViewBag.Disponibilidade)</h4>
-
-
 <form asp-action="ViewCart">
         <input type="submit" id ="process_cart" value="Create" class="btn btn-primary d-none"/>
 </form>
 
+<div id="main-wrapper">
+    <div class="container">
+        <div id="main-content">
+            <section class="block-area block-area-home">
+                <div class="block-area-header">
+                    <div class="float-left fv-heading mr-4">
+                        <h2 class="fav-heading">@Html.Raw(ViewBag.NomeStand)</h2>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="tab-content">
+                    <div class="block-area-content block-area-list fairs-list fairs-list-grid">
+                        <div class="fairs-list-wrap">
+                            @foreach (var item in Model)
+                            {
+                                <div class="stand-item">
+                                    <div class="fairs-poster">
+                                        <div class="tick fav">
+                                            <div class="tick-item"></div>
+                                        </div>
+                                        <img class="fairs-poster-img lazyload" src="https://mdbcdn.b-cdn.net/img/new/standard/city/041.webp" alt="@item.Descricao">
+                                    </div>
+                                    <div class="fairs-detail">
+                                        <h3 class="fairs-name">
+                                            <a class="dynamic-name" asp-area="" asp-controller="Produtos" asp-action="Details" asp-route-id="@item.IdProduto" data-toggle="modal" data-target="#modalProducts">@item.Descricao</a>
+                                           
+                                        </h3>
+                                        <div class="fd-infor">
+                                            @{
+                                                var price = item.Preco.ToString().Replace(",", ".");
+                                                var iva = item.Iva.ToString().Replace(",", ".");
+                                            }      
+                                            <div class="quantity">
+                                                <span class="fdi-preço">@item.Preco €</span>
+                                                <button class="rem" onclick="removeProduct(@item.IdProduto, @price)">-</button>                                                
+                                                <input type="number" id="@item.IdProduto" value="0" min="0" max="@item.Stock" readonly />
+                                                <button class="add" onclick="addProduct('@item.Descricao.ToString()', @item.IdProduto, @price, @iva, @item.Stock)">+</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                </div>
+                            }
+
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+            </section>
+            <div class="paginationFairs"></div>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+</div>
+
+<div class="clearfix"></div>
 
 <input id="buy" type="button" value="Comprar" onclick="transplantCart()" />
-
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Descricao)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Stock)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Preco)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Iva)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Descricao)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Stock)
-                </td>
-                <td>
-                    @{
-                        var dotPrice = item.Preco.ToString().Replace(",", ".");
-                    }
-                    @Html.DisplayFor(modelItem => dotPrice)
-                </td>
-                <td>
-                    @{
-                        var dotIva = item.Iva.ToString().Replace(",", ".");
-                    }
-                    @Html.DisplayFor(modelItem => dotIva)
-                </td>
-                <td>
-
-                    @{
-                        var price = item.Preco.ToString().Replace(",", ".");
-                        var iva = item.Iva.ToString().Replace(",", ".");
-                    }
-                    <button onclick="addProduct('@item.Name.ToString()', @item.IdProduto, @price, @iva, @item.Stock)">Adicionar</button>
-                    <input type="number" id="@item.IdProduto" value="0" min="0" max="@item.Stock" readonly/>
-                    <button onclick="removeProduct(@item.IdProduto, @price)">Remover</button>
-
-                    <a asp-action="Details" asp-route-id="@item.IdProduto" data-toggle="modal" data-target="#modalProducts" >Details</a> |
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
-
 
 <!-- MODAL MY modalProducts (LIST OF modalProducts I HAVE ACESS TO AS "MANAGER")-->
 <div class="modal fade" id="modalProducts" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">

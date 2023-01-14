@@ -123,7 +123,7 @@ function getPageList(totalPages, page, maxLength) {
 
 $(function () {
 
-    var numberOfItems = $(".card-content .card-display").length;
+    var numberOfItems = $(".fairs-list-wrap .flw-item").length;
     var limitPerPage = 8; //Limit of cards visible per page
     var totalPages = Math.ceil(numberOfItems / limitPerPage);
     var paginationSize = 5; //Number of pages shown at the button 
@@ -135,33 +135,33 @@ $(function () {
 
         currentPage = whichPage;
 
-        $(".card-content .card-display").hide().slice((currentPage - 1) * limitPerPage, currentPage * limitPerPage).show();
+        $(".fairs-list-wrap .flw-item").hide().slice((currentPage - 1) * limitPerPage, currentPage * limitPerPage).show();
 
-        $(".pagination li").slice(1, -1).remove();
+        $(".paginationFairs li").slice(1, -1).remove();
 
         getPageList(totalPages, currentPage, paginationSize).forEach(item => {
 
             $("<li>").addClass("page-item").addClass(item ? "current-page" : "dots")
-                .toggleClass("active", item === currentPage).append($("<a>").addClass("page-link")
+                .toggleClass("activePage", item === currentPage).append($("<a>").addClass("page-link")
                     .attr({ hreft: "javascript:void(0)" }).text(item || "...")).insertBefore(".next-page");
         });
 
-        $(".previous-page").toggleClass("disable", currentPage === 1);
-        $(".next-page").toggleClass("disable", currentPage === totalPages);
+        $(".previous-page").toggleClass("disablePage", currentPage === 1);
+        $(".next-page").toggleClass("disablePage", currentPage === totalPages);
         return true;
     }
 
-    $(".pagination").append(
+    $(".paginationFairs").append(
         $("<li>").addClass("page-item").addClass("previous-page").append($("<a>").addClass("page-link")
             .attr({ href: "javascript:void(0)" }).text("Prev")),
-        $("<li>").addClass("page-item").addClass("next-page").append($("<a>").addClass("card-link")
+        $("<li>").addClass("page-item").addClass("next-page").append($("<a>").addClass("page-link")
             .attr({ href: "javascript:void(0)" }).text("Next")),
     );
 
-    $(".card-content").show();
+    $(".fairs-list-wrap").show();
     showPage(1);
 
-    $(document).on("click", ".pagination li.current-page:not(.active)", function () {
+    $(document).on("click", ".paginationFairs li.current-page:not(.activePage)", function () {
         return showPage(+$(this).text());
     });
 
@@ -173,6 +173,7 @@ $(function () {
         return showPage(currentPage - 1);
     });
 });
+
 
 
 

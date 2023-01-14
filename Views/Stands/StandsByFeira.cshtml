@@ -4,23 +4,42 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>@Html.Raw(ViewBag.FeiraNome)</h1>
-
-
-<div class="displayContainer">
-    <div class="card-content" style="display: 10">
-        @foreach (var item in Model)
-        {
-            <div class="card-display">
-                <div class="card-image"><img src="https://mdbcdn.b-cdn.net/img/new/standard/city/041.webp"></div>
-                <div class="card-info">
-                    <h3>@item.Nome </h3>
-                    <p> @item.Descricao</p>
-                    <p> @item.Email</p>
-                    <p> @item.Telefone</p>
-                    <a class="btn btn-primary" asp-action="Enter" asp-route-id="@item.IdStand">Visit</a>
+<div id="main-wrapper">
+    <div class="container">
+        <div id="stand-content">
+            <section class="block-area block-area-home">
+                <div class="block-area-header">
+                    <div class="float-left fv-heading mr-4">
+                        <h2 class="fav-heading">Stands</h2>
+                    </div>
+                    <div class="clearfix"></div>
                 </div>
-            </div>
-        }
+                <div class="tab-content">
+                    <div class="block-area-content block-area-list fairs-list fairs-list-grid">
+                        <div class="fairs-list-wrap">
+                        @foreach (var item in Model)
+                        {
+                            <div class="stand-item">
+                                <div class="fairs-poster">
+                                    <img class="fairs-poster-img lazyload" src="https://mdbcdn.b-cdn.net/img/new/standard/city/041.webp" alt="@item.Descricao">
+                                </div>
+                                <div class="fairs-detail">
+                                    <h3 class="fairs-name">
+                                        <a class="dynamic-name" asp-area="" asp-controller="Produtos" asp-action="ProdutosByStand" asp-route-id="@item.IdStand">@item.Descricao</a>
+                                    </h3>                                    
+                                </div>
+                                <div class="clearfix"></div>
+                            </div>
+                           
+                        }
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+            </section>
+            <div class="paginationFairs"></div>
+            <div class="clearfix"></div>
+        </div>
     </div>
 </div>
+<div class="clearfix"></div>
