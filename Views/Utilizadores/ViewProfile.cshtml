@@ -25,8 +25,8 @@
             <div class="col">
                 <a class="btn btn-profile" data-toggle="modal" data-target="#editProfile" asp-action="Edit" asp-controller="Utilizadores" asp-route-id="@Model.Id">Edit Profile</a> <br>
                 <a class="btn btn-profile" data-toggle="modal" data-target="#myStands" asp-action="MyStands" asp-controller="Utilizadores">My Stands</a><br>
-                <a class="btn btn-profile" asp-action="Index" asp-controller="Home">Purchases</a><br>
-                <a class="btn btn-profile" asp-action="Index" asp-controller="Home">Visited Fairs</a>
+                <a class="btn btn-profile" data-toggle="modal" data-target="#myPurchases" asp-action="Index" asp-controller="Home">Purchases</a><br>
+                <a class="btn btn-profile" data-toggle="modal" data-target="#myVisitedFairs" asp-action="Index" asp-controller="Home">Visited Fairs</a>
             </div>
         </div>
 
@@ -143,6 +143,93 @@
         </div>
     </div>
 </div>
+
+
+<!-- MODAL MY PURCHASES (LIST OF PURCHASES I HAVE ACESS TO AS "MANAGER")-->
+<div class="modal fade" id="myPurchases" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">My Stands</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>
+                                Stand Name
+                            </th>
+                            <th>
+                                Fairs
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in stands)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Nome)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Feira.Nome)
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- MODAL MY VISITED FAIRS (LIST OF VISITED FAIRS I HAVE ACESS TO AS "MANAGER")-->
+<div class="modal fade" id="myVisitedFairs" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">My Stands</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>
+                                Stand Name
+                            </th>
+                            <th>
+                                Fairs
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in stands)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Nome)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Feira.Nome)
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+    </div>
+</div>
+
 <!--
 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" data-whatever="mdo">Open modal for mdo</button>
 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" data-whatever="fat">Open modal for fat</button>

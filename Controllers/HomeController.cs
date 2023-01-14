@@ -24,13 +24,24 @@ namespace WebFayre.Controllers
             {
                 return RedirectToAction("login", "home");
             }
-                var userid = (int)HttpContext.Session.GetInt32("utilizadorId");
+            var userid = (int)HttpContext.Session.GetInt32("utilizadorId");
+
+            if (HttpContext.Session.GetInt32("isFuncionario") == 0)
+            {
                 var user = await wfc.Utilizadors.Include(u => u.IdFeiras).FirstOrDefaultAsync(m => m.Id == userid);
                 ViewData["favorite"] = user.IdFeiras;
+                ViewBag.message = "";
+            }
 
-                return wfc.Feiras != null ?
-                    View(await wfc.Feiras.Where(f => f.DataFim >= DateTime.Today).OrderBy(f => f.DataInicio).ToListAsync()) :
-                    Problem("Entity set 'WebFayreContext.Feiras'  is null.");
+            else
+            {
+                ViewData["favorite"] = new List<Feira>();
+                ViewBag.message = "";
+            }
+
+            return wfc.Feiras != null ?
+                View(await wfc.Feiras.Where(f => f.DataFim >= DateTime.Today).OrderBy(f => f.DataInicio).ToListAsync()) :
+                Problem("Entity set 'WebFayreContext.Feiras'  is null.");
         }
 
         public IActionResult Privacy()

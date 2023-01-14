@@ -21,9 +21,6 @@
             <th>
                 @Html.DisplayNameFor(model => model.IdFuncionarioNavigation)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IdUtilizadorNavigation)
-            </th>
             <th></th>
         </tr>
     </thead>
@@ -31,22 +28,19 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.CapacidadeUtilizadores)
+                @Html.DisplayFor(modelItem => item.Nome)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Descricao)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Nome)
+                @Html.DisplayFor(modelItem => item.CapacidadeUtilizadores)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.NStands)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.IdFuncionarioNavigation.IdFuncionario)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IdUtilizadorNavigation.Id)
+                @Html.DisplayFor(modelItem => item.IdFuncionarioNavigation.Nome)
             </td>
             <td>
                 <a asp-action="Details" asp-route-id="@item.IdPromocaoFeira">Details</a> |

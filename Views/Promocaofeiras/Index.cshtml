@@ -22,16 +22,16 @@
                 @Html.DisplayNameFor(model => model.Descricao)
             </th>
             <th>
-               Capacidade Máxima
+                @Html.DisplayNameFor(model => model.CapacidadeUtilizadores)
             </th>
             <th>
-               Número de Stands
+                @Html.DisplayNameFor(model => model.NStands)
             </th>
             <th>
-               Id de Funcionário
+                @Html.DisplayNameFor(model => model.IdFuncionarioNavigation)
             </th>
             <th>
-               Id de Utilizador
+                @Html.DisplayNameFor(model => model.IdUtilizadorNavigation)
             </th>
             <th></th>
         </tr>
@@ -43,7 +43,7 @@
                 @Html.DisplayFor(modelItem => item.Nome)
             </td>
             <td>
-                    @Html.DisplayFor(modelItem => item.Descricao)
+                @Html.DisplayFor(modelItem => item.Descricao)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.CapacidadeUtilizadores)

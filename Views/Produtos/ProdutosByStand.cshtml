@@ -20,7 +20,6 @@
 
 <form asp-action="ViewCart">
         <input type="submit" id ="process_cart" value="Create" class="btn btn-primary d-none"/>
-
 </form>
 
 
@@ -76,7 +75,7 @@
                     <input type="number" id="@item.IdProduto" value="0" min="0" max="@item.Stock" readonly/>
                     <button onclick="removeProduct(@item.IdProduto, @price)">Remover</button>
 
-                    <a asp-action="Details" asp-route-id="@item.IdProduto">Details</a> |
+                    <a asp-action="Details" asp-route-id="@item.IdProduto" data-toggle="modal" data-target="#modalProducts" >Details</a> |
                 </td>
             </tr>
         }
@@ -84,3 +83,57 @@
 </table>
 
 
+<!-- MODAL MY modalProducts (LIST OF modalProducts I HAVE ACESS TO AS "MANAGER")-->
+<div class="modal fade" id="modalProducts" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">My Stands</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>
+                                Product name
+                            </th>
+                            <th>
+                                Stock
+                            </th>
+                            <th>
+                                Price
+                            </th>
+                            <th>
+                                IVA
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!--Model.Select(p => p.IdProduto == i)-->
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Descricao)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Stock)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Preco)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Iva)
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+    </div>
+</div>

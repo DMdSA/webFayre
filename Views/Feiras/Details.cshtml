@@ -25,14 +25,15 @@
                     </p>
                     <p>
                         <b>Localização: </b>@Html.DisplayFor(model => model.Morada) <br>
-                        <b>Patrocionadores: </b>@foreach (var patrocinador in Model.Patrocinadors){@Html.DisplayFor(m => patrocinador.Nome);<br>}
+                        <b>Patrocionadores: </b>@string.Join(", ", Model.Patrocinadors.Select(fc => fc.Nome).ToArray())
                     </p>
                     <p>
                         <b>Contactos:<br></b><i class="fas fa-envelope text-gray"></i>&nbsp;@Html.DisplayFor(model => model.Email)&nbsp;<br>
                         <i class="fas fa-phone text-gray"></i>&nbsp;@Html.DisplayFor(model => model.Telefone)&nbsp;<br>
                     </p>
-                    <a class="btn btn-primary" asp-action="Enter" asp-route-id="@Model.IdFeira">Enter</a> Visit Fair &nbsp;<i class="fas fa-arrow-right"></i>
-                   
+                    <a class="btn btn-primary" asp-action="Enter" asp-route-id="@Model.IdFeira">Visit Fair &nbsp;<i class="fas fa-arrow-right"></i></a>
+                    <a class="btn btn-primary" asp-action="AddFavorite" asp-route-id="@Model.IdFeira">Favorite <i class="fas fa-star"></i></a>
+
                 </div>
             </div>
             
@@ -43,6 +44,7 @@
             @foreach (var category in Model.FeiraCategoria1s)
             {
                 @Html.DisplayFor(m => category.Descricao)
+                <br /> 
 
             }
         </aside>
@@ -51,6 +53,5 @@
 
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model?.IdFeira">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">Home</a>
 </div>

@@ -21,8 +21,6 @@ namespace WebFayre.Controllers
             _context = context;
             _fairsCC = fairsCC;
 
-            // <feira_id, {<id_utilizador,email_utilizador>, maxConcurrentUsers}>
-            // {1 : { {1: d@gmail.com, 2: j@gmail.com} , 10 }, 2 : { {13 : @gmail.com, 144 : @gmail.com} , 100}, ...}
         }
 
         private Boolean userHasSession()
@@ -169,22 +167,33 @@ namespace WebFayre.Controllers
         // GET: Feiras/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-                if (id == null || _context.Feiras == null)
-                {
-                    return NotFound();
-                }
+            if (!userHasSession())
+            {
+                return RedirectToAction("login", "home");
+            }
 
-                //var feira = await _context.Feiras.Include(x => x.FeiraCategoria1s)
-                //    .ThenInclude(y => y.IdCategoriaFeira)  //Devia ser o nome da table
-                //    .SingleOrDefaultAsync(m => m.IdFeira == id);
+            if (id == null || _context.Feiras == null)
+            {
+                return NotFound();
+            }
+            
+            var feira = await _context.Feiras
+                 .SingleOrDefaultAsync(m => m.IdFeira == id);
+            if (feira == null)
+            {
+                return NotFound();
+            }
 
-                var feira = await _context.Feiras
-                    .SingleOrDefaultAsync(m => m.IdFeira == id);
-                if (feira == null)
-                {
-                    return NotFound();
-                }
-                return View(feira);
+            int userid = getUserId();
+            var user = await _context.Utilizadors.Include(u => u.IdFeiras).Where(u => u.Id == userid).FirstOrDefaultAsync();
+
+            if (user.IdFeiras.Select(f => f.IdFeira).ToList().Contains((int)id))
+            {
+                ViewBag.favorite = "true";
+            }
+            else { ViewBag.favorite = "false"; }
+
+            return View(feira);
         }
 
         // GET: Feiras/Create
