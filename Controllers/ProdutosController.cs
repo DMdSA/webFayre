@@ -117,11 +117,9 @@ namespace WebFayre.Controllers
             }
             var users = _context.Utilizadors.Where(p => p.Id == getUserId()).ToList().Select(p => p.Email);
             var staff = _context.Standstaffs.Where(p => p.IdStand == id).ToList().Select(p => p.StaffEmail);
-            foreach (var email in users)
+            if (staff.Contains(users.First()))
             {
-                if (staff.Contains(email))
-                {
-                    var prodList = _context.Produtos.Include(s => s.Stand).Where(s => s.StandId == id);
+                var prodList = _context.Produtos.Include(s => s.Stand).Where(s => s.StandId == id);
                     var stand = await _context.Stands.Where(p => p.IdStand == id).FirstOrDefaultAsync();
                     if (stand != null)
                     {
@@ -139,7 +137,6 @@ namespace WebFayre.Controllers
                     }
 
                     return View(await prodList.ToListAsync());
-                }
             }
             return RedirectToAction("index", "home");
         }
@@ -218,8 +215,36 @@ namespace WebFayre.Controllers
             {
                 return NotFound();
             }
-
             return View(produto);
+           
+        }
+
+        public async Task<IActionResult> redirectBack(int id)
+        {
+            if (getUserType() == 1)
+            {
+                if (getFuncFuncao() == "Admin")
+                {
+                    return RedirectToAction("ProdByStandAdmin", "produtos", new { id });
+                }
+                else
+                {
+                    return RedirectToAction("ProdByStandDefault", "produtos", new { id });
+                }
+            }
+            else
+            {
+                var users = _context.Utilizadors.Where(p => p.Id == getUserId()).FirstOrDefault();
+                var staff = _context.Standstaffs.Where(p => p.IdStand == id).ToList().Select(p => p.StaffEmail);
+                if (staff.Contains(users.Email))
+                {
+                    return RedirectToAction("StaffIndex", "produtos", new { id });
+                }
+                else
+                {
+                    return RedirectToAction("ProdutosByStand", "produtos", new { id });
+                }
+            }
         }
 
 
