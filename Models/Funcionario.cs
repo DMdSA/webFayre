@@ -7,20 +7,25 @@ namespace WebFayre.Models;
 
 public partial class Funcionario
 {
+    [Display(Name = "ID")]
     public int IdFuncionario { get; set; }
 
+    [Display(Name = "Name")]
     public string Nome { get; set; } = null!;
 
+    [Display(Name = "Email")]
     public string Email { get; set; } = null!;
 
+    [Display(Name = "Password")]
     public string Password { get; set; } = null!;
 
-    [Display(Name = "Telemóvel")]
+    [Display(Name = "Phone")]
     public string Telemovel { get; set; } = null!;
 
-    [Display(Name = "Data de criação")]
+    [Display(Name = "Creation date")]
     public DateTime CreationDate { get; set; }
 
+    [Display(Name = "Date")]
     public DateOnly? DataOnly
     {
         get
@@ -30,13 +35,16 @@ public partial class Funcionario
         }
     }
 
-    [Display(Name = "Imagem de perfil")]
+    [Display(Name = "Image path")]
     public string? FuncionarioPath { get; set; }
 
+    [Display(Name = "Role ID")]
     [ForeignKey("funcao_funcionario")]
     public int Funcao { get; set; }
-    [Display(Name = "Função")]
+
+    [Display(Name = "Role")]
     public virtual Funcao? FuncaoNavigation { get; set; } = null!;
 
+    [Display(Name = "Validated fair promotions")]
     public virtual ICollection<Promocaofeira> Promocaofeiras { get; } = new List<Promocaofeira>();
 }

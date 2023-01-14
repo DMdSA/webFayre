@@ -4,16 +4,19 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.CapacidadeUtilizadores)
+                @Html.DisplayNameFor(model => model.Nome)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Descricao)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Nome)
+                @Html.DisplayNameFor(model => model.CapacidadeUtilizadores)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.NStands)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IsValidado)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.IdFuncionarioNavigation)
@@ -28,16 +31,19 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.CapacidadeUtilizadores)
+                @Html.DisplayFor(modelItem => item.Nome)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Descricao)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Nome)
+                @Html.DisplayFor(modelItem => item.CapacidadeUtilizadores)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.NStands)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.isValidated)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.IdFuncionarioNavigation.IdFuncionario)

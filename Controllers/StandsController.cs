@@ -176,7 +176,8 @@ namespace WebFayre.Controllers
             }
             else
             {
-                ViewData["FeiraId"] = new SelectList(_context.Feiras, "IdFeira", "Nome");
+                var feiras = _context.Feiras.Where(f => f.DataFim >= DateTime.Now).ToList();
+                ViewData["FeiraId"] = new SelectList(feiras, "IdFeira", "Nome");
                 ViewData["StandTipoId"] = new SelectList(_context.TipoStands, "Id", "Descricao");
                 return View();
             }
@@ -214,7 +215,7 @@ namespace WebFayre.Controllers
                     return NotFound();
                 }
 
-                var stand = await _context.Stands.FindAsync(id);
+                var stand = await _context.Stands.Where(s => s.IdStand == id).FirstOrDefaultAsync();
                 if (stand == null)
                 {
                     return NotFound();
@@ -302,7 +303,7 @@ namespace WebFayre.Controllers
 
                 if (stand != null)
                 {
-                    _context.Stands.Remove(stand);
+                    await RemoveStand(id, feiraId);
                 }
 
                 await _context.SaveChangesAsync();

@@ -19,6 +19,9 @@
                 @Html.DisplayNameFor(model => model.NStands)
             </th>
             <th>
+                @Html.DisplayNameFor(model => model.IsValidado)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.IdFuncionarioNavigation)
             </th>
             <th></th>
@@ -38,6 +41,9 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.NStands)
+            </td>
+            <td>
+                    @Html.DisplayFor(modelItem => item.isValidated)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.IdFuncionarioNavigation.Nome)

@@ -11,10 +11,10 @@
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Nome)
+            @Html.DisplayNameFor(model => model.CapacidadeUtilizadores)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Nome)
+            @Html.DisplayFor(model => model.CapacidadeUtilizadores)
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Descricao)
@@ -23,16 +23,22 @@
             @Html.DisplayFor(model => model.Descricao)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CapacidadeUtilizadores)
+            @Html.DisplayNameFor(model => model.Nome)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CapacidadeUtilizadores)
+            @Html.DisplayFor(model => model.Nome)
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.NStands)
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.NStands)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.IsValidado)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.IsValidado)
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.IdFuncionarioNavigation)
@@ -44,7 +50,7 @@
             @Html.DisplayNameFor(model => model.IdUtilizadorNavigation)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.IdUtilizadorNavigation.Nome)
+            @Html.DisplayFor(model => model.IdUtilizadorNavigation.Email)
         </dd>
     </dl>
 </div>

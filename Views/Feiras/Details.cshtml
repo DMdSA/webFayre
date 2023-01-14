@@ -11,7 +11,7 @@
             <div class="fairs-content">
                 <div class="fairs-image">
                     <div>
-                        <img src="https://via.placeholder.com/210?text=1" class="fairsImg"alt="feira1" />
+                        <img src="https://via.placeholder.com/210?text=1" class="fairsImg" alt="feira1" />
                     </div>
                     <div class="fairs-info flex-row">
                         <span><b>From:&nbsp;</b><i class="fas fa-calendar-alt text-gray"></i>&nbsp;@Html.DisplayFor(model => model.DataInicio)&nbsp;</span>
@@ -36,7 +36,7 @@
 
                 </div>
             </div>
-            
+
         </div>
         <aside class="catFairs">
             <h1> Categorias </h1>
@@ -44,7 +44,7 @@
             @foreach (var category in Model.FeiraCategoria1s)
             {
                 @Html.DisplayFor(m => category.Descricao)
-                <br /> 
+                <br />
 
             }
         </aside>

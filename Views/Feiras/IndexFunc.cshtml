@@ -41,10 +41,10 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Descricao)
+                @Html.DisplayNameFor(model => model.Nome)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Nome)
+                @Html.DisplayNameFor(model => model.Descricao)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.DataInicio)
@@ -67,6 +67,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.Morada)
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PrecoBase)
+            </th>
             <th></th>
         </tr>
     </thead>
@@ -75,10 +78,10 @@
         {
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Descricao)
+                    @Html.DisplayFor(modelItem => item.Nome)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Nome)
+                    @Html.DisplayFor(modelItem => item.Descricao)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.DataInicio)
@@ -100,6 +103,9 @@
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Morada)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PrecoBase)
                 </td>
                 <td>
                     <a asp-action="Enter" asp-route-id="@item.IdFeira">Enter</a> |

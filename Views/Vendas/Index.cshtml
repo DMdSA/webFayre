@@ -22,6 +22,12 @@
                 @Html.DisplayNameFor(model => model.ValorRegateio)
             </th>
             <th>
+                @Html.DisplayNameFor(model => model.Nif)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Telemovel)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.Stand)
             </th>
             <th>
@@ -43,16 +49,22 @@
                 @Html.DisplayFor(modelItem => item.ValorRegateio)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Stand.IdStand)
+                @Html.DisplayFor(modelItem => item.Nif)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Utilizador.Id)
+                @Html.DisplayFor(modelItem => item.Telemovel)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.IdVenda">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.IdVenda">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.IdVenda">Delete</a>
+                @Html.DisplayFor(modelItem => item.Stand.Nome)
             </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Utilizador.Email)
+            </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.IdVenda">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.IdVenda">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.IdVenda">Delete</a>
+                </td>
         </tr>
 }
     </tbody>

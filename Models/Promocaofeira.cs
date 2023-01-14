@@ -6,7 +6,7 @@ namespace WebFayre.Models;
 
 public partial class Promocaofeira
 {
-    [Display(Name = "Id")]
+    [Display(Name = "ID")]
     public int IdPromocaoFeira { get; set; }
 
     [Display(Name = "Max Capacity")]
@@ -21,10 +21,24 @@ public partial class Promocaofeira
     [Display(Name = "Number of stands")]
     public int NStands { get; set; }
 
-    [Display(Name = "User id")]
+    [Display(Name = "isValidated")]
+    public byte? IsValidado { get; set; }
+
+    [Display(Name = "isValidated")]
+    public Boolean isValidated
+    {
+        get
+        {
+            if (this.IsValidado == 0) return false;
+            return true;
+        }
+    }
+
+
+    [Display(Name = "User ID")]
     public int IdUtilizador { get; set; }
 
-    [Display(Name = "Staff id")]
+    [Display(Name = "Staff ID")]
     public int? IdFuncionario { get; set; }
 
     [Display(Name = "Staff member")]

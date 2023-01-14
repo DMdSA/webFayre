@@ -84,8 +84,9 @@ namespace WebFayre.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("IdVenda,Data,Total,ValorRegateio,UtilizadorId,StandId")] Vendum vendum)
+        public async Task<IActionResult> Create([Bind("IdVenda,Data,Total,ValorRegateio,UtilizadorId,StandId,Nif,Telemovel")] Vendum vendum)
         {
+
             await _context.Venda.Include(v => v.Stand).Include(v => v.Utilizador).LoadAsync();
             if (ModelState.IsValid)
             {
@@ -128,7 +129,7 @@ namespace WebFayre.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("IdVenda,Data,Total,ValorRegateio,UtilizadorId,StandId")] Vendum vendum)
+        public async Task<IActionResult> Edit(int id, [Bind("IdVenda,Data,Total,ValorRegateio,UtilizadorId,StandId,Nif,Telemovel")] Vendum vendum)
         {
             if (id != vendum.IdVenda)
             {
@@ -201,7 +202,7 @@ namespace WebFayre.Controllers
             {
                 _context.Venda.Remove(vendum);
             }
-            
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }

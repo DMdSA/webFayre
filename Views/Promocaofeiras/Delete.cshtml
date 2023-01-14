@@ -36,16 +36,22 @@
             @Html.DisplayFor(model => model.NStands)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.IdFuncionario)
+            @Html.DisplayNameFor(model => model.IsValidado)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.IdFuncionario)
+            @Html.DisplayFor(model => model.IsValidado)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.IdFuncionarioNavigation)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.IdFuncionarioNavigation.Nome)
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.IdUtilizadorNavigation)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.IdUtilizadorNavigation.Id)
+            @Html.DisplayFor(model => model.IdUtilizadorNavigation.Email)
         </dd>
     </dl>
     

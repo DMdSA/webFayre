@@ -9,44 +9,6 @@
 <p>
     <a asp-action="Create">Create New</a>
 </p>
-<p>
-    <a asp-action="RedirectToForm">Forms List</a>
-</p>
-
-<div class="container-fluid padding">
-    <div class="row search-bar text-center">
-        <div class="col-12">
-            <form asp-action="Index">
-                <div class="input-group">
-                    <input name="nameFeira" type="search" placeholder="Search ... " class="form-control" />
-                    <div class="input-group-append">
-                        <span class="input-group-text red lighten-3" id="basic-text1">
-                            <i class="fas fa-search text-grey" aria-hidden="true"></i>
-                        </span>
-                            <!--
-                            <button type ="button" class="btn btn-outline-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Search
-                            </button> -->
-                    </div>
-                </div>
-            </form>
-
-            @section scripts{
-                    <script>
-                        $(function (){
-                            $("#basic-text1").click(function (){
-                                $("Form").submit();
-                            })
-                        });
-                    </script>
-            }
-
-        </div>
-    </div>
-</div>
-
-
-
 <table class="table">
     <thead>
         <tr>
@@ -78,12 +40,11 @@
                 @Html.DisplayNameFor(model => model.Morada)
             </th>
             <th>
-                Categorias
+                @Html.DisplayNameFor(model => model.FeiraPath)
             </th>
             <th>
-                Patrocinadores
+                @Html.DisplayNameFor(model => model.PrecoBase)
             </th>
-
             <th></th>
         </tr>
     </thead>
@@ -118,14 +79,13 @@
                 @Html.DisplayFor(modelItem => item.Morada)
             </td>
             <td>
-                @string.Join(", ", item.FeiraCategoria1s.Select(fc => fc.Descricao).ToArray())
+                @Html.DisplayFor(modelItem => item.FeiraPath)
             </td>
-                <td>
-                    @string.Join(", ", item.Patrocinadors.Select(fc => fc.Nome).ToArray())
-                </td>
             <td>
-                <a asp-action="Enter" asp-route-id="@item.IdFeira">Enter</a> |
-                    <a asp-action="Edit" asp-route-id="@item.IdFeira">Edit</a> |
+                @Html.DisplayFor(modelItem => item.PrecoBase)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.IdFeira">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.IdFeira">Details</a> |
                 <a asp-action="Delete" asp-route-id="@item.IdFeira">Delete</a>
             </td>

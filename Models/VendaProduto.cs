@@ -7,24 +7,21 @@ namespace WebFayre.Models;
 
 public partial class VendaProduto
 {
-
-    [Display(Name = "Id da venda")]
+    [Display(Name = "ID")]
     public int VendaId { get; set; }
 
-    [Display(Name = "Id do produto")]
+    [Display(Name = "Product ID")]
     public int ProdutoId { get; set; }
 
-    [Display(Name = "Preço")]
+    [Display(Name = "Final price")]
     public decimal Preco { get; set; }
 
-    [Display(Name = "Quantidade")]
+    [Display(Name = "Quantity")]
     public decimal? Quantidade { get; set; }
 
-    //[ForeignKey("produto_id")]
-    [Display(Name = "Produto")]
+    [Display(Name = "Product")]
     public virtual Produto? Produto { get; set; } = null!;
 
-    //[ForeignKey("venda_id")]
-    [Display(Name = "Venda")]
+    [Display(Name = "Sales")]
     public virtual Vendum? Venda { get; set; } = null!;
 }

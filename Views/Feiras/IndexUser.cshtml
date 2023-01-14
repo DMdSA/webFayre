@@ -41,10 +41,10 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Descricao)
+                @Html.DisplayNameFor(model => model.Nome)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Nome)
+                @Html.DisplayNameFor(model => model.Descricao)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.DataInicio)
@@ -67,17 +67,19 @@
             <th>
                 @Html.DisplayNameFor(model => model.Morada)
             </th>
-            <th></th>
+            <th>
+                @Html.DisplayNameFor(model => model.PrecoBase)
+            </th>
         </tr>
     </thead>
     <tbody>
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Descricao)
+                @Html.DisplayFor(modelItem => item.Nome)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Nome)
+                @Html.DisplayFor(modelItem => item.Descricao)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.DataInicio)
@@ -100,6 +102,9 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Morada)
             </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PrecoBase)
+                </td>
             <td>
                 <a asp-action="Enter" asp-route-id="@item.IdFeira">Enter</a> |
                 <a asp-action="AddFavorite" asp-route-id="@item.IdFeira">Favorite</a> |

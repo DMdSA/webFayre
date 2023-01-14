@@ -25,6 +25,9 @@
                 @Html.DisplayNameFor(model => model.NStands)
             </th>
             <th>
+                @Html.DisplayNameFor(model => model.IsValidado)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.IdFuncionarioNavigation)
             </th>
             <th>
@@ -36,23 +39,26 @@
     <tbody>
 @foreach (var item in Model) {
         <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Nome)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Descricao)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CapacidadeUtilizadores)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NStands)
+                </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Nome)
+                    @Html.DisplayFor(modelItem => item.isValidated)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Descricao)
+                @Html.DisplayFor(modelItem => item.IdFuncionarioNavigation.Nome)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.CapacidadeUtilizadores)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.NStands)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IdFuncionario)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IdUtilizadorNavigation.Id)
+                @Html.DisplayFor(modelItem => item.IdUtilizadorNavigation.Email)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.IdPromocaoFeira">Edit</a> |

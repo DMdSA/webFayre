@@ -45,7 +45,7 @@ public partial class WebFayreContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Server=DESKTOP-N1ODB09; Database=webFayre;Trusted_Connection=True;TrustServerCertificate=True;");
+        => optionsBuilder.UseSqlServer("Server=LAPTOP-8VUUH6OV; Database=webFayre;Trusted_Connection=True;TrustServerCertificate=True;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -93,6 +93,9 @@ public partial class WebFayreContext : DbContext
             entity.Property(e => e.Nome)
                 .HasMaxLength(75)
                 .HasColumnName("nome");
+            entity.Property(e => e.PrecoBase)
+                .HasColumnType("decimal(5, 2)")
+                .HasColumnName("preco_base");
             entity.Property(e => e.Telefone)
                 .HasMaxLength(15)
                 .HasColumnName("telefone");
@@ -223,6 +226,10 @@ public partial class WebFayreContext : DbContext
             entity.Property(e => e.Iva)
                 .HasColumnType("decimal(4, 2)")
                 .HasColumnName("iva");
+            entity.Property(e => e.Name)
+                .HasMaxLength(40)
+                .IsFixedLength()
+                .HasColumnName("name");
             entity.Property(e => e.Preco)
                 .HasColumnType("decimal(6, 2)")
                 .HasColumnName("preco");
@@ -253,6 +260,7 @@ public partial class WebFayreContext : DbContext
                 .HasColumnName("descricao");
             entity.Property(e => e.IdFuncionario).HasColumnName("id_funcionario");
             entity.Property(e => e.IdUtilizador).HasColumnName("id_utilizador");
+            entity.Property(e => e.IsValidado).HasColumnName("is_validado");
             entity.Property(e => e.NStands).HasColumnName("n_stands");
             entity.Property(e => e.Nome)
                 .HasMaxLength(45)
@@ -343,7 +351,7 @@ public partial class WebFayreContext : DbContext
 
             entity.Property(e => e.IdStand).HasColumnName("id_stand");
             entity.Property(e => e.StaffEmail)
-                .HasMaxLength(45)
+                .HasMaxLength(50)
                 .HasColumnName("staff_email");
 
             entity.HasOne(d => d.IdStandNavigation).WithMany(p => p.Standstaffs)
@@ -491,15 +499,23 @@ public partial class WebFayreContext : DbContext
 
             entity.Property(e => e.IdVenda).HasColumnName("id_venda");
             entity.Property(e => e.Data)
-                .HasColumnType("date")
+                .HasColumnType("datetime")
                 .HasColumnName("data");
+            entity.Property(e => e.Nif)
+                .HasMaxLength(10)
+                .IsFixedLength()
+                .HasColumnName("nif");
             entity.Property(e => e.StandId).HasColumnName("stand_id");
+            entity.Property(e => e.Telemovel)
+                .HasMaxLength(15)
+                .IsFixedLength()
+                .HasColumnName("telemovel");
             entity.Property(e => e.Total)
-                .HasColumnType("decimal(7, 2)")
+                .HasColumnType("decimal(6, 2)")
                 .HasColumnName("total");
             entity.Property(e => e.UtilizadorId).HasColumnName("utilizador_id");
             entity.Property(e => e.ValorRegateio)
-                .HasColumnType("decimal(7, 2)")
+                .HasColumnType("decimal(6, 2)")
                 .HasColumnName("valor_regateio");
 
             entity.HasOne(d => d.Stand).WithMany(p => p.Venda)

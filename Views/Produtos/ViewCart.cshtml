@@ -24,8 +24,8 @@
                 <table class="table table-hover">
                     <thead>
                         <tr>
-                            <th>Qt.</th>
                             <th>Product Name</th>
+                            <th>Qt.</th>
                             <th>Price</th>
                             <th>Remove</th>
                         </tr>
@@ -35,10 +35,10 @@
                         {
                             <tr>
                                 <td>
-                                    @Html.DisplayFor(proditem => prod.Quantity)
+                                    @Html.DisplayFor(proditem => prod.Name)
                                 </td>
                                 <td>
-                                    @Html.DisplayFor(proditem => prod.Name)
+                                    @Html.DisplayFor(proditem => prod.Quantity)
                                 </td>
                                 <td>
                                     @Html.DisplayFor(proditem => prod.FinalPrice)

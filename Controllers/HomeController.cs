@@ -8,13 +8,13 @@ namespace WebFayre.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private readonly FairsConcurrencyController _fairsCC;
+        //private readonly FairsConcurrencyController _fairsCC;
 
 
-        public HomeController(ILogger<HomeController> logger, FairsConcurrencyController fairsCC)
+        public HomeController(ILogger<HomeController> logger)
         {
             _logger = logger;
-            _fairsCC = fairsCC;
+            //_fairsCC = fairsCC;
         }
 
         public async Task<IActionResult> IndexAsync()
@@ -29,7 +29,10 @@ namespace WebFayre.Controllers
             if (HttpContext.Session.GetInt32("isFuncionario") == 0)
             {
                 var user = await wfc.Utilizadors.Include(u => u.IdFeiras).FirstOrDefaultAsync(m => m.Id == userid);
-                ViewData["favorite"] = user.IdFeiras;
+                
+                if (user != null)
+                    ViewData["favorite"] = user.IdFeiras;
+                else ViewData["favorite"] = new List<Feira>();
                 ViewBag.message = "";
             }
 
@@ -75,8 +78,18 @@ namespace WebFayre.Controllers
         public async Task<IActionResult> SearchResult(String nameFeira)
         {
             WebFayreContext wfc = new WebFayreContext();
-            var result = await wfc.Feiras.Where(f => f.DataFim >= DateTime.Today).OrderBy(f => f.DataInicio).Where(f => f.Nome.Contains(nameFeira)).ToListAsync();
-            return View("Index" , result);
+            if (HttpContext.Session.GetInt32("isFuncionario") == 0)
+            {
+                var userid = (int)HttpContext.Session.GetInt32("utilizadorId");
+                var a = new List<Feira>();
+                var user = await wfc.Utilizadors.Include(u => u.IdFeiras).FirstOrDefaultAsync(m => m.Id == userid);
+                ViewData["favorite"] = a.Concat(user.IdFeiras);
+                ViewBag.message = "";
+            }
+            var result = await wfc.Feiras.Where(f => f.DataFim >= DateTime.Today).OrderBy(f => f.DataInicio)
+                .Where(f => f.Nome.Contains(nameFeira) || f.FeiraCategoria1s.ToList().Select(e => e.Descricao).Contains(nameFeira))
+                .ToListAsync();
+            return View("Index", result);
         }
 
 
@@ -89,23 +102,19 @@ namespace WebFayre.Controllers
         public ActionResult Register(Utilizador u)
         {
             WebFayreContext wfc = new WebFayreContext();
-            var userlist = wfc.Utilizadors.ToList();
-            foreach(var user in userlist)
+            var userlist = wfc.Utilizadors.ToList().Select(e => e.Email);
+
+            if (userlist.Contains(u.Email))
             {
-                if(u.Email == user.Email)
-                {
-                    return RedirectToAction("Advise", "home");
-                    //return RedirectToAction("index", "home");
-                }
+                return RedirectToAction("Advise", "home");
+                //return RedirectToAction("index", "home");
             }
-            var funcList = wfc.Funcionarios.ToList();
-            foreach(var func in funcList)
+
+            var funcList = wfc.Funcionarios.ToList().Select(e => e.Email);
+            if (funcList.Contains(u.Email))
             {
-                if (u.Email == func.Email)
-                {
-                    return RedirectToAction("Advise", "home");
-                    //return RedirectToAction("index", "home");
-                }
+                return RedirectToAction("Advise", "home");
+                //return RedirectToAction("index", "home");
             }
             wfc.Utilizadors.Add(u);
             wfc.SaveChanges();
@@ -151,9 +160,6 @@ namespace WebFayre.Controllers
                 HttpContext.Session.SetString("utilizadorEmail", userLoggedIn.Email);
                 HttpContext.Session.SetInt32("isFuncionario", 0);
 
-                // remove current user from all possible fairs that are being tracked
-                LeaveAll(userLoggedIn.Id);
-
 
                 return RedirectToAction("index", "home");
             }
@@ -171,9 +177,6 @@ namespace WebFayre.Controllers
                 var func = funcionarioLoggedIn.Funcao;
                 var funcName = wfc.Funcaos.Where(u => u.IdFuncao == func).FirstOrDefault();
                 HttpContext.Session.SetString("Funcao", funcName.Descricao);
-
-                // remove current user from all possible fairs that are being tracked
-                LeaveAll(funcionarioLoggedIn.IdFuncionario);
 
 
                 return RedirectToAction("index", "home");
@@ -211,7 +214,6 @@ namespace WebFayre.Controllers
 
                 // remove current user from all possible fairs that are being tracked
                 var userid = (int)HttpContext.Session.GetInt32("utilizadorId");
-                LeaveAll(userid);
 
                 // logout
                 HttpContext.Session.Clear();
@@ -241,16 +243,7 @@ namespace WebFayre.Controllers
             }
         }
 
-        public void LeaveAll(int userid)
-        {
-            foreach (var users in _fairsCC.FairsCC.Values)
-            {
-                if (users.userExists(userid))
-                {
-                    users.removeUser(userid);
-                }
-            }
-        }
+        
 
     }
 }

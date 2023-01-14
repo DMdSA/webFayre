@@ -1,20 +1,24 @@
 ﻿@model IEnumerable<WebFayre.Models.Produto>
 
 <p>
-    <a asp-action="Create" asp-route-id="@Model.FirstOrDefault().StandId">Create new product</a>
+    <a asp-action="Create" asp-route-id="@ViewBag.IdStand">Create new product</a>
 </p>
 <h4>Disponibilidade: @Html.Raw(ViewBag.Disponibilidade)</h4>
 <p>
-    <a asp-action="ChangeDisp" asp-route-id="@Model.FirstOrDefault().StandId">Abrir/Fechar Stand</a>
+    <a asp-action="ChangeDisp" asp-route-id="@ViewBag.IdStand">Abrir/Fechar Stand</a>
 </p>
+
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Stock)
+                @Html.DisplayNameFor(model => model.Name)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Descricao)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Stock)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Preco)
@@ -29,10 +33,13 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Stock)
+                @Html.DisplayFor(modelItem => item.Name)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Descricao)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Stock)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Preco)
@@ -49,5 +56,5 @@
     </tbody>
 </table>
 <div>
-<a asp-action="Sales" asp-controller="Stands" asp-route-id="@Model.FirstOrDefault().StandId">Sales done</a>
+    <a asp-action="Sales" asp-controller="Stands" asp-route-id="ViewBag.IdStand">Sales done</a>
 </div>

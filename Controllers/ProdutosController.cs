@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.Intrinsics.X86;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
 using WebFayre.Common;
 using WebFayre.Models;
 
@@ -63,7 +61,8 @@ namespace WebFayre.Controllers
             }
         }
 
-        // GET: Produtoes
+
+        // GET: Produtos
         public async Task<IActionResult> Index()
         {
             if (VerifyAdmin() == 0)
@@ -77,6 +76,7 @@ namespace WebFayre.Controllers
             }
         }
 
+
         public async Task<IActionResult> ProdByStandAdmin(int id)
         {
             if (VerifyAdmin() == 0)
@@ -88,7 +88,10 @@ namespace WebFayre.Controllers
                 var prodList = _context.Produtos.Include(s => s.Stand).Where(s => s.StandId == id);
                 var stand = await _context.Stands.Where(p => p.IdStand == id).FirstOrDefaultAsync();
                 if (stand != null)
+                {
                     ViewBag.NomeStand = stand.Nome;
+                    ViewBag.StandId = stand.IdStand;
+                }
                 return View(await prodList.ToListAsync());
             }
         }
@@ -120,23 +123,24 @@ namespace WebFayre.Controllers
             if (staff.Contains(users.First()))
             {
                 var prodList = _context.Produtos.Include(s => s.Stand).Where(s => s.StandId == id);
-                    var stand = await _context.Stands.Where(p => p.IdStand == id).FirstOrDefaultAsync();
-                    if (stand != null)
+                var stand = await _context.Stands.Where(p => p.IdStand == id).FirstOrDefaultAsync();
+                if (stand != null)
+                {
+                    ViewBag.NomeStand = stand.Nome;
+                    ViewBag.IdStand = id;
+
+                    if (stand.Disponibilidade == 1)
                     {
-                        ViewBag.NomeStand = stand.Nome;
-                        ViewBag.IdStand = id;
-
-                        if (stand.Disponibilidade == 1)
-                        {
-                            ViewBag.Disponibilidade = "Aberto";
-                        }
-                        else
-                        {
-                            ViewBag.Disponibilidade = "Fechado";
-                        }
+                        ViewBag.Disponibilidade = "Aberto";
                     }
+                    else
+                    {
+                        ViewBag.Disponibilidade = "Fechado";
+                    }
+                }
 
-                    return View(await prodList.ToListAsync());
+
+                return View(await prodList.ToListAsync());
             }
             return RedirectToAction("index", "home");
         }
@@ -200,7 +204,8 @@ namespace WebFayre.Controllers
             }
         }
 
-        // GET: Produtoes/Details/5
+
+        // GET: Produtos/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null || _context.Produtos == null)
@@ -216,8 +221,8 @@ namespace WebFayre.Controllers
                 return NotFound();
             }
             return View(produto);
-           
         }
+
 
         public async Task<IActionResult> redirectBack(int id)
         {
@@ -248,8 +253,7 @@ namespace WebFayre.Controllers
         }
 
 
-
-        // GET: Produtoes/Create
+        // GET: Produtos/Create
         public IActionResult Create(int id)
         {
             if (HttpContext.Session.GetInt32("utilizadorId") == null)
@@ -281,12 +285,12 @@ namespace WebFayre.Controllers
             }
         }
 
-        // POST: Produtoes/Create
+        // POST: Produtos/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("IdProduto,Stock,Descricao,Preco,Iva,ImagemPath,StandId")] Produto produto)
+        public async Task<IActionResult> Create([Bind("IdProduto,Stock,Name,Descricao,Preco,Iva,ImagemPath,StandId")] Produto produto)
         {
             if (ModelState.IsValid)
             {
@@ -295,14 +299,14 @@ namespace WebFayre.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["StandId"] = new SelectList(_context.Stands, "IdStand", "Nome", produto.StandId);
-            if(getFuncFuncao() == "Admin")
+            if (getFuncFuncao() == "Admin")
             {
                 return View(produto);
             }
             return RedirectToAction("standstaff", "produtos");
         }
 
-        // GET: Produtoes/Edit/5
+        // GET: Produtos/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (VerifyAdmin() == 0)
@@ -326,12 +330,12 @@ namespace WebFayre.Controllers
             }
         }
 
-        // POST: Produtoes/Edit/5
+        // POST: Produtos/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("IdProduto,Stock,Descricao,Preco,Iva,ImagemPath,StandId")] Produto produto)
+        public async Task<IActionResult> Edit(int id, [Bind("IdProduto,Stock,Name,Descricao,Preco,Iva,ImagemPath,StandId")] Produto produto)
         {
             if (id != produto.IdProduto)
             {
@@ -362,7 +366,7 @@ namespace WebFayre.Controllers
             return View(produto);
         }
 
-        // GET: Produtoes/Delete/5
+        // GET: Produtos/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (VerifyAdmin() == 0)
@@ -388,7 +392,7 @@ namespace WebFayre.Controllers
             }
         }
 
-        // POST: Produtoes/Delete/5
+        // POST: Produtos/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -541,7 +545,9 @@ namespace WebFayre.Controllers
                     Total = calculateTotal(productsInfo),
                     UtilizadorId = userid,
                     StandId = ssc.StandId,
-                    VendaProdutos = vendaProdutos
+                    VendaProdutos = vendaProdutos,
+                    Nif = nif,
+                    Telemovel = tel
                 };
 
                 // atualizar tudo devidamente
@@ -579,7 +585,7 @@ namespace WebFayre.Controllers
         public async Task<IActionResult> Restock(int stock, int standId, int id)
         {
             var prod = await _context.Produtos.Where(p => p.IdProduto == id).FirstOrDefaultAsync();
-            if (stock > 0)
+            if (stock >= 0)
             {
                 prod.Stock = stock;
                 _context.Update(prod);
@@ -591,7 +597,7 @@ namespace WebFayre.Controllers
                 return View(prod);
             }
 
-            return RedirectToAction("StaffIndex", "Produtos", new {id = standId});
+            return RedirectToAction("StaffIndex", "Produtos", new { id = standId });
         }
     }
 }

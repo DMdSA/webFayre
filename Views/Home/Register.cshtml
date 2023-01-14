@@ -27,7 +27,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="Porta" class="control-label"></label>
-                <input asp-for="Porta" class="form-control" />
+                <input asp-for="Porta" class="form-control" min="0"/>
                 <span asp-validation-for="Porta" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -49,11 +49,6 @@
                 <label asp-for="DataNascimento" class="control-label"></label>
                 <input type="date" asp-for="DataNascimento" class="form-control" />
                 <span asp-validation-for="DataNascimento" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="UtilizadorPath" class="control-label"></label>
-                <input asp-for="UtilizadorPath" class="form-control" />
-                <span asp-validation-for="UtilizadorPath" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Register" class="btn btn-primary" />
