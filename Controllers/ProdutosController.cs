@@ -541,7 +541,7 @@ namespace WebFayre.Controllers
                 await _context.SaveChangesAsync();
 
                 HttpContext.Session.Remove("CartObject");
-                return RedirectToAction("StandsByFeira", "Stands");
+                return RedirectToAction("StandsByFeira", "Stands", new {idFeira = ssc.FeiraId});
             }
 
         }

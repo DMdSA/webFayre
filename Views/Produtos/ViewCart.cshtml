@@ -83,8 +83,9 @@
                         <b>TEL: </b><input name="tel" id="tel" value=@(ViewBag.Telemovel) />
                     </p>
                         <input class="btn btn-profile" type="submit" id="s" value="MBWAY" asp-controller="Produtos" asp-action="FinalizePurchase" onclick="deleteCart()"/>
-
-                }
+                        <input class="btn btn-profile" type="submit" id="s" value="Card" asp-controller="Produtos" asp-action="FinalizePurchase" onclick="deleteCart()"/>
+                        <input class="btn btn-profile" type="submit" id="s" value="PayPal" asp-controller="Produtos" asp-action="FinalizePurchase" onclick="deleteCart()"/>
+                    }
                  </div>       
             </div>
             <!--Footer-->
