@@ -1,4 +1,5 @@
 ﻿@model WebFayre.Models.Utilizador
+@using System.Text.RegularExpressions;
 @{
    IEnumerable<Stand> stands = ViewData["Stands"] as IEnumerable<Stand>;
 }
@@ -8,19 +9,19 @@
     <div class="profile">
         <div class="row">        
             <div class="col-8">
-                Name: @Html.DisplayFor(model => model.Nome) <br>
+                <b>@Html.DisplayNameFor(model => model.Nome):</b> @Html.DisplayFor(model => model.Nome) <br>
 
-                Email: @Html.DisplayFor(model => model.Email) <br>
+                <b>@Html.DisplayNameFor(model => model.Email):</b> @Html.DisplayFor(model => model.Email) <br>
 
-                Address: @Html.DisplayFor(model => model.Rua), @Html.DisplayFor(model => model.Porta) <br>
+                <b>@Html.DisplayNameFor(model => model.Rua):</b> @Html.DisplayFor(model => model.Rua), @Html.DisplayFor(model => model.Porta) <br>
 
-                Zip-Code: @Html.DisplayFor(model => model.CodigoPostal) <br>
+                <b>@Html.DisplayNameFor(model => model.CodigoPostal):</b> @Html.DisplayFor(model => model.CodigoPostal) <br>
 
-                Phone: @Html.DisplayFor(model => model.Telemovel) <br>
+                <b>@Html.DisplayNameFor(model => model.Telemovel):</b> @Html.DisplayFor(model => model.Telemovel) <br>
 
-                NIF: @Html.DisplayFor(model => model.Nif) <br>
+                <b>@Html.DisplayNameFor(model => model.Nif):</b> @Html.DisplayFor(model => model.Nif) <br>
 
-                Birthday: @Html.DisplayFor(model => model.DataOnly) <br>
+                <b>@Html.DisplayNameFor(model => model.DataNascimento):</b> @Html.DisplayFor(model => model.DataOnly) <br>
             </div>
             <div class="col">
                 <a class="btn btn-profile" data-toggle="modal" data-target="#editProfile" asp-action="Edit" asp-controller="Utilizadores" asp-route-id="@Model.Id">Edit Profile</a> <br>
@@ -150,7 +151,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLongTitle">My Stands</h5>
+                <h5 class="modal-title" id="exampleModalLongTitle">My Purchases</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -160,23 +161,39 @@
                     <thead>
                         <tr>
                             <th>
-                                Stand Name
+                                Date
                             </th>
                             <th>
-                                Fairs
+                                Total
+                            </th>
+                            <th>
+                                Stand
+                            </th>
+                            <th>
+                                Products
                             </th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var item in stands)
+                        @foreach (var item in Model.Venda)
                         {
                             <tr>
                                 <td>
-                                    @Html.DisplayFor(modelItem => item.Nome)
+                                    @Html.DisplayFor(modelItem => item.Data)
                                 </td>
                                 <td>
-                                    @Html.DisplayFor(modelItem => item.Feira.Nome)
+                                    @Html.DisplayFor(modelItem => item.Total)
                                 </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Stand.Nome)
+                                </td>
+                                <td>
+                                    @foreach(var prod in item.VendaProdutos){
+                                        @Html.DisplayFor(modelProd => prod.Quantidade)@Html.DisplayFor(modelProd =>
+                                            prod.Produto.Name)@Html.DisplayFor(modelProd => prod.Preco)<br>
+                                    }
+                                </td>
+
                             </tr>
                         }
                     </tbody>

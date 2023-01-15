@@ -40,7 +40,7 @@
                 {
                     <div class="card">
                         <div class="card-body">
-                            <img class="card-img-top" src="https://via.placeholder.com/210?text=1" alt="">
+                            <img class="card-img-top" src="https://via.placeholder.com/210?text=IMGFEIRA" alt="">
                             <h5 class="card-title dynamic-name">@item.Nome</h5>
                             <p class="card-text">@item.Descricao</p>
                             <a class="btn btn-primary" asp-area="" asp-controller="Feiras" asp-action="AddFavorite" asp-route-id="@item.IdFeira">Fav</a>
@@ -62,37 +62,7 @@
 <!-- XXXXXXXXXXXXXXXXXXXX CAROUSEL ENDS HERE XXXXXXXXXXXXXXXXXXXX -->
 
 
-<!-- SEARCH BAR -->
-<div class="container-fluid padding">
-    <div class="row search-bar text-center">
-        <div class="col-12">
 
-            <form asp-action="SearchResult" asp-controller="Home">
-                <div class="input-group">
-                    <label for="nameFeira" class="control-label"></label>
-                    <input name="nameFeira" placeholder="Search ... " class="form-control" />
-                    <div class="input-group-append">
-                        <div class="input-group">
-                            <button type="submit" value="Search" class="btn btn-primary" id="search">
-                                <i class="fas fa-search"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </form>
-            @section scripts{
-                <script>
-                    $(function () {
-                        $("#search").click(function () {
-                            $("Form").submit();
-                        })
-                    });
-                </script>
-            }
-
-        </div>
-    </div>
-</div>
 
 
 <!-- ##################### DISPLAY CONTENT STARTS HERE #################### -->
@@ -114,9 +84,19 @@
                             {
                             <div class="flw-item">
                                 <div class="fairs-poster">
-                                    <div class="tick fav">
-                                        <div class="tick-item">&#9734;</div>
-                                    </div>
+                                    @if (favorites.Contains(item))
+                                    {
+                                        <div class="tick fav">
+                                                <a class="tick-item" asp-controller="Feiras"  asp-action="AddFavorite" asp-route-id="@item.IdFeira">&#9733;</a>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="tick fav">
+                                            <a class="tick-item" asp-controller="Feiras" asp-action="AddFavorite" asp-route-id="@item.IdFeira">&#9734;</a>
+                                        </div>
+                                    }
+                                       
                                         <img class="fairs-poster-img lazyload" src="https://mdbcdn.b-cdn.net/img/new/standard/city/041.webp" alt="@item.Nome">
                                 </div>
                                 <div class="fairs-detail">
@@ -150,7 +130,29 @@
                 </div>
                 <div class="block-area-content">
                     <div class="cbox cbox-search">
-
+                        <!-- SEARCH BAR -->
+                                    <form asp-action="SearchResult" asp-controller="Home">
+                                        <div class="input-group">
+                                            <label for="nameFeira" class="control-label"></label>
+                                            <input name="nameFeira" placeholder="Search ... " class="form-control" />
+                                            <div class="input-group-append">
+                                                <div class="input-group">
+                                                    <button type="submit" value="Search" class="btn btn-primary" id="search">
+                                                        <i class="fas fa-search"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                    @section scripts{
+                                        <script>
+                                            $(function () {
+                                                $("#search").click(function () {
+                                                    $("Form").submit();
+                                                })
+                                            });
+                                        </script>
+                                    }
                     </div>
 
                     <div class="clearfix"></div>

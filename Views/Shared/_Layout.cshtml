@@ -40,6 +40,8 @@
 
                         <a class="btn-user btn btn-sm btn-primary btn-login" asp-area="" asp-controller="Home" asp-action="RedirectProfile">Profile</a>
 
+                        <a class="btn-user btn btn-sm btn-primary btn-login" asp-area="" asp-controller="Feiras" asp-action="RedirectToForm">Promo</a>
+
                         <a class="btn-user btn btn-sm btn-primary btn-login" asp-area="" asp-controller="Home" asp-action="Logout">Log out</a>
                     </div>
                 </div>
@@ -48,13 +50,8 @@
             </div>
         </div>
         <!-- xxxxxxxxxxxxxxxxxxxx ENDING HEADER xxxxxxxxxxxxxxxxxxxx -->
-    <!-- xxxxxxxxxxxxxxxxxxxx ENDING HEADER xxxxxxxxxxxxxxxxxxxx -->
 
-    <!-- #################### STARTING MAIN ####################  -->
-    <main>
-    @RenderBody()
-    </main>
-    <!-- xxxxxxxxxxxxxxxxxxxx ENDING MAIN xxxxxxxxxxxxxxxxxxxx -->
+        @RenderBody()
 
         <!-- Footer -->
         <div id="footer" class="invisible">
@@ -64,9 +61,9 @@
                     <h5>&copy; 2022 - WebFayre - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a></h5>
                     <h5><a class="nav-link" asp-area="" asp-controller="Utilizadores" asp-action="ForgotPassword">About</a></h5>
                 </div>
-            </div>
-            
+            </div>            
         </div>
+        <div class="clearfix"></div>
     </div>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
 
