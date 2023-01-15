@@ -131,28 +131,50 @@
                 <div class="block-area-content">
                     <div class="cbox cbox-search">
                         <!-- SEARCH BAR -->
-                                    <form asp-action="SearchResult" asp-controller="Home">
-                                        <div class="input-group">
-                                            <label for="nameFeira" class="control-label"></label>
-                                            <input name="nameFeira" placeholder="Search ... " class="form-control" />
-                                            <div class="input-group-append">
-                                                <div class="input-group">
-                                                    <button type="submit" value="Search" class="btn btn-primary" id="search">
-                                                        <i class="fas fa-search"></i>
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </form>
-                                    @section scripts{
-                                        <script>
-                                            $(function () {
-                                                $("#search").click(function () {
-                                                    $("Form").submit();
-                                                })
-                                            });
-                                        </script>
-                                    }
+                        <form asp-action="SearchResult" asp-controller="Home">
+                 
+                            <div class="input-group">
+                                <label for="nameFeira" class="control-label"></label>
+                                <input name="nameFeira" placeholder="Search ... " class="form-control" />
+
+                                <div class="input-group-append">
+                                    <div class="input-group">
+                                        <button type="submit" value="Search" class="btn btn-primary" id="search">
+                                            <i class="fas fa-search"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                        <br>
+                        <form asp-action="SearchDate" asp-controller="Home">
+                            <div class="input-group">
+                                <label for="DataInicio" class="control-label"></label>
+                                <input type="date" for="DataInicio" class="form-control" />
+
+                                <div class="input-group-append">
+                                    <div class="input-group">
+                                        <button type="submit" value="SearchDate" class="btn btn-primary" id="searchDate">
+                                            <i class="fas fa-search"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+
+                        @section scripts{
+                            <script>
+                                $(function () {
+                                    $("#search").click(function () {
+                                        $("Form").submit();
+                                    })
+                                    $("#searchDate").click(function () {
+                                        $("Form").submit();
+                                    })
+                                });
+                            </script>
+                        }
+                 
                     </div>
 
                     <div class="clearfix"></div>
