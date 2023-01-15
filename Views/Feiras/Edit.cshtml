@@ -69,6 +69,14 @@
                 <span asp-validation-for="PrecoBase" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <label asp-for="FeiraCategoria1s" class="control-label"></label>
+                @Html.DropDownListFor(x => x.FeiraCategoria1s, ((MultiSelectList)ViewBag.Categorias),"Select",new {multiple = "multiple"})
+            </div>
+            <div class="form-group">
+                <label asp-for="Patrocinadors" class="control-label"></label>
+                @Html.DropDownListFor(x => x.Patrocinadors, ((MultiSelectList)ViewBag.Patrocinadores),"Select",new {multiple = "multiple"})
+            </div>
+            <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>
         </form>

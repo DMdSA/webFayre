@@ -223,17 +223,17 @@ namespace WebFayre.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("IdFeira,Descricao,Nome,DataInicio,DataFim,CapacidadeClientes,NStands,Email,Telefone,Morada,FeiraPath,PrecoBase")] Feira feira)
+        public async Task<IActionResult> Create([Bind("IdFeira,Descricao,Nome,DataInicio,DataFim,CapacidadeClientes,NStands,Email,Telefone,Morada,FeiraPath,PrecoBase,FeiraCategoria1s,Patrocinadors")] Feira feira)
         {
             await _context.Feiras.Include(x => x.FeiraCategoria1s).Include(x => x.Patrocinadors).LoadAsync();
 
             if (ModelState.IsValid)
             {
-                var category_values = ModelState.Values.ToList()[9];
+                var category_values = ModelState.Values.ToList()[11];
                 var category_ids = category_values.AttemptedValue.Split(",");
                 var category_idsList = category_ids.Select(int.Parse).ToList();
 
-                var patroc_values = ModelState.Values.ToList()[10];
+                var patroc_values = ModelState.Values.ToList()[12];
                 var patroc_ids = patroc_values.AttemptedValue.Split(",");
                 var patroc_idsList = patroc_ids.Select(int.Parse).ToList();
 
@@ -280,12 +280,14 @@ namespace WebFayre.Controllers
             }
         }
 
+
+
         // POST: Feiras/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("IdFeira,Descricao,Nome,DataInicio,DataFim,CapacidadeClientes,NStands,Email,Telefone,Morada,FeiraPath,PrecoBase")] Feira feira)
+        public async Task<IActionResult> Edit(int id, [Bind("IdFeira,Descricao,Nome,DataInicio,DataFim,CapacidadeClientes,NStands,Email,Telefone,Morada,FeiraPath,PrecoBase,FeiraCategoria1s,Patrocinadors")] Feira feira)
         {
             if (id != feira.IdFeira)
             {
@@ -296,22 +298,33 @@ namespace WebFayre.Controllers
             {
                 try
                 {
-                    var category_values = ModelState.Values.ToList()[12];
+                    var category_values = ModelState.Values.ToList()[13];
                     var category_ids = category_values.AttemptedValue.Split(",");
                     var category_idsList = category_ids.Select(int.Parse).ToList();
 
-                    var patroc_values = ModelState.Values.ToList()[11];
+                    var patroc_values = ModelState.Values.ToList()[12];
                     var patroc_ids = patroc_values.AttemptedValue.Split(",");
                     var patroc_idsList = patroc_ids.Select(int.Parse).ToList();
 
-                    foreach (var category in feira.FeiraCategoria1s.ToList())
+                    var oldFeira = _context.Feiras.Where(f => f.IdFeira == id).AsNoTracking().
+                        Include(f => f.FeiraCategoria1s).AsNoTracking().
+                        Include(f => f.Patrocinadors).AsNoTracking().
+                        FirstOrDefault();
+
+                    CategoriafeirasController categoriaController = new CategoriafeirasController(_context);
+                    foreach (var category in oldFeira.FeiraCategoria1s.ToList())
                     {
-                        feira.FeiraCategoria1s.Remove(category);
+                        await categoriaController.RemoveFeiraAsync(oldFeira, category.IdCategoriaFeira);
                     }
-                    foreach (var patrocinador in feira.Patrocinadors.ToList())
+
+                    PatrocinadoresController patrocinadoresController = new PatrocinadoresController(_context);
+                    foreach (var patrocinador in oldFeira.Patrocinadors.ToList())
                     {
-                        feira.Patrocinadors.Remove(patrocinador);
+                        await patrocinadoresController.RemoveFeiraAsync(oldFeira, patrocinador.IdPatrocinador);
+
                     }
+                    _context.Update(oldFeira);
+                    await _context.SaveChangesAsync();
 
                     var category_entities = _context.Categoriafeiras.Where(x => category_idsList.Contains(x.IdCategoriaFeira));
                     var patroc_entities = _context.Patrocinadors.Where(x => patroc_idsList.Contains(x.IdPatrocinador));
@@ -336,6 +349,24 @@ namespace WebFayre.Controllers
             ViewData["FeiraCategoria1s"] = new MultiSelectList(_context.Categoriafeiras, "IdCategoriaFeira", "IdCategoriaFeira", feira.FeiraCategoria1s);
             ViewData["Patrocinadores"] = new MultiSelectList(_context.Patrocinadors, "IdPatrocinador", "Nome", feira.Patrocinadors);
             return View(feira);
+        }
+
+        public async void ClearFeira(int id)
+        {
+            var oldFeira = _context.Feiras.Where(f => f.IdFeira == id).Include(f => f.FeiraCategoria1s).Include(f => f.Patrocinadors).FirstOrDefault();
+
+                    CategoriafeirasController categoriaController = new CategoriafeirasController(_context);
+                    foreach (var category in oldFeira.FeiraCategoria1s.ToList())
+                    {
+                        await categoriaController.RemoveFeiraAsync(oldFeira, category.IdCategoriaFeira);
+                    }
+
+                    PatrocinadoresController patrocinadoresController = new PatrocinadoresController(_context);
+                    foreach (var patrocinador in oldFeira.Patrocinadors.ToList())
+                    {
+                        await patrocinadoresController.RemoveFeiraAsync(oldFeira, patrocinador.IdPatrocinador);
+
+                    }
         }
 
         // GET: Feiras/Delete/5
