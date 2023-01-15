@@ -92,6 +92,22 @@ namespace WebFayre.Controllers
             return View("Index", result);
         }
 
+        [HttpPost]
+        public async Task<IActionResult> SearchDate(DateTime dateInicio)
+        {
+            WebFayreContext wfc = new WebFayreContext();
+            if (HttpContext.Session.GetInt32("isFuncionario") == 0)
+            {
+                var userid = (int)HttpContext.Session.GetInt32("utilizadorId");
+                var a = new List<Feira>();
+                var user = await wfc.Utilizadors.Include(u => u.IdFeiras).FirstOrDefaultAsync(m => m.Id == userid);
+                ViewData["favorite"] = a.Concat(user.IdFeiras);
+                ViewBag.message = "";
+            }
+            var result = await wfc.Feiras.Where(f => f.DataInicio >= dateInicio).OrderBy(f => f.DataInicio).ToListAsync();
+            return View("Index", result);
+        }
+
 
         public ActionResult Register()
         {
