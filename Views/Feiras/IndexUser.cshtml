@@ -3,6 +3,8 @@
 <p>
     <a asp-action="RedirectToForm">Forms List</a>
 </p>
+
+
 <div class="container-fluid padding">
     <div class="row search-bar text-center">
         <div class="col-12">
@@ -73,44 +75,44 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Nome)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Descricao)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DataInicio)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DataFim)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CapacidadeClientes)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.NStands)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Email)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Telefone)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Morada)
-            </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.PrecoBase)
-                </td>
-            <td>
-                <a asp-action="Enter" asp-route-id="@item.IdFeira">Enter</a> |
-                <a asp-action="AddFavorite" asp-route-id="@item.IdFeira">Favorite</a> |
-                <a asp-action="Details" asp-route-id="@item.IdFeira">Details</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model) {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Nome)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Descricao)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.DataInicio)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.DataFim)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CapacidadeClientes)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.NStands)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Email)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Telefone)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Morada)
+                    </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.PrecoBase)
+                        </td>
+                    <td>
+                        <a asp-action="Enter" asp-route-id="@item.IdFeira">Enter</a> |
+                        <a asp-action="AddFavorite" asp-route-id="@item.IdFeira">Favorite</a> |
+                        <a asp-action="Details" asp-route-id="@item.IdFeira">Details</a>
+                    </td>
+                </tr>
+        }
     </tbody>
 </table>

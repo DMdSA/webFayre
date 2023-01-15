@@ -58,28 +58,43 @@ namespace WebFayre.Controllers
 
         public async Task<IActionResult> IndexByUser()
         {
-            if (getUserType() != 0)
+            if (HttpContext.Session.GetInt32("utilizadorId") == null)
             {
-                return RedirectToAction("index", "home");
+                return RedirectToAction("login", "home");
             }
             else
             {
-                var userid = (int)HttpContext.Session.GetInt32("utilizadorId");
-                var webFayreContext = _context.Promocaofeiras.Include(p => p.IdUtilizadorNavigation).Where(p => p.IdUtilizador == userid);
-                return View(await webFayreContext.ToListAsync());
+                if (getUserType() != 0)
+                {
+                    return RedirectToAction("index", "home");
+                }
+                else
+                {
+                    var userid = (int)HttpContext.Session.GetInt32("utilizadorId");
+                    var webFayreContext = _context.Promocaofeiras.Include(p => p.IdUtilizadorNavigation).Where(p => p.IdUtilizador == userid);
+                    return View(await webFayreContext.ToListAsync());
+                }
             }
+ 
         }
 
         public async Task<IActionResult> IndexFuncionario()
         {
-            if (getUserType() != 1)
+            if (HttpContext.Session.GetInt32("utilizadorId") == null)
             {
-                return RedirectToAction("index", "home");
+                return RedirectToAction("login", "home");
             }
             else
             {
-                var webFayreContext = _context.Promocaofeiras.Include(p => p.IdUtilizadorNavigation).Where(p => p.IdFuncionario == null);
-                return View(await webFayreContext.ToListAsync());
+                if (getUserType() != 1 )
+                {
+                    return RedirectToAction("index", "home");
+                }
+                else
+                {
+                    var webFayreContext = _context.Promocaofeiras.Include(p => p.IdUtilizadorNavigation).Where(p => p.IdFuncionario == null);
+                    return View(await webFayreContext.ToListAsync());
+                }
             }
         }
 

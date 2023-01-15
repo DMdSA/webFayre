@@ -1,57 +1,126 @@
 ﻿@model IEnumerable<WebFayre.Models.Promocaofeira>
 
-<p>
-    <a asp-action="Create">Create form</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Nome)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Descricao)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CapacidadeUtilizadores)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.NStands)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IsValidado)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IdFuncionarioNavigation)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Nome)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Descricao)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CapacidadeUtilizadores)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.NStands)
-            </td>
-            <td>
-                    @Html.DisplayFor(modelItem => item.isValidated)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IdFuncionarioNavigation.Nome)
-            </td>
-            <td>
-                <a asp-action="Details" asp-route-id="@item.IdPromocaoFeira">Details</a> |
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+
+
+<div class="container-fluid padding">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Nome)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Descricao)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.CapacidadeUtilizadores)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.NStands)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.IsValidado)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.IdFuncionarioNavigation)
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Nome)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Descricao)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.CapacidadeUtilizadores)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.NStands)
+                        </td>
+                        <td>
+                            @if (item.IsValidado != null)
+                            {
+                                @if (item.isValidated == true)
+                                {
+                                    @:Accepted
+                                }
+                                else if (item.isValidated == false)
+                                {
+                                    @:Rejected
+                                }
+                            }
+                            else
+                                {
+                                    @:Pending
+                                }
+                           
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.IdFuncionarioNavigation.Nome)
+                        </td>
+                        <td>
+                            <a asp-action="Details" asp-route-id="@item.IdPromocaoFeira">Details</a> |
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+</div>
+
+<div class="row justify-content-md-center">
+    <a class="btn btn-profile" data-toggle="modal" data-target="#promoteFair" asp-action="Create">Promote Form</a> <br>
+</div>
+
+<div class="modal fade" id="promoteFair" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Promote Fair</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col">
+                        <form asp-controller="Promocaofeiras" asp-action="Create">
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                            <div class="form-group">
+                                <label asp-for=@Model.FirstOrDefault().Nome class="control-label"></label>
+                                <input asp-for=@Model.FirstOrDefault().Nome class="form-control" />
+                                <span asp-validation-for=@Model.FirstOrDefault().Nome class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for=@Model.FirstOrDefault().Descricao class="control-label"></label>
+                                <input asp-for=@Model.FirstOrDefault().Descricao class="form-control" />
+                                <span asp-validation-for=@Model.FirstOrDefault().Descricao class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for=@Model.FirstOrDefault().CapacidadeUtilizadores class="control-label"></label>
+                                <input asp-for=@Model.FirstOrDefault().CapacidadeUtilizadores class="form-control" min="0" />
+                                <span asp-validation-for=@Model.FirstOrDefault().CapacidadeUtilizadores class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for=@Model.FirstOrDefault().NStands class="control-label"></label>
+                                <input asp-for=@Model.FirstOrDefault().NStands class="form-control" min="0" />
+                                <span asp-validation-for=@Model.FirstOrDefault().NStands class="text-danger"></span>
+                            </div>
+                            <div class="modal-footer">
+                                <div class="form-group">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    <input type="submit" value="Save" class="btn btn-primary" />
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -29,7 +29,11 @@ public partial class Promocaofeira
     {
         get
         {
-            if (this.IsValidado == 0) return false;
+            if (this.IsValidado == null)
+                return false;
+            if (this.IsValidado == 0) 
+                return false;
+            
             return true;
         }
     }
