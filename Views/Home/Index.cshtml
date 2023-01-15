@@ -13,61 +13,67 @@
 
 
 <!-- ###################### CAROUSEL STARTS HERE ###################### -->
-<!-- Favorites listed in a carousel row -->
-<section>
-    <div class="slider-row">
 
-        <div class="slider-header">
-            <h3 class="fav"> Favorites </h3>
-            <div class="slider-track">
-                <div class="track-item active"></div>
-                <div class="track-item"></div>
-                <div class="track-item"></div>
-                <div class="track-item"></div>
-            </div>
-        </div>
-
-        <div class="carousel-container">
-            <!-- Previous button the left side to control carousel-->
-            <button class="carousel-handler previous" type="button" data-bs-slide="prev">
-                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                <span class="visually-hidden"></span>
-            </button>
-
-            <!-- Carousel displaying favorite fairs cards -->
-            <div class="carousel-slider">
-                @foreach(var item in favorites)
-                {
-                    <div class="card">
-                        <div class="card-body">
-                            <img class="card-img-top" src="https://via.placeholder.com/210?text=IMGFEIRA" alt="">
-                            <h5 class="card-title dynamic-name">@item.Nome</h5>
-                            <p class="card-text">@item.Descricao</p>
-                            <a class="btn btn-primary" asp-area="" asp-controller="Feiras" asp-action="AddFavorite" asp-route-id="@item.IdFeira">Fav</a>
-                            <a class="btn btn-primary" asp-area="" asp-controller="Feiras" asp-action="Details" asp-route-id="@item.IdFeira">More Info</a>
-                        </div>
+<div id="main-wrapper">
+    <div class="container">
+        <div id="main-content">
+            <section class="block-area block-area-home">
+                <div class="block-area-header">
+                    <div class="float-left fv-heading mr-4">
+                        <h2 class="fav-heading">Favorites</h2>
                     </div>
-                }         
-                
+                    <div class="clearfix"></div>
+                </div>
+                <div class="tab-content">
+                    <div class="block-area-content block-area-list fairs-list fairs-list-grid">
+                        <div class="fairs-list-wrap">
+                            @foreach (var fav in favorites)
+                            {
+                                <div class="fav-item">
+                                    <div class="fairs-poster">
+                                        @if (favorites.Contains(fav))
+                                        {
+                                            <div class="tick fav">
+                                                <a class="tick-item" asp-controller="Feiras" asp-action="AddFavorite" asp-route-id="@fav.IdFeira">&#9733;</a>
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <div class="tick fav">
+                                                <a class="tick-item" asp-controller="Feiras" asp-action="AddFavorite" asp-route-id="@fav.IdFeira">&#9734;</a>
+                                            </div>
+                                        }
 
-            <button class="carousel-handler next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
-                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                <span class="visually-hidden"></span>
-            </button>
+                                        <img class="fairs-poster-img lazyload" src="https://mdbcdn.b-cdn.net/img/new/standard/city/041.webp" alt="@fav.Nome">
+                                    </div>
+                                    <div class="fairs-detail">
+                                        <h3 class="fairs-name">
+                                            <a class="dynamic-name" asp-area="" asp-controller="Feiras" asp-action="Details" asp-route-id="@fav.IdFeira">@fav.Nome</a>
+                                        </h3>
+                                        <div class="fd-infor">
+                                            <span class="fdi-item">@fav.DataInicio</span><br>
+                                            <span class="fdi-item fdi-duration">@fav.DataFim</span>
+                                        </div>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                </div>
+                            }
+
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+            </section>
+            <div class="paginationFav"></div>
+            <div class="clearfix"></div>
         </div>
-        <!-- fix this HR -->
-        <hr/>
     </div>
-</section>
-<!-- XXXXXXXXXXXXXXXXXXXX CAROUSEL ENDS HERE XXXXXXXXXXXXXXXXXXXX -->
-
-
 
 
 
 <!-- ##################### DISPLAY CONTENT STARTS HERE #################### -->
 <!-- List of X fairs sorted by date without any search -->
-<div id="main-wrapper">
+
     <div class="container">
         <div id="main-content">
             <section class="block-area block-area-home">

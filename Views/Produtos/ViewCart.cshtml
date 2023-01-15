@@ -1,71 +1,98 @@
 ﻿@model WebFayre.Models.StandShoppingCart
 
+
+
 @{
     ViewData["Title"] = "ViewCart";
 }
 
-<!-- Button trigger modal-->
-<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalCart">Buy</button>
+<div class="container-fluid padding">
+    <div class="cart">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Product Name</th>
+                    <th>Qt.</th>
+                    <th>Price</th>
+                    <th>Remove</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var prod in Model.Products)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(proditem => prod.Name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(proditem => prod.Quantity)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(proditem => prod.FinalPrice)
+                        </td>
+                        <td><a><i class="fas fa-times"></i></a></td>
+                    </tr>
+                }
+                <tr class="total">
+                    <td></td>
+                    <td><b>Total:</b></td>
+                    <td><b>@Html.Raw(ViewBag.Total)</b></td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="clearfix"></div>
+
+    </div>
+ 
+</div>
+<div class="row justify-content-md-center">
+    <!-- Button trigger modal-->
+    <button type="button" class="btn btn-profile" data-toggle="modal" data-target="#checkOut">Check Out</button>
+</div>
+<div class="clearfix"></div>
+
+
+
 <!-- Modal: modalCart -->
-<div class="modal fade" id="modalCart" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+<div class="modal fade" id="checkOut" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
      aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <!--Header-->
             <div class="modal-header">
-                <h4 class="modal-title" id="myModalLabel">Your cart</h4>
+                <h4 class="modal-title" id="myModalLabel">Confirm</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">×</span>
                 </button>
             </div>
             <!--Body-->
             <div class="modal-body">
+                <div class="row justify-content-md-center" style="padding-top: 10px;">
+                    <p><b>Total:</b> @Html.Raw(ViewBag.Total)</p>
+                </div>
+                <div class="row justify-content-md-center">
+                @using (Html.BeginForm("FinalizePurchase", "Produtos"))
+                {
+                    <p>
+                        <b>NIF: </b><input name="nif" id="nif" value=@(ViewBag.Nif) />
+                    </p>
 
-                <table class="table table-hover">
-                    <thead>
-                        <tr>
-                            <th>Product Name</th>
-                            <th>Qt.</th>
-                            <th>Price</th>
-                            <th>Remove</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var prod in Model.Products)
-                        {
-                            <tr>
-                                <td>
-                                    @Html.DisplayFor(proditem => prod.Name)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(proditem => prod.Quantity)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(proditem => prod.FinalPrice)
-                                </td>
-                                <td><a><i class="fas fa-times"></i></a></td>
-                            </tr>
-                        }
-                        <tr class="total">
-                            <td></td>
-                            <td><b>Total:</b></td>
-                            <td><b>@Html.Raw(ViewBag.Total)</b></td>
-                            <td></td>
-                        </tr>
-                    </tbody>
-                </table>
+                    <p>
+                        <b>TEL: </b><input name="tel" id="tel" value=@(ViewBag.Telemovel) />
+                    </p>
+                        <input class="btn btn-profile" type="submit" id="s" value="MBWAY" asp-controller="Produtos" asp-action="FinalizePurchase" onclick="deleteCart()"/>
 
+                }
+                 </div>       
             </div>
             <!--Footer-->
             <div class="modal-footer">
-                <button type="button" class="btn btn-outline-primary" data-dismiss="modal">Close</button>
-                <a class="btn btn-primary" asp-area="" asp-action="FinalizePurchase">Checkout</a>
+                <button type="button" class="btn btn-outline-primary" data-dismiss="modal">Cancel</button>
             </div>
         </div>
     </div>
 </div>
 <!-- Modal: modalCart -->
 
-<p>
-    <a asp-action="FinalizePurchase">Comprar</a>
-</p>

@@ -146,32 +146,36 @@ $(function () {
                     .attr({ hreft: "javascript:void(0)" }).text(item || "...")).insertBefore(".next-page");
         });
 
+        
         $(".previous-page").toggleClass("disablePage", currentPage === 1);
         $(".next-page").toggleClass("disablePage", currentPage === totalPages);
-        return true;
+        return true;     
     }
 
-    $(".paginationFairs").append(
-        $("<li>").addClass("page-item").addClass("previous-page").append($("<a>").addClass("page-link")
-            .attr({ href: "javascript:void(0)" }).text("Prev")),
-        $("<li>").addClass("page-item").addClass("next-page").append($("<a>").addClass("page-link")
-            .attr({ href: "javascript:void(0)" }).text("Next")),
-    );
+    if (totalPages > 1)
+    { 
+        $(".paginationFairs").append(
+            $("<li>").addClass("page-item").addClass("previous-page").append($("<a>").addClass("page-link")
+                .attr({ href: "javascript:void(0)" }).text("Prev")),
+            $("<li>").addClass("page-item").addClass("next-page").append($("<a>").addClass("page-link")
+                .attr({ href: "javascript:void(0)" }).text("Next")),
+        );
 
-    $(".fairs-list-wrap").show();
-    showPage(1);
+        $(".fairs-list-wrap").show();
+        showPage(1);
 
-    $(document).on("click", ".paginationFairs li.current-page:not(.activePage)", function () {
-        return showPage(+$(this).text());
-    });
+        $(document).on("click", ".paginationFairs li.current-page:not(.activePage)", function () {
+            return showPage(+$(this).text());
+        });
 
-    $(".next-page").on("click", function () {
-        return showPage(currentPage + 1);
-    });
+        $(".next-page").on("click", function () {
+            return showPage(currentPage + 1);
+        });
 
-    $(".previous-page").on("click", function () {
-        return showPage(currentPage - 1);
-    });
+        $(".previous-page").on("click", function () {
+            return showPage(currentPage - 1);
+        });
+    }
 });
 
 

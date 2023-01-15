@@ -461,6 +461,10 @@ namespace WebFayre.Controllers
                 }
                 decimal total = calculateTotal(ssc.Products);
                 ViewBag.Total = total;
+                int id = getUserId();
+                var user = _context.Utilizadors.FirstOrDefault(x => x.Id == id);
+                ViewBag.Nif = user.Nif;
+                ViewBag.Telemovel = user.Telemovel;
                 return View(ssc);
             }
         }
@@ -474,23 +478,7 @@ namespace WebFayre.Controllers
             }
             return total;
         }
-
-        [HttpGet]
-        public IActionResult FinalizePurchase()
-        {
-            if (getUserType() != 0)
-            {
-                return RedirectToAction("index", "home");
-            }
-            else
-            {
-                int id = getUserId();
-                var user = _context.Utilizadors.FirstOrDefault(x => x.Id == id);
-                ViewBag.Nif = user.Nif;
-                ViewBag.Telemovel = user.Telemovel;
-                return View();
-            }
-        }
+        
 
         public async Task<IActionResult> FinalizePurchase(string nif, string tel)
         {
@@ -506,10 +494,7 @@ namespace WebFayre.Controllers
             {
                 int userid = (int)HttpContext.Session.GetInt32("utilizadorId");
 
-                //@todo -atualizar stock; registar a compra; redirect correto para lista de produtos
-                Console.WriteLine(nif);
-                Console.WriteLine(tel);
-
+            
                 // se for finalizada..
                 StandShoppingCart? ssc = HttpContext.Session.GetObject<StandShoppingCart>("CartObject");
 
@@ -556,7 +541,7 @@ namespace WebFayre.Controllers
                 await _context.SaveChangesAsync();
 
                 HttpContext.Session.Remove("CartObject");
-                return RedirectToAction("index", "home");
+                return RedirectToAction("StandsByFeira", "Stands");
             }
 
         }

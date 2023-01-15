@@ -1,18 +1,4 @@
 ﻿
-@*
-    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
-*@
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Post Testing</title>
-    <script type="text/javascript" src="/js/cart.js"></script>
-</head>
-<body>
     <h2>Finalizar Compra</h2>
     @using (Html.BeginForm("FinalizePurchase", "Produtos"))
     {       
@@ -21,6 +7,3 @@
         <span>TEL:</span><input name="tel" id="tel" value=@(ViewBag.Telemovel) />
         <input type ="submit" id="s" value="MBWAY" onclick="deleteCart()"/> 
     }
-
-</body>
-</html>

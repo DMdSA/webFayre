@@ -201,6 +201,7 @@ namespace WebFayre.Controllers
             {
                 ViewBag.message = "false";
                 ViewBag.triedOnce = "yes";
+                ViewBag.ErrorMessage = "Username or Password isnt correct. Try again please.";
                 return View();
             }
         }

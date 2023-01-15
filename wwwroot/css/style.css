@@ -504,6 +504,10 @@ a {
 
 }
 
+#favorite-content{
+    width: 100%;
+}
+
 #main-sidebar{
     width: 25%;
     float:right;
@@ -543,7 +547,7 @@ a {
     padding: 0
 }
 
-    .fairs-list .fairs-list-wrap .flw-item {
+    .fairs-list .fairs-list-wrap .flw-item, .fairs-list .fairs-list-wrap .fav-item {
         width: calc(25% - 14px);
         margin: 0 7px 14px;
         float: left;
@@ -570,7 +574,9 @@ a {
     display: block
 }
 
-.fairs-list .fairs-list-wrap .flw-item .fairs-poster, .fairs-list .fairs-list-wrap .stand-item .fairs-poster {
+.fairs-list .fairs-list-wrap .flw-item .fairs-poster,
+.fairs-list .fairs-list-wrap .stand-item .fairs-poster, 
+.fairs-list .fairs-list-wrap .fav-item .fairs-poster {
     border-radius: 0;
     padding-bottom: 100%;
     font-size: 0
@@ -587,7 +593,9 @@ a {
     bottom: 0
 }
 
-.fairs-list .fairs-list-wrap .flw-item .fairs-detail, .fairs-list .fairs-list-wrap .stand-item .fairs-detail{
+.fairs-list .fairs-list-wrap .flw-item .fairs-detail,
+.fairs-list .fairs-list-wrap .stand-item .fairs-detail, 
+.fairs-list .fairs-list-wrap .fav-item .fairs-detail {
     color: #aaa;
     font-size: 12px;
     padding: 10px;
@@ -595,7 +603,8 @@ a {
     min-height: 84px
 }
 
-    .fairs-list .fairs-list-wrap .flw-item .fairs-detail .fairs-name{
+    .fairs-list .fairs-list-wrap .flw-item .fairs-detail .fairs-name,
+    .fairs-list .fairs-list-wrap .fav-item .fairs-detail .fairs-name {
         font-size: 14px;
         line-height: 1.3em;
         margin: 0;
@@ -620,6 +629,7 @@ a {
         overflow: hidden
     }
 
+    .fairs-list .fairs-list-wrap .flw-item .fairs-detail .fd-infor, 
     .fairs-list .fairs-list-wrap .flw-item .fairs-detail .fd-infor {
         display: -webkit-box;
         -webkit-line-clamp: 1;
@@ -774,6 +784,15 @@ hr.light {
     width: 70%;
     margin: 0 auto;
     padding: 2rem 4rem;
+    -webkit-box-shadow: -1px 4px 26px 11px rgba(0, 0, 0, 0.75);
+    -moz-box-shadow: -1px 4px 26px 11px rgba(0, 0, 0, 0.75);
+    box-shadow: -1px 4px 26px 11px rgba(0, 0, 0, 0.75);
+}
+.cart {
+    width: 70%;
+    min-height: 250px;
+    margin: 0 auto;
+    padding: 2rem 2rem;
     -webkit-box-shadow: -1px 4px 26px 11px rgba(0, 0, 0, 0.75);
     -moz-box-shadow: -1px 4px 26px 11px rgba(0, 0, 0, 0.75);
     box-shadow: -1px 4px 26px 11px rgba(0, 0, 0, 0.75);

@@ -1,10 +1,10 @@
 ﻿@model WebFayre.Models.Utilizador
 
 
-@if (ViewBag.message == null && ViewBag.triedOnce == "yes"){
-    <script type="text/javascript">
-        $('#errorModal').modal('show')
-    </script>
+@if (ViewBag.message == "false" && ViewBag.triedOnce == "yes"){
+    <div class="alert alert-danger">
+        <p>@ViewBag.ErrorMessage</p>
+    </div>
 }
 
 <!-- Modal -->
@@ -49,13 +49,14 @@
                         <input type="password" asp-for="Password" class="form-control" />
                         <span asp-validation-for="Password" class="text-danger"></span>
                     </div>
-            
+                    <small>Don't have an account?<a asp-action="Register" asp-controller="Utilizadores"> Register Here</a><br>
+                        <a asp-action="forgotPassword" asp-controller="Utilizadores">Forgot Password</a>
+                    </small>
+
                     <div class="form-group">
-                        <input type="submit" value="Login" class="btn btn-primary" onclick=""/>
+                        <input type="submit" value="Login" class="btn btn-profile" onclick=""/>
                     </div>
-                    <div class="form-group">
-                        <a asp-action="forgotPassword" asp-controller="Utilizadores">Forgot Password</a>                    
-                    </div>
+                   
             </form>
         </div>
     </div>
