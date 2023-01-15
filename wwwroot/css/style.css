@@ -683,6 +683,13 @@ a {
     background: none;
     color: #FFA500;
 }
+    .tick-item.close {
+        color:#ff0000;
+    }
+
+    .tick-item.open {
+        color: #12ff00;
+    }
 
 .tooltip {
     position: relative;

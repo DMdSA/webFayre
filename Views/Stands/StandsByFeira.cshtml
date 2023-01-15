@@ -21,6 +21,18 @@
                         {
                             <div class="stand-item">
                                 <div class="fairs-poster">
+                                    @if (item.Disponibilidade== 1)
+                                    {
+                                        <div class="tick fav">
+                                            <span class="tick-item open">&#9673;</span>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="tick fav">
+                                             <span class="tick-item close">&#9673;</span>
+                                        </div>
+                                    }
                                     <img class="fairs-poster-img lazyload" src="https://mdbcdn.b-cdn.net/img/new/standard/city/041.webp" alt="@item.Nome">
                                 </div>
                                 <div class="fairs-detail">
