@@ -129,9 +129,7 @@ namespace WebFayre.Controllers
 
             var users = _context.Utilizadors.Where(p => p.Id == getUserId()).ToList().Select(p => p.Email);
             var staff = _context.Standstaffs.Where(p => p.IdStand == id).ToList().Select(p => p.StaffEmail);
-            foreach (var email in users)
-            {
-                if (staff.Contains(email))
+            if (staff.Contains(users.First()))
                 {
 
                     // get current user's id
@@ -141,7 +139,6 @@ namespace WebFayre.Controllers
                                 View(await _context.Venda.Include(v => v.VendaProdutos).Where(v => v.StandId == id).ToListAsync()) :
                                 Problem("Entity set 'WebFayreContext.Venda'  is null.");
                 }
-            }
             return RedirectToAction("index", "home");
         }
 

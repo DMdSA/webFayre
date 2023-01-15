@@ -4,6 +4,7 @@
 
 @{
     ViewData["Title"] = "ViewCart";
+    var totalprice = Math.Round(ViewBag.Total, 2);
 }
 
 <div class="container-fluid padding">
@@ -36,7 +37,7 @@
                 <tr class="total">
                     <td></td>
                     <td><b>Total:</b></td>
-                    <td><b>@Html.Raw(ViewBag.Total)</b></td>
+                    <td><b>@totalprice</b></td>
                     <td></td>
                 </tr>
             </tbody>
@@ -70,7 +71,7 @@
             <!--Body-->
             <div class="modal-body">
                 <div class="row justify-content-md-center" style="padding-top: 10px;">
-                    <p><b>Total:</b> @Html.Raw(ViewBag.Total)</p>
+                    <p><b>Total:</b> @totalprice</p>
                 </div>
                 <div class="row justify-content-md-center">
                 @using (Html.BeginForm("FinalizePurchase", "Produtos"))
