@@ -243,6 +243,7 @@ namespace WebFayre.Controllers
                 feira.Patrocinadors.AddRange(patroc_entities);
 
                 _context.Add(feira).Collection(c => c.FeiraCategoria1s);
+                _context.Add(feira).Collection(c => c.Patrocinadors);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
