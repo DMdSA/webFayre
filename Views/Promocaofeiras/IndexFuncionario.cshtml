@@ -43,7 +43,22 @@
                 @Html.DisplayFor(modelItem => item.NStands)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.isValidated)
+                    @if (item.IsValidado != null)
+                    {
+                        @if (item.isValidated == true)
+                        {
+                            @:Accepted
+                        }
+                        else if (item.isValidated == false)
+                        {
+                            @:Rejected
+                        }
+                    }
+                    else
+                    {
+                        @:Pending
+                    }
+
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.IdFuncionarioNavigation.IdFuncionario)
