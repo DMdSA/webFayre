@@ -233,7 +233,7 @@ namespace WebFayre.Controllers
                 var category_ids = category_values.AttemptedValue.Split(",");
                 var category_idsList = category_ids.Select(int.Parse).ToList();
 
-                var patroc_values = ModelState.Values.ToList()[12];
+                var patroc_values = ModelState.Values.ToList()[10];
                 var patroc_ids = patroc_values.AttemptedValue.Split(",");
                 var patroc_idsList = patroc_ids.Select(int.Parse).ToList();
 
