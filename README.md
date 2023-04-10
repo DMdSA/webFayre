@@ -22,7 +22,7 @@ Some prints from this project:
 
 ![fair page example](imgs/fair_example.png)
 
-![fair's stand page example](imgs/fair_Stand.png)
+![fair's stand page example](imgs/fair_stand.png)
 
 ![example of a stand's products](imgs/stand_products.png)
 
